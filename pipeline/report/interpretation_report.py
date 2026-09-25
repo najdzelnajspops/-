@@ -45,6 +45,8 @@ def build_report(
     offset_compliance: dict[str, OffsetComplianceCheck] | None = None,
     lep_unknown_voltage_count: int = 0,
     lep_unknown_voltage_fallback_m: float | None = None,
+    lep_voltage_override_kv: float | None = None,
+    lep_voltage_override_applied_distance_m: float | None = None,
 ) -> dict:
     # ВАЖНО (найдено 2026-09-16 на реальном объекте — «Олимпийская деревня»,
     # 140447 объектов-ограничений): раньше применённые нормы (`applied_norms`,
@@ -156,7 +158,7 @@ def build_report(
         )
     if boundary_plausibility is not None and boundary_plausibility.verdict == "implausible":
         known_simplifications.insert(0, f"[Агент ОТК, 6.1a] {boundary_plausibility.explanation}")
-    if lep_unknown_voltage_count > 0:
+    if lep_unknown_voltage_count > 0 and lep_voltage_override_kv is None:
         known_simplifications.insert(
             0,
             f"ВНИМАНИЕ: на участке {lep_unknown_voltage_count} объектов ЛЭП, чей класс напряжения "
@@ -170,7 +172,21 @@ def build_report(
             "Это может критически уменьшить итоговую допустимую зону для посадки вплоть до почти "
             "нулевой (реальный случай, 2026-09-17: 55 м от одной такой ЛЭП дали запрещённую зону, "
             "в 3,7 раза превышающую площадь всего участка) — маленькое/нулевое число посадок ниже "
-            "может объясняться именно этим, а не реальной занятостью участка.",
+            "может объясняться именно этим, а не реальной занятостью участка. Если у вас есть "
+            "дополнительные материалы с реальным классом напряжения — его можно указать вручную "
+            "(веб-UI: выпадающий список «Класс напряжения ЛЭП» в шапке; CLI: --lep-voltage-kv) — "
+            "сервис пересчитает отступ по указанному классу вместо самого широкого тарифа.",
+        )
+    elif lep_unknown_voltage_count > 0 and lep_voltage_override_kv is not None:
+        known_simplifications.insert(
+            0,
+            f"На участке {lep_unknown_voltage_count} объектов ЛЭП, чей класс напряжения не удалось "
+            f"определить по чертежу — оператор вручную указал класс напряжения {lep_voltage_override_kv:g} "
+            f"кВ (по дополнительным материалам объекта, не по чертежу), применён отступ "
+            f"{lep_voltage_override_applied_distance_m:.0f} м (ПП РФ №160) вместо максимально "
+            f"консервативного {lep_unknown_voltage_fallback_m:.0f} м. Это ЧЕЛОВЕЧЕСКОЕ решение, а не "
+            "автоматическое определение класса по чертежу — при сомнении в правильности указанного "
+            "класса напряжения проверьте итоговую допустимую зону вручную.",
         )
     if offset_compliance is not None:
         for kind, check in offset_compliance.items():
@@ -187,10 +203,22 @@ def build_report(
         "lep_unknown_voltage": {
             "count": lep_unknown_voltage_count,
             "fallback_distance_m": lep_unknown_voltage_fallback_m,
+            "operator_override_kv": lep_voltage_override_kv,
+            "applied_distance_m": (
+                lep_voltage_override_applied_distance_m
+                if lep_voltage_override_kv is not None
+                else lep_unknown_voltage_fallback_m
+            ),
             "explanation": (
-                "Класс напряжения не определён по чертежу — применён максимально консервативный "
-                "тариф Постановления №160 (1150 кВ), а не подтверждённая норма для этой ЛЭП. См. "
-                "known_simplifications для полного объяснения."
+                (
+                    f"Оператор вручную указал класс напряжения {lep_voltage_override_kv:g} кВ (не "
+                    "определён по чертежу) — применён отступ по этому классу, не максимально "
+                    "консервативный. См. known_simplifications для полного объяснения."
+                    if lep_voltage_override_kv is not None
+                    else "Класс напряжения не определён по чертежу — применён максимально консервативный "
+                    "тариф Постановления №160 (1150 кВ), а не подтверждённая норма для этой ЛЭП. См. "
+                    "known_simplifications для полного объяснения."
+                )
                 if lep_unknown_voltage_count > 0
                 else "На участке нет ЛЭП с неопределённым классом напряжения."
             ),
@@ -275,6 +303,8 @@ def write_report(
     offset_compliance: dict[str, OffsetComplianceCheck] | None = None,
     lep_unknown_voltage_count: int = 0,
     lep_unknown_voltage_fallback_m: float | None = None,
+    lep_voltage_override_kv: float | None = None,
+    lep_voltage_override_applied_distance_m: float | None = None,
 ) -> dict:
     report = build_report(
         territory_category,
@@ -287,6 +317,8 @@ def write_report(
         offset_compliance,
         lep_unknown_voltage_count,
         lep_unknown_voltage_fallback_m,
+        lep_voltage_override_kv,
+        lep_voltage_override_applied_distance_m,
     )
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)

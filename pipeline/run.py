@@ -50,6 +50,7 @@ from pipeline.catalog.planting_cost import PlantingCostCatalog
 from pipeline.constraints.buffer_engine import ConstraintMapResult, build_constraint_map
 from pipeline.constraints.existing_vegetation import ExistingVegetationPolicy
 from pipeline.constraints.lep_zones import LepZoneRegistry
+from pipeline.constraints.lep_voltage_override import apply_lep_voltage_override
 from pipeline.constraints.red_lines_policy import apply_red_lines_policy
 from pipeline.constraints.offset_registry import OffsetRegistry, PlantingKind
 from pipeline.export.dxf_export import ExportSummary, export_placement_to_dxf
@@ -83,6 +84,7 @@ class ServiceARunResult:
     target_budget_min_rub: float = 0.0
     target_budget_max_rub: float = 0.0
     lep_unknown_voltage_fallback_m: float | None = None
+    lep_voltage_override_kv: float | None = None
 
 
 def run_service_a(
@@ -92,11 +94,20 @@ def run_service_a(
     output_dxf_path: str | Path,
     output_report_path: str | Path,
     selected_species_names: dict[str, list[str]] | None = None,
+    lep_voltage_kv_override: float | None = None,
 ) -> ServiceARunResult:
     """selected_species_names (2026-09-24, чек-боксы видов на вкладке
     автогенерации веб-UI): {"tree": [...], "shrub": [...]} — ключ жизненной
     формы, отсутствующей в словаре (или сам словарь None), сохраняет прежнее
-    однвидовое поведение для этой формы (pick_species), см. generate_placement."""
+    однвидовое поведение для этой формы (pick_species), см. generate_placement.
+
+    lep_voltage_kv_override (2026-09-25, прямой запрос пользователя — «человек
+    имеет дополнительные материалы на руках и может самостоятельно определить
+    класс объекта»): если задан, ВСЕ ЛЭП с неопределённым по чертежу классом
+    напряжения на этом участке пересчитываются по указанному классу (ПП РФ
+    №160) вместо самого широкого консервативного отступа по умолчанию (55 м,
+    см. pipeline/constraints/lep_voltage_override.py). None (по умолчанию) —
+    поведение не меняется."""
     ingest_result = ingest_dxf_files(input_dxf_paths)
 
     if ingest_result.site_boundary is None:
@@ -111,6 +122,8 @@ def run_service_a(
     # Красные линии — зона запрета размещения насаждений (решение пользователя
     # 2026-09-17, не норма 743-ПП; см. pipeline/constraints/red_lines_policy.py).
     features = apply_red_lines_policy(features)
+    lep_registry_for_override = LepZoneRegistry()
+    features = apply_lep_voltage_override(features, lep_voltage_kv_override, lep_registry_for_override)
 
     # ВАЖНО, найдено на реальном объекте 2026-09-17 (см. docs/SESSION_LOG.md):
     # если на участке есть воздушная ЛЭП, чей класс напряжения не удалось
@@ -124,6 +137,11 @@ def run_service_a(
     # через маленькую итоговую allowed_zone без объяснения причины.
     lep_unknown_voltage_fallback_m = (
         LepZoneRegistry().most_conservative_width_m() if ingest_result.lep_features_needing_voltage else None
+    )
+    lep_voltage_override_applied_distance_m = (
+        lep_registry_for_override.overhead_line_zone_width_m(lep_voltage_kv_override)
+        if lep_voltage_kv_override is not None and ingest_result.lep_features_needing_voltage
+        else None
     )
 
     # Агент ОТК, проверка 6.1a — независимый пересчёт ДО того, как этот же
@@ -256,6 +274,8 @@ def run_service_a(
         offset_compliance=offset_compliance,
         lep_unknown_voltage_count=len(ingest_result.lep_features_needing_voltage),
         lep_unknown_voltage_fallback_m=lep_unknown_voltage_fallback_m,
+        lep_voltage_override_kv=lep_voltage_kv_override,
+        lep_voltage_override_applied_distance_m=lep_voltage_override_applied_distance_m,
     )
 
     return ServiceARunResult(
@@ -270,6 +290,7 @@ def run_service_a(
         target_budget_min_rub=target_budget_min_rub,
         target_budget_max_rub=target_budget_max_rub,
         lep_unknown_voltage_fallback_m=lep_unknown_voltage_fallback_m,
+        lep_voltage_override_kv=lep_voltage_kv_override,
     )
 
 
@@ -305,6 +326,18 @@ def _build_arg_parser() -> argparse.ArgumentParser:
             "этого флага строится только машиночитаемый JSON (--output-report)."
         ),
     )
+    parser.add_argument(
+        "--lep-voltage-kv",
+        type=float,
+        default=None,
+        help=(
+            "Необязательно (2026-09-25, прямой запрос пользователя): реальный класс напряжения "
+            "(кВ) для ВСЕХ ЛЭП с неопределённым по чертежу классом на этом участке — если он "
+            "известен оператору из дополнительных материалов, не отражённых в чертеже. Без флага "
+            "применяется максимально консервативный отступ 55 м (тариф 1150 кВ, ПП РФ №160). "
+            "Типовые значения по ПП РФ №160: 1, 20, 35, 110, 220, 500, 750, 1150 (кВ)."
+        ),
+    )
     return parser
 
 
@@ -316,6 +349,7 @@ def main(argv: list[str] | None = None) -> None:
         input_dxf_paths=args.input,
         base_dxf_path_for_export=args.base_dxf,
         territory_category=args.territory_category,
+        lep_voltage_kv_override=args.lep_voltage_kv,
         output_dxf_path=args.output_dxf,
         output_report_path=args.output_report,
     )
@@ -333,7 +367,7 @@ def main(argv: list[str] | None = None) -> None:
         if result.boundary_plausibility.verdict != "ok":
             print(f"    ВНИМАНИЕ: {result.boundary_plausibility.explanation}")
     lep_count = len(result.ingest_result.lep_features_needing_voltage)
-    if lep_count > 0:
+    if lep_count > 0 and result.lep_voltage_override_kv is None:
         print(
             f"  ВНИМАНИЕ: на участке {lep_count} объектов ЛЭП, чей класс напряжения не удалось "
             f"определить по чертежу — применён максимально консервативный отступ "
@@ -342,7 +376,13 @@ def main(argv: list[str] | None = None) -> None:
             "чертёж не даёт способа его определить. Это может критически уменьшить итоговую "
             "допустимую зону для посадки (см. известный случай на «Камчатской улице» — "
             "docs/SESSION_LOG.md, 2026-09-17: 55 м от одной ЛЭП дали зону, кратно превышающую сам "
-            "участок)."
+            "участок). Если знаете реальный класс напряжения — укажите флагом --lep-voltage-kv."
+        )
+    elif lep_count > 0:
+        print(
+            f"  На участке {lep_count} объектов ЛЭП с неопределённым по чертежу классом напряжения — "
+            f"указан вручную класс {result.lep_voltage_override_kv:g} кВ (флаг --lep-voltage-kv), "
+            "применён соответствующий отступ по ПП РФ №160 вместо максимально консервативного."
         )
     for kind, placement in result.placement_results.items():
         print(

@@ -9,6 +9,11 @@ const state = {
   proposals: [], // {id, species_name_ru, life_form, x, y}
   lastReview: null, // Map<planting_id, hasIssue>
   selectedSpecies: { tree: new Set(), shrub: new Set() }, // чек-боксы видов на вкладке автогенерации (2026-09-24)
+  // Ручное указание класса напряжения ЛЭП оператором (2026-09-25, прямой
+  // запрос пользователя — «человек имеет дополнительные материалы на руках и
+  // может самостоятельно определить класс объекта»). null = не указан,
+  // применяется прежнее поведение по умолчанию (макс. консервативный отступ).
+  lepVoltageKv: null,
 };
 
 const NS = "http://www.w3.org/2000/svg";
@@ -72,6 +77,7 @@ async function init() {
   setupPriceListPanel();
   setupUploadPanel();
   setupSpeciesPicker();
+  await setupLepVoltageControl();
   setupLayoutDebugMode();
   document.getElementById("generate-btn").addEventListener("click", runGenerate);
   document.getElementById("generate-btn-2").addEventListener("click", runGenerate);
@@ -436,9 +442,11 @@ function setLoadingOverlayVisible(visible) {
 async function loadGeometry() {
   setLoadingOverlayVisible(true);
   try {
-    const geo = await fetchJSON(
-      `/api/demo-objects/${state.demoId}/geometry?territory_category=${state.territoryCategory}`
-    );
+    let url = `/api/demo-objects/${state.demoId}/geometry?territory_category=${state.territoryCategory}`;
+    if (state.lepVoltageKv !== null) {
+      url += `&lep_voltage_kv=${state.lepVoltageKv}`;
+    }
+    const geo = await fetchJSON(url);
     state.geometry = geo;
     drawBasePlan("plan-svg-generate", geo);
     drawBasePlan("plan-svg-review", geo);
@@ -446,9 +454,44 @@ async function loadGeometry() {
     renderReviewMarkers();
     await loadSpeciesPicker("tree");
     await loadSpeciesPicker("shrub");
+    updateLepVoltageControlVisibility(geo.lep_unknown_voltage_count || 0);
   } finally {
     setLoadingOverlayVisible(false);
   }
+}
+
+// Ручное указание класса напряжения ЛЭП (2026-09-25, прямой запрос
+// пользователя) — контрол в шапке показывается, только если на ТЕКУЩЕМ
+// объекте вообще есть ЛЭП с неопределённым по чертежу классом напряжения
+// (иначе он бесполезен и просто загромождает шапку).
+function updateLepVoltageControlVisibility(count) {
+  const control = document.getElementById("lep-voltage-control");
+  const countEl = document.getElementById("lep-voltage-count");
+  control.hidden = count === 0;
+  countEl.textContent = String(count);
+}
+
+async function setupLepVoltageControl() {
+  const select = document.getElementById("lep-voltage-select");
+  const tiers = await fetchJSON("/api/lep-voltage-tiers");
+  // Тарифные пороги идут по возрастанию класса напряжения (см. data/reference/
+  // lep_protection_zones.yaml) — сохраняем порядок источника, не пересортировываем.
+  const optionsHtml = tiers
+    .map((t) => {
+      const label = t.voltage_kv_min
+        ? `от ${t.voltage_kv_min} до ${t.voltage_kv_max} кВ (охранная зона ${t.width_m} м)`
+        : `до ${t.voltage_kv_max} кВ включительно (охранная зона ${t.width_m} м)`;
+      return `<option value="${t.voltage_kv_max}">${escapeHtml(label)}</option>`;
+    })
+    .join("");
+  select.innerHTML = `<option value="">не указан — макс. консервативный отступ</option>${optionsHtml}`;
+  updateSelectTitle(select);
+
+  select.addEventListener("change", async () => {
+    state.lepVoltageKv = select.value === "" ? null : Number(select.value);
+    updateSelectTitle(select);
+    await loadGeometry();
+  });
 }
 
 function ringToPathSegment(points) {
@@ -778,6 +821,9 @@ async function runGenerate() {
     const body = { territory_category: state.territoryCategory };
     if (Object.keys(selectedSpecies).length > 0) {
       body.selected_species = selectedSpecies;
+    }
+    if (state.lepVoltageKv !== null) {
+      body.lep_voltage_kv = state.lepVoltageKv;
     }
     const report = await fetchJSON(`/api/demo-objects/${state.demoId}/generate`, {
       method: "POST",
@@ -1153,10 +1199,14 @@ async function runReview() {
   btn.disabled = true;
   btn.textContent = "Проверяю...";
   try {
+    const reviewBody = { territory_category: state.territoryCategory, proposals: state.proposals };
+    if (state.lepVoltageKv !== null) {
+      reviewBody.lep_voltage_kv = state.lepVoltageKv;
+    }
     const result = await fetchJSON(`/api/demo-objects/${state.demoId}/review`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ territory_category: state.territoryCategory, proposals: state.proposals }),
+      body: JSON.stringify(reviewBody),
     });
     const withIssue = new Set(result.issues.filter((i) => i.planting_id).map((i) => i.planting_id));
     state.lastReview = withIssue;

@@ -36,6 +36,24 @@ def test_overhead_line_above_known_tariff_raises_instead_of_guessing():
         lep.overhead_line_zone_width_m(1500)
 
 
+def test_tier_options_matches_all_8_source_tariffs():
+    """2026-09-25, прямой запрос пользователя — ручное указание класса
+    напряжения оператором в UI берёт варианты отсюда, а не придумывает свои."""
+    lep = LepZoneRegistry()
+    options = lep.tier_options()
+
+    assert len(options) == 8
+    max_values = [o["voltage_kv_max"] for o in options]
+    assert max_values == [1, 20, 35, 110, 220, 500, 750, 1150]
+    widths = {o["voltage_kv_max"]: o["width_m"] for o in options}
+    assert widths[1] == 2.0
+    assert widths[20] == 10.0
+    assert widths[1150] == 55.0
+    by_max = {o["voltage_kv_max"]: o for o in options}
+    assert by_max[20]["voltage_kv_min"] == 1  # диапазон "1-20 кВ", не "до 20 кВ от нуля"
+    assert by_max[1]["voltage_kv_min"] is None
+
+
 def test_lep_zone_integrates_into_constraint_map_as_verified():
     """110 кВ ЛЭП пересекает участок — зона 20 м должна быть шире, чем 743-ПП
     дал бы для обычной мачты освещения (4 м) — это отдельная, более строгая норма."""
@@ -77,5 +95,6 @@ def test_lep_zone_integrates_into_constraint_map_as_verified():
 if __name__ == "__main__":
     test_overhead_line_zone_width_by_voltage_tier()
     test_overhead_line_above_known_tariff_raises_instead_of_guessing()
+    test_tier_options_matches_all_8_source_tariffs()
     test_lep_zone_integrates_into_constraint_map_as_verified()
     print("OK: LEP zone tests passed")

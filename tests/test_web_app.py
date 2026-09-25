@@ -52,6 +52,51 @@ def test_geometry_unknown_demo_object_404():
     assert resp.status_code == 404
 
 
+def test_geometry_reports_lep_unknown_voltage_count():
+    """«Песчаный переулок» реально содержит ЛЭП с неопределённым по чертежу
+    классом напряжения (2026-09-25, найдено по жалобе пользователя «почему
+    такая малая площадь озеленения») — фронт использует это число, чтобы
+    показывать/скрывать контрол ручного указания класса напряжения."""
+    resp = client.get("/api/demo-objects/peschany_pereulok/geometry?territory_category=dvorovye")
+    assert resp.status_code == 200
+    assert resp.json()["lep_unknown_voltage_count"] > 0
+
+
+def test_geometry_lep_voltage_override_grows_allowed_zone():
+    """2026-09-25, прямой запрос пользователя: если оператор укажет реальный
+    (более низкий) класс напряжения, допустимая зона должна вырасти по
+    сравнению с максимально консервативным допущением по умолчанию."""
+    without = client.get(
+        "/api/demo-objects/peschany_pereulok/geometry?territory_category=dvorovye"
+    ).json()
+    with_override = client.get(
+        "/api/demo-objects/peschany_pereulok/geometry?territory_category=dvorovye&lep_voltage_kv=10"
+    ).json()
+
+    def ring_area(rings):
+        # Сериализация — {"exterior": [...], "holes": [...]} на кольцо; для
+        # грубого сравнения площади считаем через shapely.
+        from shapely.geometry import Polygon as ShapelyPolygon
+
+        total = 0.0
+        for r in rings:
+            poly = ShapelyPolygon(r["exterior"], holes=r["holes"])
+            total += poly.area
+        return total
+
+    area_without = ring_area(without["allowed_zone"]["tree"])
+    area_with_override = ring_area(with_override["allowed_zone"]["tree"])
+    assert area_with_override > area_without
+
+
+def test_lep_voltage_tiers_endpoint_returns_8_standard_tariffs():
+    resp = client.get("/api/lep-voltage-tiers")
+    assert resp.status_code == 200
+    tiers = resp.json()
+    assert len(tiers) == 8
+    assert {t["voltage_kv_max"] for t in tiers} == {1, 20, 35, 110, 220, 500, 750, 1150}
+
+
 def test_species_endpoint_returns_recommended_species():
     resp = client.get("/api/species?territory_category=dvorovye&life_form=tree")
     assert resp.status_code == 200
@@ -72,6 +117,24 @@ def test_generate_produces_placements_and_summary():
     assert report["summary"]["placed"] > 0
     assert "lep_unknown_voltage" in report
     assert len(report["placements"]) == report["summary"]["total_points"]
+
+
+def test_generate_with_lep_voltage_override_places_more_points():
+    """2026-09-25, прямой запрос пользователя — сквозная проверка через
+    /generate, не только /geometry: указанный оператором класс напряжения
+    должен реально повлиять на итоговое число размещённых посадок, а отчёт —
+    честно отразить, что это ручное решение, а не определение по чертежу."""
+    without = client.post(
+        "/api/demo-objects/peschany_pereulok/generate", json={"territory_category": "dvorovye"}
+    ).json()
+    with_override = client.post(
+        "/api/demo-objects/peschany_pereulok/generate",
+        json={"territory_category": "dvorovye", "lep_voltage_kv": 10},
+    ).json()
+
+    assert with_override["summary"]["placed"] > without["summary"]["placed"]
+    assert with_override["lep_unknown_voltage"]["operator_override_kv"] == 10
+    assert without["lep_unknown_voltage"]["operator_override_kv"] is None
 
 
 def test_generate_with_selected_species_distributes_them_across_points():
