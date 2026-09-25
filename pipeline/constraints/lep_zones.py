@@ -84,6 +84,22 @@ class LepZoneRegistry:
     def underground_cable_zone_width_m(self) -> float:
         return self._underground_default_m
 
+    def tier_options(self) -> list[dict]:
+        """Типовые классы напряжения (ПП РФ №160) для выбора оператором вручную —
+        2026-09-25, прямой запрос пользователя: «человек имеет дополнительные
+        материалы на руках и может самостоятельно определить класс объекта».
+        Не придумываем новые категории сверх заданных источником — ровно те же
+        8 тарифных порогов, что уже используются most_conservative_width_m()."""
+        return [
+            {
+                "voltage_kv_max": t.voltage_kv_max,
+                "voltage_kv_min": t.voltage_kv_min,
+                "width_m": t.width_m,
+                "note": t.note,
+            }
+            for t in self._overhead_tiers
+        ]
+
     def most_conservative_width_m(self) -> float:
         """Наибольшая известная ширина охранной зоны ВЛ (сейчас — 1150 кВ).
 

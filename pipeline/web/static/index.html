@@ -17,6 +17,9 @@
     <label>Категория территории:
       <select id="category-select"></select>
     </label>
+    <label id="lep-voltage-control" hidden title="На этом участке есть ЛЭП, чей класс напряжения не удалось определить по чертежу — по умолчанию применяется максимально консервативный отступ (55 м). Если у вас есть дополнительные материалы с реальным классом напряжения, укажите его здесь.">ЛЭП с неизв. напряжением (<span id="lep-voltage-count">0</span>), класс:
+      <select id="lep-voltage-select"></select>
+    </label>
     <button class="secondary header-btn" id="upload-btn">Загрузить свой DWG/DXF</button>
     <button class="secondary header-btn header-btn--light" id="data-sources-btn">Нормативная база</button>
   </div>
@@ -136,7 +139,7 @@
       </div>
       <h2>Результат</h2>
       <button class="primary" id="generate-btn-2">Сгенерировать план</button>
-      <div id="generate-summary" class="hint service-recommendation">Нажмите «Сгенерировать план» — сервис детерминированно расставит посадки по нормам 743-ПП/623-ПП.</div>
+      <div id="generate-summary" class="hint service-recommendation">Нажмите «Сгенерировать план» — сервис самостоятельно расставит посадки по нормам 743-ПП/623-ПП.</div>
       <div id="generate-species" class="service-recommendation"></div>
       <div id="generate-warnings" class="service-recommendation"></div>
     </div>

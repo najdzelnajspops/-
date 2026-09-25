@@ -43,6 +43,7 @@ from pipeline.catalog.price_list_ingest import (
 from pipeline.catalog.species_territory_recommendations import SpeciesTerritoryRegistry
 from pipeline.constraints.buffer_engine import build_constraint_map
 from pipeline.constraints.existing_vegetation import ExistingVegetationPolicy
+from pipeline.constraints.lep_voltage_override import apply_lep_voltage_override
 from pipeline.constraints.lep_zones import LepZoneRegistry
 from pipeline.constraints.offset_registry import OffsetRegistry
 from pipeline.constraints.red_lines_policy import apply_red_lines_policy
@@ -90,10 +91,19 @@ class ProposalIn(BaseModel):
 class ReviewRequest(BaseModel):
     territory_category: str
     proposals: list[ProposalIn]
+    # Ручное указание класса напряжения ЛЭП (2026-09-25) — см. GenerateRequest ниже.
+    lep_voltage_kv: float | None = None
 
 
 class GenerateRequest(BaseModel):
     territory_category: str
+    # Ручное указание класса напряжения ЛЭП оператором (2026-09-25, прямой
+    # запрос пользователя — «человек имеет дополнительные материалы на руках и
+    # может самостоятельно определить класс объекта»): если задан, ВСЕ ЛЭП с
+    # неопределённым по чертежу классом напряжения на этом участке получают
+    # отступ по этому классу (ПП РФ №160) вместо максимально консервативного
+    # (55 м) по умолчанию. None — поведение не меняется.
+    lep_voltage_kv: float | None = None
     # Чек-боксы видов на вкладке автогенерации (2026-09-24) — {"tree": [...],
     # "shrub": [...]}, ключ отсутствует/None = прежнее однвидовое поведение по
     # умолчанию для этой формы (см. pipeline/placement/generator.py,
@@ -134,7 +144,7 @@ def _resolve_object(object_id: str) -> _ResolvedObject:
     )
 
 
-def _prepared_site(object_id: str):
+def _prepared_site(object_id: str, lep_voltage_kv: float | None = None):
     resolved = _resolve_object(object_id)
 
     ingest_result = ingest_dxf_files(resolved.input_paths)
@@ -147,6 +157,10 @@ def _prepared_site(object_id: str):
     veg_policy = ExistingVegetationPolicy()
     features = veg_policy.apply_to_features(ingest_result.features)
     features = apply_red_lines_policy(features)
+    # Ручное указание класса напряжения ЛЭП оператором (2026-09-25, прямой
+    # запрос пользователя) — см. pipeline/constraints/lep_voltage_override.py.
+    # None (по умолчанию) не меняет поведение.
+    features = apply_lep_voltage_override(features, lep_voltage_kv, LepZoneRegistry())
     return resolved, ingest_result, features
 
 
@@ -249,8 +263,8 @@ def api_data_sources():
 
 
 @app.get("/api/demo-objects/{demo_id}/geometry")
-def api_geometry(demo_id: str, territory_category: str | None = None):
-    obj, ingest_result, features = _prepared_site(demo_id)
+def api_geometry(demo_id: str, territory_category: str | None = None, lep_voltage_kv: float | None = None):
+    obj, ingest_result, features = _prepared_site(demo_id, lep_voltage_kv)
     category = territory_category or obj.default_territory_category
     registry = OffsetRegistry()
 
@@ -267,7 +281,19 @@ def api_geometry(demo_id: str, territory_category: str | None = None):
             "tree": polygon_to_rings(tree_map.allowed_zone),
             "shrub": polygon_to_rings(shrub_map.allowed_zone),
         },
+        # Число ЛЭП с неопределённым по чертежу классом напряжения (2026-09-25) —
+        # фронт показывает это рядом с выбором класса напряжения, чтобы было
+        # понятно, есть ли вообще смысл его указывать на этом объекте.
+        "lep_unknown_voltage_count": len(ingest_result.lep_features_needing_voltage),
     }
+
+
+@app.get("/api/lep-voltage-tiers")
+def api_lep_voltage_tiers():
+    """Типовые классы напряжения ЛЭП (ПП РФ №160) для ручного выбора оператором
+    (2026-09-25, прямой запрос пользователя) — см.
+    pipeline/constraints/lep_voltage_override.py."""
+    return LepZoneRegistry().tier_options()
 
 
 @app.get("/api/species")
@@ -299,6 +325,7 @@ def api_generate(demo_id: str, request: GenerateRequest):
             output_dxf_path=tmp_path / "result.dxf",
             output_report_path=tmp_path / "report.json",
             selected_species_names=request.selected_species,
+            lep_voltage_kv_override=request.lep_voltage_kv,
         )
         # DXF/JSON — во временной директории, которая удаляется по выходу из
         # `with`; для UI-демонстрации достаточно отчёта в памяти (result.report),
@@ -309,7 +336,7 @@ def api_generate(demo_id: str, request: GenerateRequest):
 
 @app.post("/api/demo-objects/{demo_id}/review")
 def api_review(demo_id: str, request: ReviewRequest):
-    obj, ingest_result, features = _prepared_site(demo_id)
+    obj, ingest_result, features = _prepared_site(demo_id, request.lep_voltage_kv)
 
     proposals = [
         ProposedPlanting(id=p.id, species_name_ru=p.species_name_ru, life_form=p.life_form, x=p.x, y=p.y)
