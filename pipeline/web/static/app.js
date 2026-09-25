@@ -466,9 +466,14 @@ async function loadGeometry() {
 // (иначе он бесполезен и просто загромождает шапку).
 function updateLepVoltageControlVisibility(count) {
   const control = document.getElementById("lep-voltage-control");
-  const countEl = document.getElementById("lep-voltage-count");
   control.hidden = count === 0;
-  countEl.textContent = String(count);
+  // Число объектов — не в самом ярлыке (сбивало с толку пользователя: "что
+  // такое 59?"), а в подсказке при наведении, вместе с объяснением, что это
+  // вообще значит и на что влияет выбор.
+  control.title =
+    `На этом участке ${count} объектов ЛЭП, чей класс напряжения не удалось определить по чертежу — ` +
+    "по умолчанию применяется максимально консервативный отступ (55 м). Если у вас есть дополнительные " +
+    "материалы с реальным классом напряжения, укажите его здесь — сервис пересчитает допустимую зону.";
 }
 
 async function setupLepVoltageControl() {
