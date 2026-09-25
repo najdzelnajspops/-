@@ -1,0 +1,5891 @@
+{
+  "source_documents": {
+    "dpioos_osnovnoi_assortiment": "Основной ассортимент деревьев, кустарников и лиан, рекомендуемый для озеленения различных категорий территорий города Москвы (ДПиООС, mos.ru)",
+    "dpioos_perspektivnye_vidy": "Ассортимент перспективных видов деревьев, кустарников и лиан для увеличения биоразнообразия городских насаждений (ДПиООС, mos.ru)"
+  },
+  "territory_categories": {
+    "dvorovye": "Дворовые территории",
+    "doshkolnye": "Дошкольные учреждения",
+    "obscheobr": "Общеобразовательные и спортивные учреждения (школы, колледжи)",
+    "zdravoohr": "Учреждения здравоохранения и реабилитационные центры",
+    "magistrali": "Магистрали (шоссе, проспекты, улицы с высокоскоростным движением, кольцевые дороги, хорды); *внутриквартальные улицы и проезды местного значения",
+    "ploschadi": "Площади, пространства общественно-делового и торгово-развлекательного назначения (запечатанные/полузапечатанные поверхности)",
+    "parki": "Парки; *бульвары, скверы, набережные, сады",
+    "proizvodstvennye": "Территории производственного назначения; *озеленённые территории охранных и санитарно-защитных зон"
+  },
+  "footnote_legend": {
+    "1": "Разрешён на всех территориях, кроме ООЗТ и ПТ, с контролем распространения (п. 5 ПП №369-ПП)",
+    "2": "Не высаживать вблизи детских и спортивных площадок, мест массового пребывания детей",
+    "3": "Требует особого ухода: защита корневой системы от травм, весеннее дождевание кроны (при посадке у дорог), мульчирование, рыхление",
+    "4": "Требует дренированных, рыхлых, незасоленных, неуплотнённых почв. Не высаживать в зонах с застойным увлажнением и на уплотнённых грунтах",
+    "5": "Чувствительно к противогололёдным реагентам и выхлопным газам",
+    "6": "Не высаживать вблизи плодовых культур (яблоня, груша, айва) из-за риска распространения ржавчинных грибов",
+    "7": "Вид с потенциалом самосева и неконтролируемого распространения. За пределами ООЗТ посадка допускается на расстоянии от 1 до 2 км от их границ (осн. ассортимент) / при условии регулярного контроля (перспективные виды)"
+  },
+  "column_quality_note": "В исходном файле каждой из таблиц («основной ассортимент» и «перспективные виды») визуально дублирован заголовок «Дошкольные учреждения» (файл 1) либо «Дворовые территории» и «Дошкольные учреждения» (файл 2) на 2 столбца таблицы. Проверено по ширине столбцов в разметке docx (tblGrid/gridCol): один из двух физических столбцов в каждой такой паре — паразитный остаточный столбец аномально малой ширины (в файле 1 — 95 твипов против 883/1123 у соседних содержательных столбцов; в файле 2 — 142 и 283 твипа против 705+ у остальных), не несущий самостоятельного смысла. Для 50 из 265 строк файла 1 значения в этом паразитном столбце и в содержательном столбце расходились (+/-) — паразитный столбец во всех случаях расхождения показывал '+', тогда как содержательный (широкий) столбец показывал '-'; паразитный столбец отброшен, использован только содержательный. Решение основано на структурном признаке (ширина столбца в XML), а не на предположении — считать проверенным (verified), но данная особенность источника (двойной заголовок без различающей подписи) сама по себе является неустранённой неоднозначностью первоисточника.",
+  "trailing_notes": {
+    "dpioos_osnovnoi_assortiment": [
+      "1 На территориях ботанических, зоологических садов, кладбищ, мемориальных комплексов и религиозных организаций породный состав для озеленения определяется балансодержателем. В границах особо охраняемых природных территорий, особо охраняемых зеленых территорий, природных территорий на участках, занятых естественными растительными сообществами, породный состав определяется на основании проекта мероприятий по сохранению, развитию и воспроизводству насаждений.",
+      "На территориях инклюзивных площадок для людей с ограниченными возможностями породный состав определяется на основании проекта мероприятий по сохранению, развитию и воспроизводству насаждений.",
+      "На территориях высших учебных заведений породный состав определяется на основании проекта мероприятий по сохранению, развитию и воспроизводству насаждений.",
+      "*Обозначенный перечень территорий озеленения вне границ ООЗТ, на которых возможна высадка рекомендуемого растения при условии контроля его распространения."
+    ],
+    "dpioos_perspektivnye_vidy": [
+      "1 На территориях ботанических, зоологических садов, кладбищ, мемориальных комплексов и религиозных организаций породный состав для озеленения определяется балансодержателем. В границах особо охраняемых природных территорий, особо охраняемых зеленых территорий, природных территорий на участках, занятых естественными растительными сообществами, породный состав определяется на основании проекта мероприятий по сохранению, развитию и воспроизводству насаждений.",
+      "На территориях инклюзивных площадок для людей с ограниченными возможностями породный состав определяется на основании проекта мероприятий по сохранению, развитию и воспроизводству насаждений.",
+      "На территориях высших учебных заведений породный состав определяется на основании проекта мероприятий по сохранению, развитию и воспроизводству насаждений.",
+      "*Обозначенный перечень территорий озеленения вне границ ООЗТ, на которых возможна высадка рекомендуемого растения при условии контроля его распространения."
+    ]
+  },
+  "species": [
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 1,
+      "name": "Ель колючая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 2,
+      "name": "Ель обыкновенная/европейская, (формы и сорта)",
+      "footnotes": [
+        3,
+        4,
+        5
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 3,
+      "name": "Лиственница американская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 4,
+      "name": "Лиственница даурская (Гмелина)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 5,
+      "name": "Лиственница европейская (опадающая) (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 6,
+      "name": "Лиственница сибирская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 7,
+      "name": "Сосна обыкновенная, (формы и сорта)",
+      "footnotes": [
+        3,
+        4,
+        5
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 1,
+      "name": "Можжевельник виргинский, (формы и сорта)",
+      "footnotes": [
+        2,
+        5,
+        6
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 2,
+      "name": "Можжевельник горизонтальный, (формы и сорта)",
+      "footnotes": [
+        2,
+        5,
+        6
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 3,
+      "name": "Можжевельник казацкий, (формы и сорта)",
+      "footnotes": [
+        2,
+        5,
+        6
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 4,
+      "name": "Можжевельник средний Пфитцериана, (формы и сорта)",
+      "footnotes": [
+        2,
+        5,
+        6
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 5,
+      "name": "Можжевельник скальный, (формы и сорта)",
+      "footnotes": [
+        2,
+        5,
+        6
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 6,
+      "name": "Сосна горная (формы и сорта)",
+      "footnotes": [
+        5
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 1,
+      "name": "Бархат Амурский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 2,
+      "name": "Береза повислая/плакучая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 3,
+      "name": "Береза пушистая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 4,
+      "name": "Боярышник Арнольда",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 5,
+      "name": "Боярышник крупноколючковый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 6,
+      "name": "Боярышник перистонадрезанный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 7,
+      "name": "Боярышник полумягкий/мягковатый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 8,
+      "name": "Боярышник сливолистный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 9,
+      "name": "Боярышник точечный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 10,
+      "name": "Боярышник чёрный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 11,
+      "name": "Вишня обыкновенная",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 12,
+      "name": "Вяз гибридный Резиста",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 13,
+      "name": "Вяз перисто-ветвистый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 14,
+      "name": "Вяз приземистый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 15,
+      "name": "Груша уссурийская",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 16,
+      "name": "Дуб красный",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 17,
+      "name": "Дуб черешчатый (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 18,
+      "name": "Ива белая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 19,
+      "name": "Ива ломкая ф. «Bullata»",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 20,
+      "name": "Ива прутовидная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 21,
+      "name": "Ивы свердловской селекции (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 22,
+      "name": "Ива Шверина",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 23,
+      "name": "Кладрастис желтый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 24,
+      "name": "Клен гиннала/приречный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 25,
+      "name": "Клен красный (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 26,
+      "name": "Клен остролистный (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 27,
+      "name": "Клен сахаристый/серебристый (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 28,
+      "name": "Клен татарский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 29,
+      "name": "Конский каштан восьмитычинковый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 30,
+      "name": "Конский каштан мясо-красный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 31,
+      "name": "Липа американская",
+      "footnotes": [
+        3
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 32,
+      "name": "Липа крупнолистная (формы и сорта)",
+      "footnotes": [
+        3
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 33,
+      "name": "Липа мелколистная/сердцевидная (формы и сорта)",
+      "footnotes": [
+        3
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 34,
+      "name": "Липа обыкновенная/европейская (формы и сорта)",
+      "footnotes": [
+        3
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 35,
+      "name": "Ольха серая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 36,
+      "name": "Ольха черная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 37,
+      "name": "Орех маньчжурский",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "-",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 38,
+      "name": "Орех серый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 39,
+      "name": "Робиния лжеакация/акация белая",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "-",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 40,
+      "name": "Рябина ария (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 41,
+      "name": "Рябина гибридная (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 42,
+      "name": "Рябина обыкновенная (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 43,
+      "name": "Рябина промежуточная (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 44,
+      "name": "Рябина тюрингская/дуболистная (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 45,
+      "name": "Слива домашняя (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 46,
+      "name": "Слива колючая/терн",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 47,
+      "name": "Слива растопыренная",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 48,
+      "name": "Тополь бальзамический (муж. клоны)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 49,
+      "name": "Тополь белый/серебристый (муж. клоны) (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 50,
+      "name": "Тополь берлинский (муж. клоны)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 51,
+      "name": "Тополь дрожащий/осина (муж. клоны)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "-",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 52,
+      "name": "Тополь канадский (муж. клоны)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 53,
+      "name": "Тополь Симона (муж. клоны) (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 54,
+      "name": "Тополь советский Пирамидальный (муж. клоны)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 55,
+      "name": "Черемуха виргинская (формы и сорта)",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 56,
+      "name": "Черемуха Маака",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 57,
+      "name": "Черемуха обыкновенная (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 58,
+      "name": "Черемуха поздняя (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 59,
+      "name": "Яблоня Недзведцкого",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 60,
+      "name": "Яблоня обильноцветущая",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 61,
+      "name": "Яблоня сливолистная",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 62,
+      "name": "Яблоня ягодная (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 1,
+      "name": "Аморфа кустарниковая",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 2,
+      "name": "Арония черноплодная/Мичурина (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 3,
+      "name": "Барбарис амурский",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 4,
+      "name": "Барбарис обыкновенный (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 5,
+      "name": "Барбарис оттавский (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 6,
+      "name": "Барбарис Тунберга (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 7,
+      "name": "Бересклет бородавчатый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 8,
+      "name": "Бересклет европейский (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 9,
+      "name": "Бересклет крылатый (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 10,
+      "name": "Бересклет Маака",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 11,
+      "name": "Бирючина обыкновенная (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 12,
+      "name": "Боярышник Арнольда",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 13,
+      "name": "Боярышник кроваво-красный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 14,
+      "name": "Боярышник обыкновенный/колючий",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 15,
+      "name": "Боярышник однопестичный (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 16,
+      "name": "Боярышник перистонадрезанный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 17,
+      "name": "Боярышник полумягкий/мягковатый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 18,
+      "name": "Боярышник сливолистный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 19,
+      "name": "Бузина канадская «Аurea»",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 20,
+      "name": "Бузина красная/кистистая",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "-",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 21,
+      "name": "Бузина черная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 22,
+      "name": "Гортензия Бреттшнейдера",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 23,
+      "name": "Гортензия древовидная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 24,
+      "name": "Гортензия метельчатая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 25,
+      "name": "Дерен белый/сибирский (формы и сорта)",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 26,
+      "name": "Дерен кроваво-красный (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 27,
+      "name": "Дерен отпрысковый ф. «Флавирамея»",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 28,
+      "name": "Жимолость альпийская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 29,
+      "name": "Жимолость золотистая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 30,
+      "name": "Жимолость Королькова",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 31,
+      "name": "Жимолость Маака",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 32,
+      "name": "Жимолость Максимовича",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 33,
+      "name": "Жимолость обыкновенная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "-",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 34,
+      "name": "Жимолость татарская (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 35,
+      "name": "Ива пурпурная ф. «Nana»",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 36,
+      "name": "Ирга канадская/Ирга Ламарка",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 37,
+      "name": "Ирга колосистая",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 38,
+      "name": "Ирга круглолистная",
+      "footnotes": [
+        7
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 39,
+      "name": "Калина гордовина (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 40,
+      "name": "Калина обыкновенная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 41,
+      "name": "Калина Саржента (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 42,
+      "name": "Карагана древовидная/акация желтая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 43,
+      "name": "Карагана кустарниковая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 44,
+      "name": "Кизильник блестящий",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 45,
+      "name": "Лапчатка кустарниковая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 46,
+      "name": "Лещина обыкновенная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 47,
+      "name": "Лещина пурпурнолистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 48,
+      "name": "Лох серебристый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 49,
+      "name": "Лох узколистный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 50,
+      "name": "Магония падуболистная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 51,
+      "name": "Пузыреплодник калинолистный (формы и сорта)",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 52,
+      "name": "Роза бедренцеволистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 53,
+      "name": "Роза морщинистая (формы и сорта)",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 54,
+      "name": "Роза сизая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 55,
+      "name": "Роза собачья",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 56,
+      "name": "Рябинник рябинолистный (формы и сорта)",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 57,
+      "name": "Сирень амурская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 58,
+      "name": "Сирень венгерская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 59,
+      "name": "Сирень обыкновенная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 60,
+      "name": "Сирень Престон (сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 61,
+      "name": "Смородина альпийская (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 62,
+      "name": "Смородина железистая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 63,
+      "name": "Смородина золотистая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 64,
+      "name": "Смородина красная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 65,
+      "name": "Снежноягодник белый (формы и сорта)",
+      "footnotes": [
+        7
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 66,
+      "name": "Спирея березолистная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 67,
+      "name": "Спирея Билларда (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 68,
+      "name": "Спирея Бумальда (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 69,
+      "name": "Спирея Вангутта (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 70,
+      "name": "Спирея дубравколистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 71,
+      "name": "Спирея Дугласа (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 72,
+      "name": "Спирея иволистная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 73,
+      "name": "Спирея ниппонская (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 74,
+      "name": "Спирея острозубчатая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 75,
+      "name": "Спирея серая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 76,
+      "name": "Спирея средняя (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 77,
+      "name": "Спирея трехлопастная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 78,
+      "name": "Спирея японская (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 79,
+      "name": "Форзиция обратнояйцевидная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 80,
+      "name": "Хеномелес японский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 81,
+      "name": "Чубушник венечный (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 82,
+      "name": "Чубушник Лемуана (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 83,
+      "name": "Чубушник мелколистный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 1,
+      "name": "Актинидия коломикта",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 2,
+      "name": "Виноград амурский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 3,
+      "name": "Девичий виноград пятилисточковый",
+      "footnotes": [
+        1
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 4,
+      "name": "Жимолость каприфоль",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 5,
+      "name": "Клематис сибирский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 6,
+      "name": "Лимонник китайский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 1,
+      "name": "Ель канадская/сизая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 2,
+      "name": "Ель сербская (формы и сорта)",
+      "footnotes": [
+        4
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 3,
+      "name": "Ель шероховатая",
+      "footnotes": [
+        4
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 4,
+      "name": "Ель Энгельмана",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 5,
+      "name": "Кипарисовик горохоплодный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 6,
+      "name": "Лиственница Кемфера",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 7,
+      "name": "Лиственница Сукачева",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 8,
+      "name": "Пихта бальзамическая, (формы и сорта)",
+      "footnotes": [
+        3,
+        4,
+        5
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 9,
+      "name": "Пихта Вича",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 10,
+      "name": "Пихта одноцветная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 11,
+      "name": "Пихта сибирская",
+      "footnotes": [
+        3,
+        4,
+        5
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 12,
+      "name": "Псевдотсуга Мензиса сизая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 13,
+      "name": "Сосна Веймутова (формы и сорта)",
+      "footnotes": [
+        4
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "-",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 14,
+      "name": "Сосна кедровая европейская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 15,
+      "name": "Сосна кедровая корейская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 16,
+      "name": "Сосна кедровая сибирская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 17,
+      "name": "Сосна кедровая стланиковая (кедровый стланик)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 18,
+      "name": "Сосна румелийская (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "-",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 19,
+      "name": "Сосна черная австрийская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 20,
+      "name": "Туя западная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 1,
+      "name": "Микробиота перекрёстнопарная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 2,
+      "name": "Можжевельник китайский , (формы и сорта)",
+      "footnotes": [
+        5,
+        6
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 3,
+      "name": "Можжевельник чешуйчатый , (формы и сорта)",
+      "footnotes": [
+        5,
+        6
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 1,
+      "name": "Багряник японский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 2,
+      "name": "Береза бумажная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 3,
+      "name": "Берёза вишнёвая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 4,
+      "name": "Береза ребристая (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 5,
+      "name": "Береза черная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 6,
+      "name": "Береза Эрмана/каменная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 7,
+      "name": "Боярышник зеленомясый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 8,
+      "name": "Вяз шершавый (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 9,
+      "name": "Груша иволистная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 10,
+      "name": "Груша обыкновенная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 11,
+      "name": "Дуб монгольский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 12,
+      "name": "Ива козья (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "-",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 13,
+      "name": "Ива пятитычинковая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 14,
+      "name": "Ива росистая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 15,
+      "name": "Ива цельнолистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 16,
+      "name": "Клен зеленокорый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 17,
+      "name": "Клён колосистый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 18,
+      "name": "Клен ложнозибольдов",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 19,
+      "name": "Клен маньчжурский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 20,
+      "name": "Клён мелколистный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 21,
+      "name": "Липа войлочная/серебристая",
+      "footnotes": [
+        3
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 22,
+      "name": "Липа монгольская",
+      "footnotes": [
+        3
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 23,
+      "name": "Маакия амурская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 24,
+      "name": "Рябина Арнольда (сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 25,
+      "name": "Рябина бузинолистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 26,
+      "name": "Рябина кашмирская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 27,
+      "name": "Рябина Мужо",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 28,
+      "name": "Тополь лавролистный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "-",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 29,
+      "name": "Тополь Максимовича (муж. клоны)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "-",
+        "parki": "-",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 30,
+      "name": "Тополь черный (муж. клоны)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 31,
+      "name": "Черемуха пенсильванская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 32,
+      "name": "Яблоня Зибольда",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 33,
+      "name": "Яблоня Саржента",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 34,
+      "name": "Ясень маньчжурский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 1,
+      "name": "Барбарис Вильсон",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 2,
+      "name": "Бересклет Форчуна (формы и сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 3,
+      "name": "Боярышник Максимовича",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 4,
+      "name": "Вейгела Миддендорфа",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 5,
+      "name": "Вишня войлочная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 6,
+      "name": "Дёрен Бейли",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 7,
+      "name": "Дёрен Вальтера",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 8,
+      "name": "Жёстер даурский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 9,
+      "name": "Жимолость Максимовича",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 10,
+      "name": "Жимолость покрывальная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 11,
+      "name": "Кизильник горизонтальный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 12,
+      "name": "Миндаль низкий/степной",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 13,
+      "name": "Ракитник русский",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 14,
+      "name": "Рододендрон даурский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 15,
+      "name": "Сирень Вольфа",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 16,
+      "name": "Сирень Комарова",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 17,
+      "name": "Скумпия обыкновенная/кожевенная (формы и сорта)",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 18,
+      "name": "Снежноягодник Доренбоза",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 19,
+      "name": "Стефанандра надрезаннолистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 20,
+      "name": "Стефанандра Танаки",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 21,
+      "name": "Экзохорда тяньшанская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 1,
+      "name": "Аристолохия крупнолистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 2,
+      "name": "Аристолохия маньчжурская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 3,
+      "name": "Гортензия черешковая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 4,
+      "name": "Древогубец круглолистный",
+      "footnotes": [
+        7
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 5,
+      "name": "Жимолость вьющаяся",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": null,
+        "doshkolnye": null,
+        "obscheobr": null,
+        "zdravoohr": null,
+        "magistrali": null,
+        "ploschadi": null,
+        "parki": null,
+        "proizvodstvennye": null
+      }
+    },
+    {
+      "source": "dpioos_osnovnoi_assortiment",
+      "life_form": "Лианы",
+      "no_in_group": 6,
+      "name": "Клематис тангутский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 1,
+      "name": "Пихта белокорая/почкочешуйная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 2,
+      "name": "Пихта цельнолистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 3,
+      "name": "Сосна Мюррея",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 4,
+      "name": "Тсуга канадская",
+      "footnotes": [
+        3,
+        4,
+        5
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные деревья",
+      "no_in_group": 5,
+      "name": "Плосковеточник восточный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 1,
+      "name": "Тисс остроконечный (сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 2,
+      "name": "Тисс средний (сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Хвойные кустарники",
+      "no_in_group": 3,
+      "name": "Тисс ягодный (малорослые сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 1,
+      "name": "Абрикос маньчжурский (мелкоплодная форма)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 2,
+      "name": "Берёза аллеганская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 3,
+      "name": "Берёза даурская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 4,
+      "name": "Берёза плосколистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 5,
+      "name": "Боярышник согнутостолбиковый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 6,
+      "name": "Вяз Андросова",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 7,
+      "name": "Вяз японский/Давида",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 8,
+      "name": "Ива волчниковая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 9,
+      "name": "Ива каспийская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 10,
+      "name": "Ива тонкостолбиковая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 11,
+      "name": "Клён бородатый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 12,
+      "name": "Конский каштан голый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 13,
+      "name": "Лещина древовидная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 14,
+      "name": "Магнолия кобус",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 15,
+      "name": "Рябина Альбова",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 16,
+      "name": "Рябина Вильморена",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 17,
+      "name": "Рябина кавказская",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 18,
+      "name": "Рябина Кёне",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 19,
+      "name": "Рябина смешанная",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 20,
+      "name": "Черёмуха Грея",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 21,
+      "name": "Черёмуха Сьори",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 22,
+      "name": "Слива Саржента",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 23,
+      "name": "Чозения арбутолистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные деревья",
+      "no_in_group": 24,
+      "name": "Яблоня Сиверса",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 1,
+      "name": "Акантопанакс сидячецветковый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 2,
+      "name": "Аралия высокая",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 3,
+      "name": "Арония арбутолистная",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 4,
+      "name": "Барбарис выемчатый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 5,
+      "name": "Барбарис Дильса",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 6,
+      "name": "Бересклет большекрылый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 7,
+      "name": "Бересклет Гамильтона",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 8,
+      "name": "Бересклет малоцветковый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 9,
+      "name": "Вейгела ранняя",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 10,
+      "name": "Восковница пенсильваннская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 11,
+      "name": "Восковница обыкновенная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 12,
+      "name": "Гамамелис виргинский",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 13,
+      "name": "Дейция амурская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 14,
+      "name": "Диервилла ручейная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 15,
+      "name": "Жимолость мелколистная",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 16,
+      "name": "Жимолость Толмачёва",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 17,
+      "name": "Калина сливолистная",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 18,
+      "name": "Лещина Зибольда",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "-",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 19,
+      "name": "Ольха зеленая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 20,
+      "name": "Птелея трёхлистная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 21,
+      "name": "Рододендрон жёлтый",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 22,
+      "name": "Рододендрон короткоплодный (сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 23,
+      "name": "Рододендрон канадский гибридные (сорта)",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 24,
+      "name": "Рододендрон кэтевбинский",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 25,
+      "name": "Рододендрон мягкий",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 26,
+      "name": "Рододендрон ноготковидный",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 27,
+      "name": "Рододендрон Смирнова",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 28,
+      "name": "Рододендрон Фори",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 29,
+      "name": "Рододендрон японский",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 30,
+      "name": "Роза даурская",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 31,
+      "name": "Роза калифорнийская",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 32,
+      "name": "Роза Федченко",
+      "footnotes": [
+        2
+      ],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 33,
+      "name": "Сирень пекинская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 34,
+      "name": "Сирень бархатистая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 35,
+      "name": "Сирень мохнатая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 36,
+      "name": "Сирень пониклая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 37,
+      "name": "Сирень юньнаньская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 38,
+      "name": "Спирея длиннопочечная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 39,
+      "name": "Спирея извилистая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 40,
+      "name": "Форзиция свисающая",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 41,
+      "name": "Чубушник Гордона",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 42,
+      "name": "Чубушник пушистый",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 43,
+      "name": "Чубушник тонколистный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 44,
+      "name": "Чубушник Шренка",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лиственные кустарники",
+      "no_in_group": 45,
+      "name": "Экзохорда тяньшанская",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лианы",
+      "no_in_group": 1,
+      "name": "Актинидия многобрачная/полигамная",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "-",
+        "doshkolnye": "-",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "-"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лианы",
+      "no_in_group": 2,
+      "name": "Виноград лисий",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лианы",
+      "no_in_group": 3,
+      "name": "Виноград приречный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "+",
+        "obscheobr": "+",
+        "zdravoohr": "+",
+        "magistrali": "+",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    },
+    {
+      "source": "dpioos_perspektivnye_vidy",
+      "life_form": "Лианы",
+      "no_in_group": 4,
+      "name": "Виноградовник аконитолистный",
+      "footnotes": [],
+      "territory_flags": {
+        "dvorovye": "+",
+        "doshkolnye": "-",
+        "obscheobr": "-",
+        "zdravoohr": "+",
+        "magistrali": "-",
+        "ploschadi": "+",
+        "parki": "+",
+        "proizvodstvennye": "+"
+      }
+    }
+  ]
+}

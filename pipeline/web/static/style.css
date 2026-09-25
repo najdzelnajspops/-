@@ -1,0 +1,617 @@
+/* Шрифт бренда «Зелёный контур» (2026-09-24, прямой запрос пользователя) —
+   переменный (variable font) файл, локальный, не Google Fonts (нет в
+   публичном каталоге, проверено). font-weight: 100 900 — весь диапазон
+   переменной оси начертания, конкретный вес (Medium=500) задаётся ниже. */
+@font-face {
+  font-family: "Involve";
+  src: url("/static/fonts/Involve-VF.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #dce7bf;
+  --header-bg: #30401c;
+  --panel: #ffffff;
+  --ink: #1f2a1a;
+  --muted: #5c6b52;
+  --border: #d7ddce;
+  --accent: #2f6b3a;
+  --accent-dark: #1f4d28;
+  --danger: #b33f3f;
+  --danger-bg: #fbeaea;
+  --ok: #2f6b3a;
+  --ok-bg: #eaf3e8;
+  --site: #e4e9de;
+  --allowed-tree: #bfe3c4;
+  --allowed-shrub: #a9d6c6;
+  font-family: "Involve", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+/* Браузеры по умолчанию НЕ наследуют font-family для form-контролов
+   (button/input/select/textarea используют системный шрифт ОС, а не шрифт
+   body) — без этого правила Involve применился бы не «ко всему тексту в
+   сервисе», как просил пользователь (2026-09-24), а только к обычному тексту. */
+button, input, select, textarea { font-family: inherit; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500; /* Involve Medium — по умолчанию для всего текста сервиса */
+}
+
+header {
+  background: var(--header-bg);
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  /* Реальный найденный баг (2026-09-24): при недостаточной ширине окна
+     (масштаб страницы/узкий монитор) шапка переносится в 2 строки — лого на
+     первой, .controls на второй. С прежним `margin-left:auto` на .controls
+     эта же авто-подстановка продолжала действовать и на второй строке, где
+     .controls — единственный элемент, поэтому её физически толкало вправо,
+     оставляя пустой промежуток слева (там, где пользователь обвёл красным).
+     `justify-content: space-between` на строке из ОДНОГО элемента по
+     спецификации flexbox эквивалентно flex-start — на второй строке .controls
+     встаёт вровень с лого выше, никакого разрыва. */
+  justify-content: space-between;
+}
+
+header .logo { height: 28px; display: block; }
+
+header .controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+select {
+  padding: 6px 10px;
+  /* 2026-09-24: 6px → 5px — «на этих плашках тоже поставь скругление 5»,
+     единое скругление с остальными кнопками/иконками сервиса. */
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+
+/* Некоторые категории территорий — длинные формулировки из ДПиООС (например,
+   "магистрали" — почти 150 символов); Chromium считает ширину select по
+   САМОМУ ШИРОКОМУ option, а не по текущему выбранному — без ограничения select
+   в шапке растягивался почти на всю ширину страницы даже когда выбрана
+   короткая категория (реальный баг, найден пользователем 2026-09-24 на живом
+   скриншоте). Полный текст доступен по наведению — title выставляется в JS. */
+header .controls select {
+  max-width: 340px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Кнопки загрузки/нормативной базы в шапке — по образцу Figma-мокапа
+   пользователя (2026-09-24): сплошная заливка без обводки и без иконки,
+   крупный скруглённый прямоугольник — раньше это были обычные тонкие
+   button.secondary (обводка, 12px), не совпадало с макетом. */
+header .controls .header-btn {
+  background: var(--bg);
+  color: var(--header-bg);
+  border: none;
+  /* Высота выровнена по селекту «Категория территории» рядом (2026-09-24,
+     прямой запрос пользователя) — было 14px сверху/снизу (49px по факту),
+     стало 7px (35px, вровень с select). */
+  padding: 8px 28px;
+  /* 2026-09-24: 14px → 5px, единое скругление со всеми остальными
+     иконками/кнопками по прямому запросу пользователя. */
+  border-radius: 5px;
+  /* 2026-09-24: было 16px, затем ненадолго 16pt (≈21px) по прямому уточнению
+     пользователя — но 21px оказался слишком крупным (кнопка «Нормативная
+     база» переносилась на новую строку в шапке), пользователь сразу же
+     попросил взять размер как у select «Категория территории» рядом (14px). */
+  font-size: 14px;
+  font-weight: 500;
+}
+
+header .controls .header-btn--light {
+  background: #ffffff;
+}
+
+.data-sources-panel {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+}
+
+.data-sources-panel h2 { font-size: 15px; margin: 0 0 6px; }
+
+#data-sources-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+#data-sources-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+#price-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+#price-list-table th, #price-list-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+/* Переключатель «Ручной ввод / Автоматическая генерация» в виде «папки» —
+   прямой запрос пользователя со скриншотом-макетом (2026-09-24). Сплошная
+   оливковая подложка под всей строкой вкладок (была задумана как единый фон,
+   на котором активная вкладка «выступает» белым) — убрана отдельным прямым
+   запросом чуть позже («оливковую строку... убери совсем, она не нужна»):
+   строка вкладок теперь прозрачная (виден обычный фон страницы #DCE7BF), а
+   олива остаётся только заливкой САМОЙ неактивной вкладки. Отступы по бокам —
+   115px, как у .layout ниже, чтобы вкладки визуально стояли ровно над окном
+   чертежа. */
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 115px 0;
+}
+
+.tab-btn {
+  padding: 10px 26px 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  background: #98a973;
+  color: #fff;
+  /* Форма «папки» — прямой запрос пользователя (2026-09-24, «должны
+     выглядеть иначе — правая со скосом»): левый край прямой, правый —
+     скошенный (уже наверху, шире внизу), как у бумажного ярлычка папки, а не
+     скруглённый прямоугольник, как было раньше. Настоящий border-radius
+     технически несовместим с clip-path (он рисует форму целиком заново,
+     скругления игнорирует). Первая версия — фаска (прямой срез) 5px в обоих
+     верхних углах — пользователь забраковал вживую: «обрублены сверху»,
+     выглядело как грубый скол, а не скругление. Заменено на настоящую дугу:
+     верхний левый угол (единственный настоящий угол 90° в этой форме)
+     аппроксимирован 4 отрезками по окружности радиуса 5px — на глаз читается
+     как честное скругление. Верхняя точка скоса справа (не угол 90°, а
+     вершина между горизонтальным верхом и наклонной гранью) оставлена острой
+     — фаска там смотрелась ещё хуже (косой срез на уже наклонном ребре), а
+     сама вершина почти не заметна на готовой кнопке. */
+  clip-path: polygon(
+    0 5px, 0.38px 3.09px, 1.46px 1.46px, 3.09px 0.38px, 5px 0,
+    calc(100% - 14px) 0,
+    100% 100%, 0 100%
+  );
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  color: #30401c;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.tab-panel { display: none; }
+/* Реальный найденный баг (2026-09-24): сетка «план / сайдбар 340px» висела
+   на .layout, а фактические колонки (.plan-wrap/.side-panel) вложены на
+   уровень глубже — внутрь .tab-panel, обычного блочного div. Так как в
+   единицу времени видна только ОДНА .tab-panel, .layout всегда содержал
+   ровно один grid-элемент — вторая колонка пустовала, а план и сайдбар
+   просто стояли друг под другом (проверено вживую: сайдбар «Ваши посадки»
+   уезжал под план на любой ширине окна, не только на узких). Сетка перенесена
+   туда, где действительно лежат её колонки. */
+.tab-panel.active {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+}
+
+.layout {
+  /* Верхний отступ убран (2026-09-24, прямой запрос — «вкладки должны быть
+     приклеены к полю самого чертежа»): раньше здесь было 40px, из-за чего
+     между вкладками-«папками» и белой карточкой оставался заметный зазор.
+     115px по бокам — без изменений, прежний запрос пользователя. */
+  padding: 0 115px 16px;
+  /* УБРАН max-width:1400px + margin:0 auto (2026-09-25, жалоба на 32" мониторе
+     — «почему не подстраивается под разрешение экрана» + следом «папки не
+     прикреплены к окну чертежа»). Реальная причина обеих жалоб одна: .tabs
+     (см. ниже) всегда был на всю ширину окна с тем же padding 115px, а
+     .layout — центрированным островом фиксированной ширины 1400px. На узких
+     экранах остров ≈ вся доступная ширина, поэтому расхождение было незаметно;
+     на широком мониторе .tabs и карточка плана расходились по левому краю, а
+     вся рабочая область (план+панель) переставала расти вместе с экраном.
+     Теперь .layout — такой же полноширинный блок с padding 115px, как и
+     .tabs — оба всегда совпадают по краю на любой ширине экрана, а область
+     плана (колонка `1fr` в `.tab-panel.active`) использует всё доступное
+     пространство вместо фиксированного потолка. Боковая панель (340px,
+     фиксированная колонка грида) не растягивается — её ширина не менялась. */
+}
+
+.plan-wrap {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  /* Единое скругление 10px по всем углам (2026-09-24, прямой запрос —
+     «одинаковое скругление у папок 5, у окна чертежа 10») — промежуточный
+     вариант с квадратным, а затем смешанным 5/10 верхом отменён. */
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.plan-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.palette {
+  display: flex;
+  gap: 10px;
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* Высота выровнена по select «Категория территории» (2026-09-24, прямой
+     запрос пользователя), скругление — 5px, как и у остальных иконок/кнопок
+     по тому же запросу (было 8px). */
+  padding: 3px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 5px;
+  cursor: grab;
+  background: #fafcf8;
+  font-size: 14px;
+  user-select: none;
+}
+
+.palette-item:active { cursor: grabbing; }
+.palette-item .icon { font-size: 20px; }
+
+.legend {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  /* margin-left:auto убран (2026-09-24) — теперь этот же эффект («сдвинуть
+     вправо») даёт кнопка «Печать» перед ней (см. #print-review-btn/-generate-btn),
+     легенда просто идёт следом с обычным зазором .plan-toolbar. */
+}
+
+.legend span { display: flex; align-items: center; gap: 5px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+.hide-recs-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Прямой запрос пользователя (2026-09-19): решение о посадке остаётся за
+   пользователем — переключатель убирает текстовые рекомендации/предупреждения
+   сервиса с экрана и из печати, план (сам SVG) и выбор пользователя не
+   трогает. Полный ответ сервиса при этом всегда сохраняется на сервере
+   (pipeline/web/audit_log.py) независимо от этого переключателя. */
+.recommendations-hidden .service-recommendation { display: none; }
+
+/* Реальный найденный баг (2026-09-24): у каждой вкладки свой id контейнера/svg
+   (-review/-generate — появились при разделении на две вкладки), а это
+   правило раньше писалось только под старый общий #plan-svg-container/#plan-svg,
+   которые не существуют в разметке ни на одной вкладке (реальные id —
+   plan-svg-container-review/plan-svg-container и plan-svg-review/plan-svg-generate).
+   Вкладка «Проверка моего выбора» (активная по умолчанию) поэтому размерялась
+   не по этому правилу, а по случайному поведению браузера для <svg> без явных
+   width/height. Правило теперь применяется к обеим вкладкам явно. */
+#plan-svg-container-review,
+#plan-svg-container {
+  position: relative;
+  /* Фиксированный px (1640×800) не масштабируется под экран — пользователь
+     сам это заметил и явно выбрал «резиновая ширина + фиксированная
+     пропорция» (2026-09-24) вместо жёстких абсолютных пикселей. Пропорция
+     ниже — 1640:800 = 2.05:1, ровно та форма, что тестировалась в
+     debug-режиме перед решением; при желании поменять пропорцию — снова
+     через ?debug=layout: там она теперь отдельно считается и показывается. */
+  width: 100%;
+  aspect-ratio: 1640 / 800;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #eef1ea;
+}
+
+#plan-svg-review,
+#plan-svg-generate { width: 100%; height: 100%; display: block; }
+
+/* Режим отладки вёрстки (?debug=layout) — см. setupLayoutDebugMode() в app.js.
+   Только для ручной подгонки положения/размера окна чертежа пользователем,
+   в обычном режиме сервиса эти классы/id никогда не создаются. */
+/* .layout-debug-target — вся карточка (.plan-wrap, включая белый фон).
+   .layout-debug-resize-target — само окно чертежа внутри карточки.
+   .layout-debug-target-side — боковая панель. Разные цвета в подсветке,
+   чтобы не путать, какой элемент сейчас двигается/растягивается. Ручки
+   управления — НЕ на самих элементах (реальный найденный баг: при широком
+   окне чертежа ручка на его собственном углу уезжала за край экрана,
+   пользователь физически не мог до неё дотянуться) — все они вынесены в
+   плавающую панель, которая всегда видна независимо от того, куда уехал
+   или как растянулся сам элемент. */
+.layout-debug-target { outline: 2px dashed #ff5722; z-index: 5; }
+.layout-debug-resize-target { outline: 2px dashed #1976d2; }
+.layout-debug-target-side { outline: 2px dashed #8e24aa; }
+#layout-debug-readout {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background: #111;
+  color: #6f6;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  max-width: 380px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+#layout-debug-readout .layout-debug-readout-title { color: #fff; font-weight: bold; margin-bottom: 6px; }
+#layout-debug-readout pre { white-space: pre-wrap; margin: 0 0 8px; }
+.layout-debug-controls { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+.layout-debug-ctrl {
+  background: #333;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: move;
+  user-select: none;
+}
+.layout-debug-ctrl:active { background: #555; }
+#layout-debug-readout button { font-size: 11px; padding: 4px 10px; cursor: pointer; }
+
+/* fill-opacity < 1 намеренно: форма/площадь допустимой зоны под маркерами
+   должна оставаться видимой (пользователь верно заметил — крупные сплошные
+   кружки скрывали и объём, и форму территории под ними, 2026-09-18). */
+.marker-tree { fill: #2f6b3a; fill-opacity: 0.8; stroke: #163a1c; stroke-width: 0.4; }
+.marker-shrub { fill: #6fae6a; fill-opacity: 0.75; stroke: #2f6b3a; stroke-width: 0.3; }
+.marker-issue { fill: var(--danger); fill-opacity: 0.85; stroke: #6b1f1f; }
+.marker-no-species { fill: #b8860b; fill-opacity: 0.85; stroke: #6b5008; }
+
+.side-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.side-panel h2 {
+  font-size: 15px;
+  margin: 0 0 4px;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+button.primary:hover { background: var(--accent-dark); }
+button.primary:disabled { background: #a9b6a2; cursor: not-allowed; }
+
+/* «Сгенерировать план» и «Проверить» — прямой запрос пользователя (2026-09-24):
+   перекрасить именно эти кнопки в основной цвет шапки, а не остальные
+   button.primary (загрузка DWG/DXF, применение прайс-листа) — поэтому по id,
+   не по общему классу. Позже пользователь тем же цветом попросил перекрасить
+   и «Загрузить и обработать» — добавлена в тот же список; «Применить
+   отмеченное» (прайс-лист) по-прежнему не упоминалась, её не трогаем. */
+#review-btn, #generate-btn, #generate-btn-2, #upload-submit-btn { background: var(--header-bg); }
+#review-btn:hover, #generate-btn:hover, #generate-btn-2:hover, #upload-submit-btn:hover { background: #263316; }
+
+/* Вторая рабочая кнопка «Сгенерировать план» в блоке «Результат»
+   (2026-09-24, прямой запрос пользователя) — та же кнопка, тот же обработчик,
+   просто доступна и рядом с результатом, не только в панели инструментов
+   над планом. */
+#generate-btn-2 { width: 100%; margin-bottom: 10px; }
+
+/* Индикатор загрузки при смене объекта/категории (2026-09-24, прямой запрос
+   пользователя — «нужно окно загрузки, чтобы показать, что сервис не
+   завис») — pipeline/web/static/app.js, showLoadingOverlay()/hideLoadingOverlay(). */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink);
+  z-index: 20;
+}
+/* Реальный баг, найденный при проверке (2026-09-24): класс .loading-overlay
+   задаёт display:flex с более высокой специфичностью, чем встроенное правило
+   браузера [hidden]{display:none} — атрибут hidden переставал скрывать
+   элемент, спиннер зависал навсегда. Явный override возвращает hidden в силу. */
+.loading-overlay[hidden] { display: none; }
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spinner-rotate 0.8s linear infinite;
+}
+@keyframes spinner-rotate { to { transform: rotate(360deg); } }
+
+button.secondary {
+  background: none;
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Кнопка «Печать» в тулбаре плана — та же высота, что у select «Категория
+   территории» и у палитры «Дерево/Кустарник» рядом (2026-09-24, прямой
+   запрос пользователя). Не трогает остальные button.secondary (Отмена в
+   попапах и т.д.) — те не упоминались. */
+#print-review-btn, #print-generate-btn {
+  padding: 8.5px 10px;
+  margin-left: auto;
+}
+
+.proposal-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+
+.proposal-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: #fafcf8;
+  border-radius: 6px;
+  font-size: 13px;
+  gap: 8px;
+}
+
+.proposal-list li .meta { color: var(--muted); font-size: 11px; }
+
+/* Подсветка проблемных пунктов в списке «Ваши посадки» + переход к точке на
+   карте (2026-09-24, прямое замечание пользователя — «растений могут быть
+   сотни, как узнать, где он накосячил?»). */
+.proposal-list li.has-issue { background: var(--danger-bg); }
+.proposal-jump { cursor: pointer; }
+.proposal-jump:hover { text-decoration: underline; }
+
+.issue {
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.issue.bad { background: var(--danger-bg); color: #6b1f1f; }
+.issue.good { background: var(--ok-bg); color: var(--ok); }
+.issue.clickable { cursor: pointer; }
+.issue.clickable:hover { outline: 1px solid #6b1f1f; }
+.issue .kind { font-weight: 600; display: block; margin-bottom: 2px; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+
+/* Кратковременная подсветка маркера при переходе к нему с карты/списка. */
+@keyframes marker-flash-pulse {
+  0%, 100% { stroke-width: 0.4; transform: scale(1); }
+  50% { stroke-width: 2; transform: scale(1.6); }
+}
+.marker-flash {
+  animation: marker-flash-pulse 0.4s ease-in-out 3;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.summary-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.summary-row:last-child { border-bottom: none; }
+
+.hint { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.hint-inline { font-size: 12px; font-weight: 400; color: var(--muted); }
+
+/* Чек-боксы выбора видов на вкладке автогенерации (2026-09-24, прямой запрос
+   пользователя) — см. pipeline/web/static/app.js, setupSpeciesPicker(). */
+.species-picker { margin-bottom: 14px; }
+.species-picker-header { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+.species-picker-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.species-picker-list {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: var(--panel);
+}
+.species-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+.species-picker-item input { margin: 0; cursor: pointer; }
+.species-picker-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.marker-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 8px 0 2px;
+}
+
+.species-popup {
+  position: absolute;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  padding: 10px;
+  z-index: 10;
+  min-width: 240px;
+}
+
+.species-popup select { width: 100%; margin-bottom: 8px; }
+.species-popup .popup-actions { display: flex; justify-content: flex-end; gap: 6px; }
+
+[hidden] { display: none !important; }
+
+/* Печать только текущей открытой вкладки (прямое решение пользователя,
+   2026-09-19) — интерактивные элементы (выбор объекта/категории, вкладки,
+   тулбар с кнопками/палитрой/легендой) на бумаге бесполезны, план и (если не
+   скрыты переключателем выше) текст рекомендаций — печатаются. */
+@media print {
+  header .controls,
+  .tabs,
+  .plan-toolbar,
+  .data-sources-panel {
+    display: none !important;
+  }
+  .tab-panel:not(.active) { display: none !important; }
+  .tab-panel.active { display: block; }
+  .plan-wrap { border: none; padding: 0; margin-bottom: 12px; }
+  .side-panel { max-height: none; overflow: visible; border: none; padding: 0; }
+}

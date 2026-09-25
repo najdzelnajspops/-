@@ -1,0 +1,1794 @@
+{
+  "source": {
+    "act_code": "PP_623",
+    "act_name": "ППМ №623-ПП (МГСН 1.02-02), Приложение В, Таблица В.6 «Виды растений в различных категориях насаждений»",
+    "status": "verified",
+    "extraction_method": "python-docx, разбор реальной структуры таблицы (не плоский текст) — 80 строк, 6 столбцов"
+  },
+  "categories_legend": {
+    "gardens_parks": "садов, парков",
+    "squares_boulevards": "скверов, бульваров",
+    "streets_roads": "улиц и дорог",
+    "courtyards": "внутриквартальных территорий",
+    "special_zones": "специальных территорий"
+  },
+  "note": "flag: recommended (+) / not_recommended (-) / unspecified (пусто в источнике). note — доп. условие из документа (например 'с огр.', 'только ул.', 'бульв.') — НЕ объясняется в самом акте, что именно ограничивает (может быть корневая система, пух, аллергенность, ломкость и др.) — не домысливать причину.",
+  "species": [
+    {
+      "name_ru": "Ель колючая",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Лиственница русская",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Туя западная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "только ул., с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Белая акация",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Береза повислая",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "только ул.,; с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Боярышник даурский",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Боярышник колючий",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Боярышник кроваво- красный",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Боярышник Максимовича",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Боярышник полумягкий",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Боярышник приречный",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Вишня обыкновенная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Вяз гладкий",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Вяз приземистый",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Груша обыкновенная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "маг.; с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Груша уссурийская",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Дуб красный (северный)",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Дуб черешчатый",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Жостер слабительный",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Ива белая",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "бульв.; с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "только ул."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Ива ломкая",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Ива ломкая (ф. шаровидная)",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Клен Гиннала",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Клен остролистный и его формы",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Клен серебристый",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "бульв. с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Клен татарский",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Конский каштан обыкновенный",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Липа голландская",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Липа мелколистная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Липа крупнолистная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Лох узколистный",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Орех маньчжурский",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "бульв.; с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Рябина гибридная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Рябина обыкновенная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Рябина обыкновенная (ф. плакучая)",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "(только; для улиц)"
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Тополь бальзамический",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": "с огр."
+      }
+    },
+    {
+      "name_ru": "Тополь белый",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "бульв. с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "только ул.,; с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Тополь берлинский",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Тополь канадский",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Тополь китайский",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "бульв. с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "только ул."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Тополь советский (ф. пирамидальный)",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Тополь черный",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "squares_boulevards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": "с огр."
+      }
+    },
+    {
+      "name_ru": "Черемуха Маака",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Черемуха обыкновенная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": "с огр."
+      }
+    },
+    {
+      "name_ru": "Яблоня домашняя",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Яблоня Недзведского",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Яблоня ягодная",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "not_recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Ясень пенсильванский",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Ясень обыкновенный",
+      "life_form": "tree",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Барбарис обыкновенный",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "unspecified",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Барбарис обыкновенный (ф. пурпурный)",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Барбарис Тунберга",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Бирючина обыкновенная",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Вишня войлочная",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Дерен белый",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Карагана древовидная (желтая акация)",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Карагана кустарник",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Кизильник обыкновенный",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Жимолость (различные виды)",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Ирга (различные виды)",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Калина гордовина",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Калина обыкновенная",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "бульв. с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Кизильник блестящий",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Пузыреплодник калинолистный",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Роза (различные виды)",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Сирень венгерская",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Сирень обыкновенная",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Смородина альпийская",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Смородина золотистая",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Снежноягодник белый",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Спирея (различные виды)",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Форзиция",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Чубушник венечный",
+      "life_form": "shrub",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": "с огр."
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    },
+    {
+      "name_ru": "Девичий виноград",
+      "life_form": "liana",
+      "gardens_parks": {
+        "flag": "recommended",
+        "note": null
+      },
+      "squares_boulevards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "streets_roads": {
+        "flag": "not_recommended",
+        "note": null
+      },
+      "courtyards": {
+        "flag": "recommended",
+        "note": null
+      },
+      "special_zones": {
+        "flag": "recommended",
+        "note": null
+      }
+    }
+  ]
+}

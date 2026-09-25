@@ -1,0 +1,103 @@
+# Отчёт по итогам озеленения{% if object_label %} — {{ object_label }}{% endif %}
+
+Категория территории: **{{ report.territory_category }}** · Схема отчёта: `{{ report.schema_version }}` · Статус границы участка: **{{ report.site_boundary_status }}**
+
+Исходные файлы: {% for f in report.source_files %}`{{ f }}`{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% if report.site_boundary_status != "found" %}
+> ⚠️ **Граница участка не найдена надёжно.** Малое или нулевое число посадок ниже может объясняться именно этим, а не тем, что участок действительно весь занят ограничениями.
+{% endif %}
+
+{% if report.lep_unknown_voltage.count > 0 %}
+> ⚠️ **{{ report.lep_unknown_voltage.count }} объектов ЛЭП с неопределённым классом напряжения.** Применён максимально консервативный отступ {{ "%.0f"|format(report.lep_unknown_voltage.fallback_distance_m) }} м. {{ report.lep_unknown_voltage.explanation }}
+{% endif %}
+
+## 1. Сводка
+
+| Показатель | Значение |
+|---|---|
+| Предложено всего | {{ report.summary.total_points }} |
+| Размещено | {{ report.summary.placed }} |
+| Отклонено | {{ report.summary.rejected }} |
+{% for kind, counts in report.summary.by_planting_kind.items() %}
+| — из них {{ {"tree": "деревья", "shrub": "кустарники"}.get(kind, kind) }} | {{ counts.placed }} размещено / {{ counts.rejected }} отклонено |
+{% endfor %}
+| Оценочная стоимость посадочного материала | {{ "{:,.0f}".format(report.total_estimated_cost_rub).replace(",", " ") }} ₽ |
+
+### Выбранные виды
+
+{% for sc in report.species_choices %}
+- **{{ {"tree": "Дерево", "shrub": "Кустарник"}.get(sc.planting_kind, sc.planting_kind) }}**: {{ sc.chosen_species_name_ru or "нет рекомендованного вида" }}{% if sc.eligible_alternatives %} (ещё {{ sc.eligible_alternatives|length }} вид(ов) были равно допустимы — выбор по алфавиту, не по качеству){% endif %}{{ "\n" }}{% if sc.species_conflict_note %}  - {{ sc.species_conflict_note }}{{ "\n" }}{% endif %}{% if sc.density_note %}  - {{ sc.density_note }}{{ "\n" }}{% endif %}
+{% endfor %}
+
+## 2. Схема «до посадки»
+
+Допустимая (зелёным) и запрещённая (красным) для посадки зона, рассчитанная по нормативным отступам от коммуникаций и охранных зон.
+
+![Схема до посадки]({{ scheme_before_name }})
+
+## 3. Схема «после размещения»
+
+То же + предложенные точки (тёмно-зелёным) и отклонённые кандидаты (крестиком).
+
+![Схема после размещения]({{ scheme_after_name }})
+
+## 4. Таблица обоснований
+
+Полный список — в машиночитаемом JSON-отчёте (`report.json`, поле `placements`). Здесь — по деревьям поимённо (их обычно на порядок меньше кустарников), по кустарникам — сводкой по группе/виду.
+
+### Деревья
+
+{% set trees = report.placements | selectattr("planting_kind", "equalto", "tree") | list %}
+| id | Координаты | Статус | Вид | Обоснование |
+|---|---|---|---|---|
+{% for p in trees[:50] %}
+| {{ p.id }} | {{ "%.1f"|format(p.x) }}, {{ "%.1f"|format(p.y) }} | {{ "размещено" if p.status == "placed" else "отклонено" }} | {{ p.species_name_ru or "—" }} | {{ p.species_citation or "—" }} |
+{% endfor %}
+{% if trees|length > 50 %}
+_...ещё {{ trees|length - 50 }} записей — см. полный JSON-отчёт._
+{% endif %}
+
+### Кустарники (сводка)
+
+{% set shrubs = report.placements | selectattr("planting_kind", "equalto", "shrub") | list %}
+{% set shrubs_placed = shrubs | selectattr("status", "equalto", "placed") | list %}
+{% set shrubs_rejected = shrubs | rejectattr("status", "equalto", "placed") | list %}
+
+| Показатель | Значение |
+|---|---|
+| Размещено (шт.) | {{ shrubs_placed|length }} |
+| Отклонено (шт.) | {{ shrubs_rejected|length }} |
+| Норма густоты, шт/га | {{ report.species_choices | selectattr("planting_kind", "equalto", "shrub") | map(attribute="density_note") | select | first or "—" }} |
+
+Точные координаты каждого куста — в JSON-отчёте (`placements`, `planting_kind == "shrub"`); на схеме выше и в DXF-экспорте кустарник показан группами (ГОСТ 21.508-2020), не поточечно.
+
+## 5. Протокол технического контроля (агент ОТК)
+
+{% if report.otk_boundary_plausibility %}
+- **6.1a, правдоподобие границы участка**: {{ report.otk_boundary_plausibility.verdict }} — {{ report.otk_boundary_plausibility.explanation }}
+{% endif %}
+{% if report.otk_offset_compliance %}
+{% for kind, check in report.otk_offset_compliance.items() %}
+- **6.1, отступы ({{ {"tree": "деревья", "shrub": "кустарники"}.get(kind, kind) }})**: {{ check.verdict }} — проверено точек: {{ check.points_checked }}. {{ check.explanation }}
+{% endfor %}
+{% endif %}
+{% if report.otk_layer_integrity %}
+- **6.2, целостность слоёв DXF**: {{ report.otk_layer_integrity.verdict }} — {{ report.otk_layer_integrity.explanation }}
+{% endif %}
+- **6.3, анти-галлюцинационная сверка ссылок на нормы**: {{ report.otk_citation_integrity.verdict }} — проверено цитат: {{ report.otk_citation_integrity.citations_checked }}. {{ report.otk_citation_integrity.explanation }}
+
+## 6. Известные упрощения
+
+{% for note in report.known_simplifications %}
+- {{ note }}
+{% endfor %}
+
+## Приложение — отклонённые варианты
+
+{% set rejected_all = report.placements | rejectattr("status", "equalto", "placed") | list %}
+{% if rejected_all %}
+Всего отклонено: {{ rejected_all|length }} (деревья: {{ rejected_all | selectattr("planting_kind", "equalto", "tree") | list | length }}, кустарники: {{ rejected_all | selectattr("planting_kind", "equalto", "shrub") | list | length }}). Причина отклонения — «нет рекомендованного вида для данной категории территории» среди допустимых по каталогу ДПиООС (полный список см. в JSON, поле `status`).
+{% else %}
+Отклонённых вариантов нет.
+{% endif %}

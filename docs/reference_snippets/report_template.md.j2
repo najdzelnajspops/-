@@ -1,0 +1,395 @@
+# ИНВЕСТИЦИОННЫЙ АНАЛИЗ ОБЪЕКТА НЕДВИЖИМОСТИ
+## {{ object.address }}
+Анализ на {{ analysis_date }} • Горизонт {{ object.analysis_years }} лет
+
+---
+
+## Executive Summary
+
+{% for line in report_presentation.executive_summary %}
+- {{ line }}
+{% endfor %}
+
+---
+
+## 1. Параметры объекта
+
+| Параметр | Значение |
+|----------|---------|
+| Адрес | **{{ object.address }}** |
+{% if object.district %}| Округ | {{ object.district }}{% if object.neighbourhood %}, {{ object.neighbourhood }}{% endif %} |
+{% endif %}| Площадь | **{{ object.area_m2 }} м²** |
+| Высота потолков | **{{ object.ceiling_h_m }} м** |
+| Электромощность | **{{ object.power_kw }} кВт** |
+| Метро | **{{ object.metro }}** ({{ object.metro_walk_min }} мин пешком) |
+| Тип здания | {{ object.building_type }} |
+| Вход | {{ object.entry_type }} |
+| Кадастровый номер | {% if feat.cadastral_number is defined and feat.cadastral_number %}**{{ feat.cadastral_number }}**{% else %}—{% endif %} |
+| Кадастровая стоимость | {% if feat.cadastral_value_rub is defined and feat.cadastral_value_rub is not none %}**{{ "{:,.0f}".format(feat.cadastral_value_rub) }} ₽**{% if feat.cadastral_value_mode is defined and feat.cadastral_value_mode %} ({{ feat.cadastral_value_mode }}){% endif %}{% else %}—{% endif %} |
+| Кадастровая стоимость / м² | {% if feat.cadastral_value_per_m2 is defined and feat.cadastral_value_per_m2 is not none %}{{ "{:,.0f}".format(feat.cadastral_value_per_m2) }} ₽/м²{% else %}—{% endif %} |
+
+### Финансовые параметры
+
+| | |
+|-|-|
+| Цена объявления | {{ "{:,.0f}".format(feat.price_asking_rub) }} ₽ |
+| Торговый дисконт | **{{ (feat.listing_discount * 100) | int }}%** |
+| **Цена с дисконтом** | **{{ "{:,.0f}".format(feat.price_effective_rub) }} ₽** |
+| Цена за м² | {{ "{:,.0f}".format(feat.price_per_m2) }} ₽/м² |
+| Расходы при покупке | {{ "{:,.0f}".format(object.acquisition_costs_rub) }} ₽ |
+{% if object.fit_out_cost_rub > 0 %}| Ремонт/адаптация | {{ "{:,.0f}".format(object.fit_out_cost_rub) }} ₽ |
+{% endif %}| **Суммарные инвестиции** | **{{ "{:,.0f}".format(feat.total_investment_rub) }} ₽** |
+
+---
+
+## 2. Анализ арендного потока
+
+{% if report_presentation.sparse_blocks.payback_analysis.show_fallback %}
+> **{{ report_presentation.sparse_blocks.payback_analysis.title }}:** {{ report_presentation.sparse_blocks.payback_analysis.message }}
+{% endif %}
+
+| Показатель | Значение |
+|-----------|---------|
+| {% if payback_explain.has_canonical %}Модельная аренда / мес{% else %}Рыночная аренда / мес{% endif %} | **{{ "{:,.0f}".format(feat.monthly_rent_rub) }} ₽** |
+| Ставка аренды | **{{ "{:.0f}".format(feat.rent_per_m2_mo) }} ₽/м²/мес** |
+| Вакансия (сценарий) | {{ (feat.vacancy_rate * 100) | round(1) }}% |
+| Операционные расходы | {{ (feat.opex_ratio * 100) | int }}% от аренды |
+| Валовой доход / год | {{ "{:,.0f}".format(feat.gross_income_rub) }} ₽ |
+| **Чистый доход после расходов и налогов** | **{{ "{:,.0f}".format(feat.noi_after_tax_rub) }} ₽/год** |
+| Валовая доходность | {{ (feat.gross_yield * 100) | round(2) }}% |
+| **Ставка капитализации** | **{{ (feat.cap_rate * 100) | round(2) }}%** |
+| {% if payback_explain.has_canonical %}Модельная простая окупаемость{% else %}Простая окупаемость{% endif %} | {{ feat.simple_payback_years }} лет |
+| Оценка локации | {{ feat.location_score }} |
+
+{% if feat.comps_rent_count > 0 %}
+> Аренда определена по **{{ feat.comps_rent_count }} аналогам** с ЦИАН
+> (медиана {{ "{:.0f}".format(feat.market_rent_per_m2_mo) }} ₽/м²/мес).
+{% endif %}
+{% if feat.comps_sale_count > 0 %}
+> Рыночная цена продажи по **{{ feat.comps_sale_count }} аналогам**: {{ "{:,.0f}".format(feat.market_sale_per_m2) }} ₽/м².
+{% endif %}
+{% if payback_explain.has_canonical %}
+> Если в объекте указана аренда, она считается **каноническим ориентиром сделки**. Ниже модель показана отдельно как независимая проверка.
+{% endif %}
+
+---
+
+## 2.1 Формула нашей оценки простой окупаемости
+
+| Шаг | Формула | Значение |
+|-----|---------|----------|
+| Цена для расчёта окупаемости | Цена объявления × (1 - торговый дисконт) | **{{ "{:,.0f}".format(payback_explain.price_effective_rub) }} ₽** |
+| Месячная аренда (модель) | База{% if payback_explain.adjustment_multiplier and payback_explain.adjustment_multiplier != 1.0 %} × поправка {{ "%.3f"|format(payback_explain.adjustment_multiplier) }}{% endif %} | **{{ "{:,.0f}".format(payback_explain.model_adjusted.monthly_rent_rub) }} ₽/мес** |
+| Аренда / год | Месячная аренда × 12 | {{ "{:,.0f}".format(payback_explain.model_adjusted.annual_rent_rub) }} ₽ |
+| Валовой доход | Аренда / год × (1 - вакансия {{ payback_explain.vacancy_rate_pct }}%) | {{ "{:,.0f}".format(payback_explain.model_adjusted.gross_income_rub) }} ₽ |
+| Чистый доход до налогов | Валовой доход - операционные расходы {{ payback_explain.opex_ratio_pct }}% | {{ "{:,.0f}".format(payback_explain.model_adjusted.noi_before_tax_rub) }} ₽ |
+| Чистый доход после налогов | Чистый доход до налогов - налог на имущество - налог на доход | **{{ "{:,.0f}".format(payback_explain.model_adjusted.noi_after_tax_rub) }} ₽/год** |
+| Простая окупаемость | Цена с дисконтом / чистый доход после налогов | **{{ feat.simple_payback_years }} лет** |
+
+> В полном отчёте простая окупаемость считается от **цены с дисконтом**, чтобы метрика была сопоставима с витриной и подборкой.
+> **Суммарные инвестиции {{ "{:,.0f}".format(payback_explain.total_investment_rub) }} ₽** используются в анализе дисконтированных денежных потоков и расчёте приведённой стоимости, но не в этой упрощённой формуле.
+
+{% if payback_explain.adjustment_reasons %}
+> Поправка к рыночной аренде применена по причинам: {{ payback_explain.adjustment_reasons | join(', ') }}.
+{% endif %}
+
+{% if payback_explain.has_canonical %}
+### Сравнение канона и модели
+
+| Показатель | Каноническая аренда | Модельная аренда |
+|-----------|----------------------|------------------|
+| Источник | {{ payback_explain.canonical_label }} | {{ payback_explain.model_label }} |
+| Аренда / мес | **{{ "{:,.0f}".format(payback_explain.canonical.monthly_rent_rub) }} ₽** | **{{ "{:,.0f}".format(payback_explain.model_adjusted.monthly_rent_rub) }} ₽** |
+| Аренда / год | {{ "{:,.0f}".format(payback_explain.canonical.annual_rent_rub) }} ₽ | {{ "{:,.0f}".format(payback_explain.model_adjusted.annual_rent_rub) }} ₽ |
+| Чистый доход после налогов | {{ "{:,.0f}".format(payback_explain.canonical.noi_after_tax_rub) }} ₽ | {{ "{:,.0f}".format(payback_explain.model_adjusted.noi_after_tax_rub) }} ₽ |
+| Простая окупаемость | **{{ payback_explain.canonical.payback_years }} лет** | **{{ payback_explain.model_adjusted.payback_years }} лет** |
+
+{% if payback_explain.rent_delta_rub is not none %}> Разница по аренде: {% if payback_explain.rent_delta_rub > 0 %}+{% endif %}{{ "{:,.0f}".format(payback_explain.rent_delta_rub) }} ₽/мес{% if payback_explain.rent_delta_pct is not none %} ({{ "%+.1f"|format(payback_explain.rent_delta_pct) }}%){% endif %}.
+{% endif %}
+{% if payback_explain.payback_delta_years is not none %}> Разница по сроку окупаемости: {{ "%+.1f"|format(payback_explain.payback_delta_years) }} лет.
+{% endif %}
+
+> Каноническая ставка не подменяет модель: она показывает фактический ориентир из объекта/объявления, а модель даёт независимую проверку той же сделки одной и той же формулой.
+{% endif %}
+
+---
+
+## 2.2 Оценка пешеходного потока
+
+{% if feat.foot_traffic_score is defined and feat.foot_traffic_score is not none %}
+{% set _traffic_has_extended = (feat.foot_traffic_artifact_mode == 'extended') or feat.foot_traffic_metro_m or feat.foot_traffic_street or feat.foot_traffic_factors %}
+{% if _traffic_has_extended %}
+| Показатель | Значение |
+|-----------|---------|
+| **Пешеходный поток** | **{{ (feat.foot_traffic_score * 100) | round(0) | int }} / 100 — {{ feat.foot_traffic_label }}** |
+{% if feat.foot_traffic_metro_m %}| Расстояние до метро | {{ feat.foot_traffic_metro_m }} м |{% endif %}
+{% if feat.foot_traffic_street %}{%- set _street_names = {'motorway': 'Скоростная магистраль', 'trunk': 'Скоростное шоссе', 'primary': 'Главная улица', 'secondary': 'Крупная улица', 'tertiary': 'Местная улица', 'residential': 'Жилая улица', 'living_street': 'Дворовая зона', 'pedestrian': 'Пешеходная зона', 'unclassified': 'Улица без категории', 'service': 'Служебный проезд'} %}| Тип улицы | {{ _street_names.get(feat.foot_traffic_street, feat.foot_traffic_street) }} |
+{% endif %}
+{% if feat.foot_traffic_context_sources %}| Контекстные слои | {{ feat.foot_traffic_context_sources | join(', ') }} |
+{% endif %}
+
+{% if feat.foot_traffic_factors %}
+#### Факторы трафика
+| Фактор | Оценка |
+|--------|--------|
+{% set _factor_names = {'metro': 'Близость метро', 'business_magnets': 'Заведения (кафе, магазины)', 'business_density': 'Плотность бизнеса', 'housing': 'Жилая застройка', 'ground_transport': 'Наземный транспорт', 'first_line': 'Первая линия улицы', 'parking': 'Парковка', 'retail': 'Торговая среда рядом', 'center_proximity': 'Близость к центру', 'food_accessibility': 'Доступность общепита и магазинов'} %}
+{% for _factor_key, _factor_value in feat.foot_traffic_factors.items() %}| {{ _factor_names.get(_factor_key, _factor_key) }} | {{ (_factor_value * 100) | round(0) | int }}% |
+{% endfor %}
+{% endif %}
+
+> *Показатель отражает потенциальный пешеходный поток у объекта на основе данных ОСМ и метро.
+> Используется для оценки локационного преимущества, не влияет на расчёт ROI напрямую.*
+{% else %}
+| Показатель | Значение |
+|-----------|---------|
+| **Пешеходный поток** | **{{ (feat.foot_traffic_score * 100) | round(0) | int }} / 100 — {{ feat.foot_traffic_label }}** |
+{% if feat.foot_traffic_distance_m %}| Расстояние до ближайшей точки индекса | {{ feat.foot_traffic_distance_m }} м |{% endif %}
+| Формат данных | Сводный балл без разложения по факторам |
+| Источник | {{ feat.foot_traffic_source or "локальный индекс потока" }} |
+| Статус | {{ feat.foot_traffic_status or "готово" }} |
+{% if feat.foot_traffic_context_sources %}| Контекстные слои | {{ feat.foot_traffic_context_sources | join(', ') }} |{% endif %}
+{% if feat.foot_traffic_built_at %}| Актуальность артефакта | {{ feat.foot_traffic_built_at }} |{% endif %}
+
+> *Доступен только индексный балл из локального артефакта. Факторы, тип улицы и расстояние до метро в этом артефакте не представлены.*
+{% endif %}
+{% else %}
+> ⚠️ Оценка пешеходного потока недоступна ({{ feat.foot_traffic_label }}).
+> Источник: {{ feat.foot_traffic_source or "локальный индекс потока" }}, статус: {{ feat.foot_traffic_status or "недоступно" }}{% if feat.foot_traffic_built_at %}, артефакт: {{ feat.foot_traffic_built_at }}{% endif %}.
+{% endif %}
+
+---
+
+## 3. Макроэкономический контекст
+
+| Показатель | Значение |
+|-----------|---------|
+| Ключевая ставка ЦБ РФ | **{{ (macro.cbr_key_rate * 100) | round(1) }}%** |
+{% if macro.cbr_key_rate_source is defined %}| Источник ставки ЦБ | {{ macro.cbr_key_rate_source }}{% if macro.cbr_key_rate_is_fallback %} ⚠️ запасной источник{% endif %} |
+{% endif %}
+| Инфляция | {{ (macro.inflation_rate * 100) | round(1) }}% |
+{% if macro.inflation_source is defined %}| Источник инфляции | {{ macro.inflation_source }}{% if macro.inflation_rate_is_fallback %} ⚠️ запасной источник{% endif %} |
+{% endif %}
+{% if macro.ofz_10y_yield is defined %}| ОФЗ-10 (безрисковая) | {{ (macro.ofz_10y_yield * 100) | round(2) }}% |
+{% if macro.ofz_10y_yield_source is defined %}| Источник ОФЗ-10 | {{ macro.ofz_10y_yield_source }}{% if macro.ofz_10y_yield_is_fallback %} ⚠️ запасной источник{% endif %} |
+{% endif %}
+{% endif %}| Ставка дисконтирования | **{{ (macro.discount_rate * 100) | round(1) }}%** |
+| (ключевая + премия за риск) | (+{{ (macro.risk_premium * 100) | round(1) }}%) |
+| Дата данных | {{ macro.data_date }} |
+
+> **Контекст:** При ключевой ставке {{ (macro.cbr_key_rate * 100) | round(0) | int }}%
+> банковский депозит даёт сопоставимую доходность без рисков.
+> Инвестиция в недвижимость оправдана, когда внутренняя норма доходности выше ставки ЦБ с учётом премии за неликвидность.
+
+---
+
+## 4. Анализ дисконтированных денежных потоков (3 сценария, {{ object.analysis_years }} лет)
+
+| Сценарий | Рост аренды | Вакансия | Ставка дисконтирования | Чистая приведённая стоимость | Внутренняя норма доходности | Окупаемость |
+|---------|------------|---------|-------------|-----|-----|------------|
+{% for sc_key, sc in scenarios.items() -%}
+{% set scd = scenarios_display.get(sc_key, sc) %}
+| {{ sc.label }} | {{ (sc.rent_growth_pa * 100) | round(0) | int }}%/год | {{ (sc.vacancy_rate * 100) | round(0) | int }}% | {{ (sc.discount_rate * 100) | round(1) }}% | **{{ "{:+,.0f}".format(sc.npv_rub) }} ₽** | {{ scd.irr_display }} | {{ scd.payback_discounted_display }} |
+{% endfor %}
+
+### Денежные потоки (базовый сценарий)
+
+| Год | Денежный поток | Дисконтированный поток | Кумулятивный итог |
+|-----|----------|------------|-------------|
+{% set r = base_scenario.discount_rate %}
+{% set cum = namespace(val=base_scenario.cash_flows[0]) %}
+{% for cf in base_scenario.cash_flows[1:] %}
+{% set t = loop.index %}
+{% set pv = cf / (1 + r) ** t %}
+{% set cum.val = cum.val + pv %}
+| {{ t }} | {{ "{:+,.0f}".format(cf) }} ₽ | {{ "{:+,.0f}".format(pv) }} ₽ | {{ "{:+,.0f}".format(cum.val) }} ₽ |
+{% endfor %}
+
+> Терминальная стоимость включена в год {{ object.analysis_years }}.
+
+---
+
+## 5. Вероятностное моделирование: оценка рисков
+
+*({{ mc.n_simulations | int | string }} симуляций)*
+
+| Метрика | Значение |
+|--------|---------|
+| **Вероятность положительной приведённой стоимости** | **{{ (mc.probability_npv_positive * 100) | round(1) }}%** |
+| Оценка риска | **{{ mc.risk_assessment }}** |
+| Приведённая стоимость P5 (стрессовый) | {{ "{:+,.0f}".format(mc.npv.p5) }} ₽ |
+| Медианная приведённая стоимость | {{ "{:+,.0f}".format(mc.npv.median) }} ₽ |
+| Приведённая стоимость P95 (лучший) | {{ "{:+,.0f}".format(mc.npv.p95) }} ₽ |
+| Потери с вероятностью 95% | {{ "{:+,.0f}".format(mc.var_95_rub) }} ₽ |
+| Медиана окупаемости | {{ mc.payback_years.median }} лет |
+
+---
+
+## 6. Сводка по сценариям
+
+{% for sc_key, sc in scenarios.items() %}
+{% set scd = scenarios_display.get(sc_key, sc) %}
+### {{ sc.label }}
+- **Чистая приведённая стоимость:** {{ "{:+,.0f}".format(sc.npv_rub) }} ₽
+- **IRR:** {{ scd.irr_display }}
+- **Дисконт. окупаемость:** {{ scd.payback_discounted_display }}
+- **Equity Multiple:** {{ sc.equity_multiple }}×
+{% if sc.dscr > 0 %}- **DSCR:** {{ sc.dscr }}{% endif %}
+- **Вердикт:** *{{ sc.recommendation }}*
+
+{% endfor %}
+
+---
+
+{% set _comp = comp if comp is defined else {} %}
+{% set sale_list = _comp.get('sale_listings', []) %}
+{% set rent_list = _comp.get('rent_listings', []) %}
+{% set local_rows = local_analogs.get('rows', []) if local_analogs is defined else [] %}
+## 7. Аналоги, использованные в расчётах
+
+{% if report_presentation.sparse_blocks.price_analysis.show_fallback %}
+> **{{ report_presentation.sparse_blocks.price_analysis.title }}:** {{ report_presentation.sparse_blocks.price_analysis.message }}
+{% endif %}
+{% if report_presentation.sparse_blocks.local_analogs.show_fallback %}
+> **{{ report_presentation.sparse_blocks.local_analogs.title }}:** {{ report_presentation.sparse_blocks.local_analogs.message }}
+{% endif %}
+
+{% if local_rows %}
+### Локальные аналоги по базе ({{ local_rows | length }} объектов)
+
+> Радиус: {{ local_analogs.get('radius_m', 500) }} м. Блок показывает те локальные аналоги, которые оператор видел в преотчёте и использовал как быстрый ориентир по окружению объекта.
+
+| # | Адрес | Тип сделки | Площадь | Цена | Цена/м² | Дистанция | Этаж | Источник |
+|---|-------|------------|---------|------|---------|-----------|------|---------|
+{% for item in local_rows -%}
+| {{ loop.index }} | {{ (item.get('address') or '—')[:45] }}{% if (item.get('address') or '') | length > 45 %}…{% endif %} | {{ item.get('deal_label', '—') }} | {{ item.get('area_m2', '—') }} м² | {% if item.get('price_total_rub') %}{{ "{:,.0f}".format(item.get('price_total_rub', 0)) }} ₽{% else %}—{% endif %} | {% if item.get('price_per_m2') %}{{ "{:,.0f}".format(item.get('price_per_m2', 0)) }} ₽/м²{% else %}—{% endif %} | {% if item.get('distance_m') is not none %}{{ item.get('distance_m') }} м{% else %}—{% endif %} | {{ item.get('floor', '—') }} | {{ item.get('source', '—') }} |
+{% endfor %}
+
+{% endif %}
+
+{% if sale_list %}
+### Аналоги продажи ({{ sale_list | length }} объектов)
+
+| # | Адрес | Площадь | Цена | Цена/м² | Этаж | Источник |
+|---|-------|---------|------|---------|------|---------|
+{% for item in sale_list[:15] -%}
+| {{ loop.index }} | {{ (item.get('address') or '—')[:45] }}{% if (item.get('address') or '') | length > 45 %}…{% endif %} | {{ item.get('area_m2', '—') }} м² | {{ "{:,.0f}".format(item.get('price_rub', 0)) }} ₽ | {{ "{:,.0f}".format(item.get('price_per_m2', 0)) }} ₽/м² | {{ item.get('floor', '—') }} | {{ item.get('source', '—') }} |
+{% endfor %}
+{% if sale_list | length > 15 %}*...и ещё {{ sale_list | length - 15 }} объектов*{% endif %}
+
+> **Медиана цены:** {{ "{:,.0f}".format(_comp.get('sale', {}).get('median_per_m2', 0)) }} ₽/м²
+{% else %}
+> ⚠️ **Объекты на продажу по Вашему запросу не найдены.** Ставка аренды определена по эвристике. Для точного расчёта укажите аренду вручную в поле формы.
+{% endif %}
+
+{% if rent_list %}
+### Аналоги аренды ({{ rent_list | length }} объектов)
+
+| # | Адрес | Площадь | Аренда/мес | ₽/м²/мес | Этаж | Источник |
+|---|-------|---------|-----------|---------|------|---------|
+{% for item in rent_list[:15] -%}
+| {{ loop.index }} | {{ (item.get('address') or '—')[:45] }}{% if (item.get('address') or '') | length > 45 %}…{% endif %} | {{ item.get('area_m2', '—') }} м² | {{ "{:,.0f}".format(item.get('monthly_rent_rub', 0)) }} ₽ | {{ "{:,.0f}".format(item.get('rent_per_m2_mo', 0)) }} ₽/м² | {{ item.get('floor', '—') }} | {{ item.get('source', '—') }} |
+{% endfor %}
+{% if rent_list | length > 15 %}*...и ещё {{ rent_list | length - 15 }} объектов*{% endif %}
+
+> **Медиана ставки аренды:** {{ "{:,.0f}".format(_comp.get('rent', {}).get('median_per_m2_mo', 0)) }} ₽/м²/мес
+{% else %}
+> ⚠️ **Объекты в аренду по Вашему запросу не найдены.** Ставка аренды определена по эвристике (расстояние до метро). Рекомендуем ввести актуальную ставку вручную.
+{% endif %}
+
+---
+
+{% if alcohol and alcohol.get('requested') %}
+---
+
+## 8. Проверка соответствия требованиям алкогольной лицензии
+
+> **Нормативная база:** ФЗ-171 ст. 16 п. 2; Постановление Правительства РФ № 1425 от 27.12.2012
+> Запрет розничной продажи алкоголя в радиусе **100 м** от образовательных, медицинских,
+> санаторно-курортных организаций и объектов спорта.
+
+{% if alcohol.get('error') %}
+> ⚠️ **Проверка не выполнена:** {{ alcohol.error }}
+{% elif alcohol.get('compliant') %}
+### ✅ СООТВЕТСТВУЕТ требованиям ФЗ-171
+
+Запрещённые объекты в радиусе 100 м не обнаружены.
+
+{% if alcohol.get('nearby') %}
+#### Объекты в зоне 100–150 м (информационно)
+
+| Объект | Категория | Расстояние |
+|--------|-----------|-----------|
+{% for item in alcohol.nearby -%}
+| {{ item.name }} | {{ item.category }} | {{ item.dist_m }} м |
+{% endfor %}
+{% endif %}
+{% else %}
+### ❌ НАРУШЕНИЕ требований ФЗ-171
+
+Обнаружены запрещённые объекты в радиусе 100 м — **алкогольная лицензия не может быть выдана**.
+
+#### Нарушения ({{ alcohol.violations | length }} объектов)
+
+| Объект | Категория | Расстояние |
+|--------|-----------|-----------|
+{% for item in alcohol.violations -%}
+| {{ item.name }} | {{ item.category }} | **{{ item.dist_m }} м** |
+{% endfor %}
+
+{% if alcohol.get('nearby') %}
+#### Дополнительно в зоне 100–150 м
+
+| Объект | Категория | Расстояние |
+|--------|-----------|-----------|
+{% for item in alcohol.nearby -%}
+| {{ item.name }} | {{ item.category }} | {{ item.dist_m }} м |
+{% endfor %}
+{% endif %}
+{% endif %}
+
+{% if alcohol.get('beauty_warnings') %}
+#### ⚠️ Салоны красоты в радиусе {{ alcohol.search_radius_m }} м — требуют ручной проверки
+
+Если салон имеет медицинскую лицензию — он приравнивается к медицинской организации и
+попадает под действие ФЗ-171. Проверьте наличие лицензии на сайте roszdravnadzor.gov.ru.
+
+| Салон | Расстояние |
+|-------|-----------|
+{% for item in alcohol.beauty_warnings -%}
+| {{ item.name }} | {{ item.dist_m }} м |
+{% endfor %}
+{% endif %}
+
+{% endif %}
+
+---
+
+## 9. Статус дополнительных модулей
+
+| Модуль | Статус | Комментарий |
+|--------|--------|-------------|
+| {{ optional_blocks.recommendations.label }} | {{ optional_blocks.recommendations.status }} | {{ optional_blocks.recommendations.message }} |
+| {{ optional_blocks.alcohol.label }} | {{ optional_blocks.alcohol.status }} | {{ optional_blocks.alcohol.message }} |
+| {{ optional_blocks.comparables.label }} | {{ optional_blocks.comparables.status }} | {{ optional_blocks.comparables.message }} |
+
+---
+
+## Риски и ограничения
+
+{% for line in report_presentation.risks %}
+- {{ line }}
+{% endfor %}
+
+---
+
+## Приложение: источники и ограничения данных
+
+| Слой | Статус | Комментарий |
+|------|--------|-------------|
+{% for row in report_presentation.appendix_rows -%}
+| {{ row.layer }} | {{ row.status }} | {{ row.comment }} |
+{% endfor %}
+
+---
+
+*Отчёт сгенерирован автоматически • {{ analysis_date }}*

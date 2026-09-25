@@ -1,0 +1,49 @@
+# ============================================================
+# Настройки геокодирования
+# ============================================================
+# Провайдеры используются в порядке приоритета.
+# Если первый не вернул результат — переходим к следующему.
+#
+# Как получить ключи:
+#   Яндекс:  https://developer.tech.yandex.ru/ → Геокодер HTTP API
+#   2GIS:    https://dev.2gis.com/ → Geocoding API (бесплатно до 1000 запросов/сут)
+#   DaData:  https://dadata.ru/ → подсказки по адресам (бесплатно до 10 000 запросов/сут)
+#   Google:  https://console.cloud.google.com/ → Geocoding API
+#            Бесплатно: 200 USD/мес (~40 000 запросов). Работает через любой VPN.
+#   Nominatim: ключ не нужен. Rate limit: 1 запрос/сек. Бесплатно.
+# Секреты не хранятся в tracked-файле.
+# Рабочие варианты:
+#   1. config/geocoding.local.yaml
+#   2. env:
+#      YANDEX_GEOCODER_API_KEY
+#      DGIS_API_KEY
+#      DADATA_API_KEY
+#      DADATA_SECRET_KEY
+#      GOOGLE_GEOCODING_API_KEY
+# ============================================================
+
+providers:
+  - name: yandex
+    enabled: true
+    api_key: "<redacted>"
+
+  - name: 2gis
+    enabled: false
+    api_key: "<redacted>"
+
+  - name: dadata
+    enabled: true
+    api_key: "<redacted>"   # API token
+    secret_key: "<redacted>"  # optional for address suggestions, required for clean/address
+
+  - name: google
+    enabled: true
+    api_key: "<redacted>"
+
+  - name: nominatim
+    enabled: true
+    # Ключ не требуется. Rate limit: 1 запрос/сек.
+
+daily_soft_caps:
+  google: 250
+  2gis: 150

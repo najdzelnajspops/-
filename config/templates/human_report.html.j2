@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>Отчёт по итогам озеленения{% if object_label %} — {{ object_label }}{% endif %}</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; color: #1c2a1c; background: #f5f6ef; line-height: 1.5; }
+  h1 { font-size: 26px; margin-bottom: 4px; }
+  h2 { font-size: 20px; margin-top: 40px; border-bottom: 2px solid #2f6b3a; padding-bottom: 6px; }
+  h3 { font-size: 16px; margin-top: 24px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; background: #fff; }
+  th, td { border: 1px solid #dbe3d3; padding: 6px 10px; text-align: left; }
+  th { background: #e2eee1; }
+  img { max-width: 100%; border: 1px solid #dbe3d3; border-radius: 8px; margin: 12px 0; }
+  .meta { color: #5b6a58; font-size: 14px; }
+  .warn { background: #fbeaea; border-left: 4px solid #b33f3f; padding: 10px 14px; margin: 16px 0; border-radius: 6px; }
+  .note { color: #5b6a58; font-size: 13px; }
+  ul { padding-left: 20px; }
+</style>
+</head>
+<body>
+
+<h1>Отчёт по итогам озеленения{% if object_label %} — {{ object_label }}{% endif %}</h1>
+<p class="meta">Категория территории: <strong>{{ report.territory_category }}</strong> · Схема отчёта: <code>{{ report.schema_version }}</code> · Статус границы участка: <strong>{{ report.site_boundary_status }}</strong></p>
+<p class="meta">Исходные файлы: {% for f in report.source_files %}<code>{{ f }}</code>{% if not loop.last %}, {% endif %}{% endfor %}</p>
+
+{% if report.site_boundary_status != "found" %}
+<div class="warn">⚠️ <strong>Граница участка не найдена надёжно.</strong> Малое или нулевое число посадок ниже может объясняться именно этим, а не тем, что участок действительно весь занят ограничениями.</div>
+{% endif %}
+
+{% if report.lep_unknown_voltage.count > 0 %}
+<div class="warn">⚠️ <strong>{{ report.lep_unknown_voltage.count }} объектов ЛЭП с неопределённым классом напряжения.</strong> Применён максимально консервативный отступ {{ "%.0f"|format(report.lep_unknown_voltage.fallback_distance_m) }} м. {{ report.lep_unknown_voltage.explanation }}</div>
+{% endif %}
+
+<h2>1. Сводка</h2>
+<table>
+<tr><th>Показатель</th><th>Значение</th></tr>
+<tr><td>Предложено всего</td><td>{{ report.summary.total_points }}</td></tr>
+<tr><td>Размещено</td><td>{{ report.summary.placed }}</td></tr>
+<tr><td>Отклонено</td><td>{{ report.summary.rejected }}</td></tr>
+{% for kind, counts in report.summary.by_planting_kind.items() %}
+<tr><td>— из них {{ {"tree": "деревья", "shrub": "кустарники"}.get(kind, kind) }}</td><td>{{ counts.placed }} размещено / {{ counts.rejected }} отклонено</td></tr>
+{% endfor %}
+<tr><td>Оценочная стоимость посадочного материала</td><td>{{ "{:,.0f}".format(report.total_estimated_cost_rub).replace(",", " ") }} ₽</td></tr>
+</table>
+
+<h3>Выбранные виды</h3>
+<ul>
+{% for sc in report.species_choices %}
+<li><strong>{{ {"tree": "Дерево", "shrub": "Кустарник"}.get(sc.planting_kind, sc.planting_kind) }}</strong>: {{ sc.chosen_species_name_ru or "нет рекомендованного вида" }}{% if sc.eligible_alternatives %} (ещё {{ sc.eligible_alternatives|length }} вид(ов) были равно допустимы — выбор по алфавиту, не по качеству){% endif %}
+  {% if sc.species_conflict_note %}<div class="note">{{ sc.species_conflict_note }}</div>{% endif %}
+  {% if sc.density_note %}<div class="note">{{ sc.density_note }}</div>{% endif %}
+</li>
+{% endfor %}
+</ul>
+
+<h2>2. Схема «до посадки»</h2>
+<p class="note">Допустимая (зелёным) и запрещённая (красным) для посадки зона, рассчитанная по нормативным отступам от коммуникаций и охранных зон.</p>
+<img src="{{ scheme_before_name }}" alt="Схема до посадки">
+
+<h2>3. Схема «после размещения»</h2>
+<p class="note">То же + предложенные точки (тёмно-зелёным) и отклонённые кандидаты (крестиком).</p>
+<img src="{{ scheme_after_name }}" alt="Схема после размещения">
+
+<h2>4. Таблица обоснований</h2>
+<p class="note">Полный список — в машиночитаемом JSON-отчёте (<code>report.json</code>, поле <code>placements</code>). Здесь — по деревьям поимённо, по кустарникам — сводкой по группе/виду (см. также схему выше и DXF-экспорт: кустарник показан группами по ГОСТ 21.508-2020, не поточечно).</p>
+
+<h3>Деревья</h3>
+{% set trees = report.placements | selectattr("planting_kind", "equalto", "tree") | list %}
+<table>
+<tr><th>id</th><th>Координаты</th><th>Статус</th><th>Вид</th><th>Обоснование</th></tr>
+{% for p in trees[:50] %}
+<tr><td>{{ p.id }}</td><td>{{ "%.1f"|format(p.x) }}, {{ "%.1f"|format(p.y) }}</td><td>{{ "размещено" if p.status == "placed" else "отклонено" }}</td><td>{{ p.species_name_ru or "—" }}</td><td>{{ p.species_citation or "—" }}</td></tr>
+{% endfor %}
+</table>
+{% if trees|length > 50 %}<p class="note">...ещё {{ trees|length - 50 }} записей — см. полный JSON-отчёт.</p>{% endif %}
+
+<h3>Кустарники (сводка)</h3>
+{% set shrubs = report.placements | selectattr("planting_kind", "equalto", "shrub") | list %}
+{% set shrubs_placed = shrubs | selectattr("status", "equalto", "placed") | list %}
+{% set shrubs_rejected = shrubs | rejectattr("status", "equalto", "placed") | list %}
+<table>
+<tr><th>Показатель</th><th>Значение</th></tr>
+<tr><td>Размещено (шт.)</td><td>{{ shrubs_placed|length }}</td></tr>
+<tr><td>Отклонено (шт.)</td><td>{{ shrubs_rejected|length }}</td></tr>
+<tr><td>Норма густоты</td><td>{{ report.species_choices | selectattr("planting_kind", "equalto", "shrub") | map(attribute="density_note") | select | first or "—" }}</td></tr>
+</table>
+
+<h2>5. Протокол технического контроля (агент ОТК)</h2>
+<ul>
+{% if report.otk_boundary_plausibility %}
+<li><strong>6.1a, правдоподобие границы участка</strong>: {{ report.otk_boundary_plausibility.verdict }} — {{ report.otk_boundary_plausibility.explanation }}</li>
+{% endif %}
+{% if report.otk_offset_compliance %}
+{% for kind, check in report.otk_offset_compliance.items() %}
+<li><strong>6.1, отступы ({{ {"tree": "деревья", "shrub": "кустарники"}.get(kind, kind) }})</strong>: {{ check.verdict }} — проверено точек: {{ check.points_checked }}. {{ check.explanation }}</li>
+{% endfor %}
+{% endif %}
+{% if report.otk_layer_integrity %}
+<li><strong>6.2, целостность слоёв DXF</strong>: {{ report.otk_layer_integrity.verdict }} — {{ report.otk_layer_integrity.explanation }}</li>
+{% endif %}
+<li><strong>6.3, анти-галлюцинационная сверка ссылок на нормы</strong>: {{ report.otk_citation_integrity.verdict }} — проверено цитат: {{ report.otk_citation_integrity.citations_checked }}. {{ report.otk_citation_integrity.explanation }}</li>
+</ul>
+
+<h2>6. Известные упрощения</h2>
+<ul>
+{% for note in report.known_simplifications %}
+<li>{{ note }}</li>
+{% endfor %}
+</ul>
+
+<h2>Приложение — отклонённые варианты</h2>
+{% set rejected_all = report.placements | rejectattr("status", "equalto", "placed") | list %}
+{% if rejected_all %}
+<p>Всего отклонено: {{ rejected_all|length }} (деревья: {{ rejected_all | selectattr("planting_kind", "equalto", "tree") | list | length }}, кустарники: {{ rejected_all | selectattr("planting_kind", "equalto", "shrub") | list | length }}). Причина отклонения — «нет рекомендованного вида для данной категории территории» среди допустимых по каталогу ДПиООС (полный список см. в JSON, поле <code>status</code>).</p>
+{% else %}
+<p>Отклонённых вариантов нет.</p>
+{% endif %}
+
+</body>
+</html>

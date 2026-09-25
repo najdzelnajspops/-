@@ -1,0 +1,17 @@
+# Сырой датасет — 23 ГБ, вне git и вне образа (см. .gitignore); объекты для
+# демонстрации подаются через volume в docker-compose.yml, не запекаются в образ.
+data/raw/dataset_extracted/
+data/raw/*.zip
+docs/tz_source/normative_acts/
+data/cache/
+data/processed/
+
+.git/
+.pytest_cache/
+__pycache__/
+*.pyc
+.venv/
+
+# Локальные артефакты сессии, не часть образа
+*.bak
+diff_prep.txt

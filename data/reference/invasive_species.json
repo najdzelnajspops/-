@@ -1,0 +1,45 @@
+{
+  "source": {
+    "act_code": "PP_369",
+    "act_name": "ППМ № 369-ПП от 03.03.2026, Приложение 1 «Перечень инвазивных видов растений...»",
+    "status": "verified"
+  },
+  "prohibition_clause": "Приложение 2, п. 2.4: запрет высадки инвазивных растений на территории города Москвы",
+  "note": "Предлагаемые к посадке виды должны сверяться с этим списком (по русскому и латинскому названию); совпадение — блокирующая ошибка для Placement Generator / агента ОТК.",
+  "species": [
+    {"group": "I", "name_ru": "Айлант высочайший", "name_lat": "Ailanthus altissima (Mill.) Swingle"},
+    {"group": "I", "name_ru": "Борщевик Сосновского", "name_lat": "Heracleum sosnowskyi Manden"},
+    {"group": "I", "name_ru": "Золотарники канадский и гигантский", "name_lat": "Solidago canadensis, gigantea"},
+    {"group": "I", "name_ru": "Люпин многолистный", "name_lat": "Lupinus polyphyllus Lindl."},
+    {"group": "I", "name_ru": "Рейнутрия", "name_lat": "Reynoutria ssp."},
+
+    {"group": "II", "name_ru": "Клен ясенелистный", "name_lat": "Acer negundo L."},
+
+    {"group": "III", "name_ru": "Аморфа кустарниковая", "name_lat": "Amorpha fruticosa L."},
+    {"group": "III", "name_ru": "Девичий виноград", "name_lat": "Parthenocissus inserta (A. Kern.) Fritsch"},
+    {"group": "III", "name_ru": "Дерен белый", "name_lat": "Cornus albus L."},
+    {"group": "III", "name_ru": "Дуб красный", "name_lat": "Quercus rubra L."},
+    {"group": "III", "name_ru": "Ирга колосистая", "name_lat": "Amelanchier spicata Decne"},
+    {"group": "III", "name_ru": "Ирга ольхолистная", "name_lat": "Amelanchier alnifolia (Nutt.) Nutt. ex M. Roem"},
+    {"group": "III", "name_ru": "Облепиха крушиновидная", "name_lat": "Hippophae rhamnoides L."},
+    {"group": "III", "name_ru": "Орех маньчжурский", "name_lat": "Juglans mandshurica Maxim."},
+    {"group": "III", "name_ru": "Пузыреплодник калинолистный", "name_lat": "Physocarpus opulifolius Maxim.", "note": "встречается в реальном датасете пилотных объектов (слои DENDRO_BUSH_...), проверка не теоретическая"},
+    {"group": "III", "name_ru": "Робиния псевдоакация (Белая акация)", "name_lat": "Robinia pseudoacacia L."},
+    {"group": "III", "name_ru": "Роза морщинистая (шиповник морщинистый)", "name_lat": "Rosa rugosa Thunb"},
+    {"group": "III", "name_ru": "Рябинник рябинолистный", "name_lat": "Sorbaria sorbifolia (L.) A. Braun"},
+    {"group": "III", "name_ru": "Черемуха виргинская", "name_lat": "Prunus virginiana L."},
+    {"group": "III", "name_ru": "Ясень пенсильванский", "name_lat": "Fraxinus pennsylvanica Marshall"},
+
+    {"group": "IV", "name_ru": "Белокопытник гибридный", "name_lat": "Petasites hybridus (L.) G. Gaertn., B. Mey. & Scherb."},
+    {"group": "IV", "name_ru": "Вероника нитевидная", "name_lat": "Veronica filiformis Sm."},
+    {"group": "IV", "name_ru": "Мелколепестник канадский", "name_lat": "Erigeron canadensis L."},
+    {"group": "IV", "name_ru": "Недотрога железконосная", "name_lat": "Impatiens glandulifera Royle"},
+    {"group": "IV", "name_ru": "Недотрога мелкоцветковая", "name_lat": "Impatiens parviflora DC."},
+    {"group": "IV", "name_ru": "Подсолнечник клубневой (топинамбур)", "name_lat": "Helianthus tuberosus L."},
+    {"group": "IV", "name_ru": "Прилипало пристающее", "name_lat": "Adenocaulon adhaerescens Maxim."},
+    {"group": "IV", "name_ru": "Цицания широколистная", "name_lat": "Zizania latifolia (Griseb.) Hance ex F. Muell."},
+    {"group": "IV", "name_ru": "Череда олиственная", "name_lat": "Bidens frondosa L."},
+    {"group": "IV", "name_ru": "Элодея канадская", "name_lat": "Elodea canadensis Michx."},
+    {"group": "IV", "name_ru": "Эхиноцистис лопастной", "name_lat": "Echinocystis lobata (Michx.) Torr. & A. Gray"}
+  ]
+}

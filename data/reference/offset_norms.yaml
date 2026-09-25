@@ -1,0 +1,109 @@
+# Нормативные отступы деревьев/кустарников от сооружений и коммуникаций.
+# Источник: ППМ 743-ПП (Москва) от 10.09.2002, п. 3.6.3, Таблица 3.6.1 (со ссылкой на МГСН 1.01-99).
+# Статус: verified — сверено с первоисточником (docs/tz_source/normative_acts/743-pp.docx), см. docs/NORMATIVE_REFERENCES.md.
+# Единицы измерения: метры. "null" = норма для этого типа насаждения не задана в таблице (обычно относится только к деревьям).
+
+source:
+  act_code: PP_743
+  act_name: "ППМ № 743-ПП от 10.09.2002, п. 3.6.3, Таблица 3.6.1 (МГСН 1.01-99)"
+  status: verified
+
+notes:
+  - "Нормативы относятся к деревьям с диаметром кроны не более 5 м; для деревьев большего диаметра — увеличивать соответственно (п.1 примечаний к таблице)."
+  - "Деревья с широкой кроной (липа, клён, дуб, каштан, тополь и др.) — не ближе 10 м от здания (п.3 примечаний, со ссылкой на Метод. указания Госсанэпиднадзора № 2295-81)."
+
+# Категория "boundary_type" — то, от чего считается отступ.
+offsets:
+  - boundary_type: building_wall
+    boundary_label_ru: "Наружная стена здания и сооружения"
+    min_distance_tree_m: 5.0
+    min_distance_shrub_m: 1.5
+
+  - boundary_type: school_or_kindergarten_wall
+    boundary_label_ru: "Наружная стена школьного здания или здания детского сада"
+    min_distance_tree_m: 10.0
+    min_distance_shrub_m: 1.5
+
+  - boundary_type: tram_track_axis
+    boundary_label_ru: "Ось трамвайных путей"
+    min_distance_tree_m: 5.0
+    min_distance_shrub_m: 3.0
+
+  - boundary_type: sidewalk_or_garden_path_edge
+    boundary_label_ru: "Край тротуара и садовой дорожки"
+    min_distance_tree_m: 0.7
+    min_distance_shrub_m: 0.5
+
+  - boundary_type: roadway_edge
+    boundary_label_ru: "Край проезжей части улиц, кромка укреплённой полосы обочины дороги и бровка канавы"
+    min_distance_tree_m: 2.0
+    min_distance_shrub_m: 1.0
+
+  - boundary_type: lighting_or_tram_mast
+    boundary_label_ru: "Мачта и опора осветительной сети, трамвая, колонны галерей и эстакад"
+    min_distance_tree_m: 4.0
+    min_distance_shrub_m: null
+
+  - boundary_type: slope_or_terrace_base
+    boundary_label_ru: "Подошва откоса, террасы и др."
+    min_distance_tree_m: 1.0
+    min_distance_shrub_m: 0.5
+
+  - boundary_type: retaining_wall
+    boundary_label_ru: "Подошва и внутренняя грань подпорных стенок"
+    min_distance_tree_m: 3.0
+    min_distance_shrub_m: 1.0
+
+  # Подземные коммуникации — основная секция для Constraint/Buffer Engine.
+  - boundary_type: gas_pipeline
+    boundary_label_ru: "Газопровод"
+    min_distance_tree_m: 1.5
+    min_distance_shrub_m: null
+
+  - boundary_type: sewage
+    boundary_label_ru: "Канализация"
+    min_distance_tree_m: 1.5
+    min_distance_shrub_m: null
+
+  - boundary_type: heating_main
+    boundary_label_ru: "Теплопровод, трубопровод, теплосеть"
+    min_distance_tree_m: 2.0
+    min_distance_shrub_m: 1.0
+
+  - boundary_type: water_supply
+    boundary_label_ru: "Водопровод"
+    min_distance_tree_m: 2.0
+    min_distance_shrub_m: null
+
+  - boundary_type: drainage
+    boundary_label_ru: "Дренаж"
+    min_distance_tree_m: 2.0
+    min_distance_shrub_m: null
+
+  - boundary_type: power_cable
+    boundary_label_ru: "Силовой кабель"
+    min_distance_tree_m: 2.0
+    min_distance_shrub_m: 0.7
+
+  - boundary_type: communication_cable
+    boundary_label_ru: "Кабель связи"
+    min_distance_tree_m: 2.0
+    min_distance_shrub_m: 0.7
+
+# Ориентировочные расстояния между самими посадками (743-ПП, п.3.6.4, Таблица 3.6.2) — не отступ от препятствия,
+# а рекомендация по плотности размещения для Placement Generator.
+planting_density_recommendations:
+  source_act: "ППМ № 743-ПП, п. 3.6.4, Таблица 3.6.2"
+  single_row_trees_m: [5, 6]
+  double_row_trees_m: [7, 8]
+  single_row_shrubs_tall_over_1_8m_m: [0.5, 1]
+  single_row_shrubs_medium_low_m: [0.3, 0.4]
+  group_planting_trees_m: [5, 7]
+  group_planting_shrubs_m: 0.3
+  note: "При многорядной посадке кустарников ширину полосы увеличивать на 1,5-2 м для каждого дополнительного ряда."
+
+# Явно НЕ закрыто этими данными (см. docs/OPEN_QUESTIONS.md):
+# - охранная зона ЛЭП (ширина коридора высоковольтных линий) — СП 42.13330.2016 п.12.22 отсылает к отдельным
+#   санитарным правилам/нормам, которых нет в текущем комплекте документов;
+# - точная таблица из Приказа Госстроя РФ № 153 от 15.12.1999 (упомянута в СП 82.13330.2016 как источник [5]) —
+#   реквизиты подтверждены, сам текст не получен.

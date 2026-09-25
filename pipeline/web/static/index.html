@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Зелёный контур</title>
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<header>
+  <img class="logo" src="/static/img/logo.svg" alt="Зелёный контур" />
+  <div class="controls">
+    <label>Объект:
+      <select id="demo-select"></select>
+    </label>
+    <label>Категория территории:
+      <select id="category-select"></select>
+    </label>
+    <button class="secondary header-btn" id="upload-btn">Загрузить свой DWG/DXF</button>
+    <button class="secondary header-btn header-btn--light" id="data-sources-btn">Нормативная база</button>
+  </div>
+</header>
+
+<div id="upload-panel" class="data-sources-panel" hidden>
+  <h2>Загрузить свой чертёж</h2>
+  <p class="hint">Принимаются файлы .dwg и .dxf (можно несколько сразу — например, отдельные слои коммуникаций и границы участка). Обработка идёт синхронно: крупные объекты (десятки гектаров) могут занять несколько минут — не закрывайте вкладку.</p>
+  <label class="hint" style="display:block;margin-bottom:6px;">Название объекта (необязательно):
+    <input type="text" id="upload-label" style="width:100%;padding:6px;margin-top:4px;">
+  </label>
+  <input type="file" id="upload-files" multiple accept=".dwg,.dxf" style="margin-bottom:10px;">
+  <div class="popup-actions" style="justify-content:flex-start;gap:8px;">
+    <button class="primary" id="upload-submit-btn">Загрузить и обработать</button>
+    <button class="secondary" id="upload-close">Отмена</button>
+  </div>
+  <div id="upload-status" class="hint" style="margin-top:8px;"></div>
+</div>
+
+<div id="data-sources-panel" class="data-sources-panel" hidden>
+  <h2>Используемая нормативная база</h2>
+  <p class="hint">Справочники обновляются вручную (заменой файла в data/reference/) — здесь видно, какая версия каждого сейчас реально используется.</p>
+  <table id="data-sources-table"><tbody></tbody></table>
+
+  <h2 style="margin-top:16px;">Обновить цены из прайс-листа питомника</h2>
+  <p class="hint">Загрузите прайс-лист (.xlsx/.xls/.docx/.pdf) — сервис попробует распознать категорию каждого растения (по каталогу ДПиООС, а где не получится — по ключевым словам в тексте) и предложит обновлённые цены. Ничего не применяется без вашего подтверждения ниже.</p>
+  <input type="file" id="price-list-file" accept=".xlsx,.xls,.docx,.pdf" style="margin-bottom:8px;">
+  <button class="secondary" id="price-list-parse-btn">Разобрать</button>
+  <div id="price-list-status" class="hint" style="margin-top:8px;"></div>
+  <div id="price-list-preview" hidden>
+    <table id="price-list-table">
+      <thead>
+        <tr><th></th><th>Категория</th><th>Текущая цена</th><th>Предложенная цена</th><th>Строк-источников</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="primary" id="price-list-apply-btn" style="margin-top:8px;">Применить отмеченное</button>
+  </div>
+
+  <button class="secondary" id="data-sources-close" style="margin-top:16px;">Закрыть</button>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="review">Ручной ввод</button>
+  <button class="tab-btn" data-tab="generate">Автоматическая генерация</button>
+</div>
+
+<div class="layout">
+
+  <!-- ===== Вкладка 1: проверка человеческого выбора ===== -->
+  <div class="tab-panel active" data-tab-panel="review" id="review-panel">
+    <div class="plan-wrap">
+      <div class="plan-toolbar">
+        <div class="palette">
+          <div class="palette-item" data-life-form="tree"><span class="icon">🌳</span> Дерево</div>
+          <div class="palette-item" data-life-form="shrub"><span class="icon">🌿</span> Кустарник</div>
+        </div>
+        <button class="secondary" id="print-review-btn">🖨️ Печать</button>
+        <label class="hide-recs-toggle"><input type="checkbox" id="hide-recs-review"> Скрыть рекомендации сервиса</label>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--allowed-tree)"></i>допустимо (дерево)</span>
+          <span><i class="swatch" style="background:var(--allowed-shrub)"></i>допустимо (кустарник)</span>
+          <span><i class="swatch" style="background:#2f6b3a"></i>без замечаний</span>
+          <span><i class="swatch" style="background:#b33f3f"></i>есть нарушение</span>
+        </div>
+      </div>
+      <div id="plan-svg-container-review" style="position:relative;">
+        <svg id="plan-svg-review" viewBox="0 0 100 100"></svg>
+        <div class="loading-overlay" id="loading-overlay-review" hidden><div class="spinner"></div><span>Загрузка объекта...</span></div>
+      </div>
+      <p class="marker-count" id="plan-svg-review-count" hidden></p>
+      <p class="hint">Перетащите значок дерева/кустарника на план — там, куда бросите, появится выбор вида. Точки можно добавить сколько угодно, разных видов. Уже поставленную точку можно перетащить на новое место или кликнуть по ней, чтобы удалить (без перетаскивания). Колесо мыши — приблизить/отдалить, перетаскивание фона — сдвинуть вид, двойной клик — сбросить масштаб.</p>
+    </div>
+    <div class="side-panel">
+      <h2>Ваши посадки</h2>
+      <ul class="proposal-list" id="proposal-list"></ul>
+      <button class="primary" id="review-btn" disabled>Проверить</button>
+      <h2>Результат проверки</h2>
+      <div id="review-summary" class="hint service-recommendation">Добавьте хотя бы одну посадку и нажмите «Проверить».</div>
+      <p class="hint">Строки с ⚠️ и замечания ниже — кликабельны: карта приблизится прямо к нужной точке, не нужно искать её среди остальных.</p>
+      <div id="review-issues" class="service-recommendation"></div>
+    </div>
+  </div>
+
+  <!-- ===== Вкладка 2: автогенерация ===== -->
+  <div class="tab-panel" data-tab-panel="generate" id="generate-panel">
+    <div class="plan-wrap">
+      <div class="plan-toolbar">
+        <button class="primary" id="generate-btn">Сгенерировать план</button>
+        <button class="secondary" id="print-generate-btn">🖨️ Печать</button>
+        <label class="hide-recs-toggle"><input type="checkbox" id="hide-recs-generate"> Скрыть рекомендации сервиса</label>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--allowed-tree)"></i>допустимо (дерево)</span>
+          <span><i class="swatch" style="background:var(--allowed-shrub)"></i>допустимо (кустарник)</span>
+          <span><i class="swatch" style="background:var(--marker-tree, #2f6b3a)"></i>размещено</span>
+        </div>
+      </div>
+      <div id="plan-svg-container" style="position:relative;">
+        <svg id="plan-svg-generate" viewBox="0 0 100 100"></svg>
+        <div class="loading-overlay" id="loading-overlay-generate" hidden><div class="spinner"></div><span>Загрузка объекта...</span></div>
+      </div>
+      <p class="marker-count" id="plan-svg-generate-count" hidden></p>
+      <p class="hint">Колесо мыши — приблизить/отдалить, перетаскивание фона — сдвинуть вид, двойной клик — сбросить масштаб. Плотные группы кустарника на общем виде могут визуально сливаться — приблизьтесь, чтобы различить каждую точку.</p>
+    </div>
+    <div class="side-panel">
+      <h2>Выбор видов <span class="hint-inline">(необязательно)</span></h2>
+      <p class="hint">Ничего не отмечено — сервис сам выберет один вид по умолчанию (первый по алфавиту среди рекомендованных), как раньше. Отметьте один или несколько видов — сервис распределит их по точкам посадки по кругу, в алфавитном порядке.</p>
+      <div class="species-picker" id="species-picker-tree">
+        <div class="species-picker-header">🌳 Деревья</div>
+        <input type="text" class="species-picker-search" placeholder="Поиск по названию..." data-life-form="tree">
+        <div class="species-picker-list" data-life-form="tree"><span class="hint">Загрузка...</span></div>
+      </div>
+      <div class="species-picker" id="species-picker-shrub">
+        <div class="species-picker-header">🌿 Кустарники</div>
+        <input type="text" class="species-picker-search" placeholder="Поиск по названию..." data-life-form="shrub">
+        <div class="species-picker-list" data-life-form="shrub"><span class="hint">Загрузка...</span></div>
+      </div>
+      <h2>Результат</h2>
+      <button class="primary" id="generate-btn-2">Сгенерировать план</button>
+      <div id="generate-summary" class="hint service-recommendation">Нажмите «Сгенерировать план» — сервис детерминированно расставит посадки по нормам 743-ПП/623-ПП.</div>
+      <div id="generate-species" class="service-recommendation"></div>
+      <div id="generate-warnings" class="service-recommendation"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

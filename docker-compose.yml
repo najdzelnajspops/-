@@ -1,0 +1,35 @@
+# name задан явно: путь к проекту содержит кириллицу ("Проект озеленения
+# территории"), и Docker Compose не может из неё вывести имя проекта по
+# умолчанию ("project name must not be empty") — найдено и исправлено
+# 2026-09-18 при первой проверке образа, см. docs/SESSION_LOG.md.
+name: landscaping-service
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Датасет и рабочие каталоги подаются через volume, а не запекаются в
+      # образ (см. .dockerignore) — 23 ГБ сырого датасета всё равно вне git.
+      - ./data:/app/data
+    # Без аргументов — CMD из Dockerfile (--help). Реальный запуск:
+    #   docker compose run --rm app python -m pipeline.run --input ... --base-dxf ... \
+    #     --territory-category dvorovye --output-dxf /app/data/out/result.dxf \
+    #     --output-report /app/data/out/report.json
+    # Второй режим (проверка человеческого выбора):
+    #   docker compose run --rm app python -m pipeline.review_run --input ... \
+    #     --territory-category dvorovye --proposals /app/data/proposals.json \
+    #     --output-report /app/data/out/review_report.json
+
+  # Веб-UI (pipeline/web/) — второй способ запуска, см. docs/SESSION_LOG.md 2026-09-18.
+  # `docker compose up web` -> http://localhost:8000
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "pipeline.web.app:app", "--host", "0.0.0.0", "--port", "8000"]
