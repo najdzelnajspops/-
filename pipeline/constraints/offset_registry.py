@@ -88,6 +88,21 @@ class OffsetRegistry:
     def known_boundary_types(self) -> list[str]:
         return sorted(self._rules.keys())
 
+    def max_known_distance(self) -> float:
+        """Наибольший верифицированный отступ во всём реестре (по обоим видам
+        посадки) — используется buffer_engine.py для пространственного
+        пре-фильтра объектов-ограничений (2026-09-27): объект дальше этого
+        расстояния от границы участка не может попасть ни в одну буферную
+        зону, посчитанную по ЭТОМУ реестру. Считается динамически из данных,
+        не захардкожено — обновление offset_norms.yaml не требует правки кода."""
+        values = [
+            d
+            for rule in self._rules.values()
+            for d in (rule.min_distance_tree_m, rule.min_distance_shrub_m)
+            if d is not None
+        ]
+        return max(values) if values else 0.0
+
     def citation(self, boundary_type: str) -> str | None:
         """Текст обоснования для отчёта интерпретации — только для известных реестру типов."""
         rule = self.get_rule(boundary_type)
