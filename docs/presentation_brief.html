@@ -302,6 +302,52 @@
     color: var(--muted);
   }
   .footer strong { color: var(--ink); }
+
+  /* ---- Таблицы норм отступов ---- */
+  .tables-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .tables-row { grid-template-columns: 1fr; }
+  }
+  .norms-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .norms-table caption {
+    caption-side: top;
+    text-align: left;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 0 0 10px;
+  }
+  .norms-table th, .norms-table td {
+    padding: 9px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .norms-table th {
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--surface-2);
+  }
+  .norms-table tr:last-child td { border-bottom: none; }
+  .norms-table td.num, .norms-table th.num { text-align: right; font-family: "IBM Plex Mono", monospace; }
+  .norms-table.lep tbody tr:last-child td { font-weight: 600; color: var(--bad); }
 </style>
 </head>
 <body>
@@ -311,6 +357,54 @@
   <span class="eyebrow">Бриф для презентации</span>
   <h1>Умное озеленение города</h1>
   <p class="lede">Программа, которая читает технический чертёж участка и помогает грамотно спланировать посадку деревьев и кустарников — по всем официальным нормам Москвы, с понятным объяснением каждого решения.</p>
+
+  <div class="section" style="margin-top: 40px;">
+    <h2>Суть решения</h2>
+    <p style="font-size: 15px; max-width: 68ch; margin: 0 0 14px;">Сервис принимает чертёж участка (DWG/DXF — загруженный оператором или демонстрационный объект) и определяет допустимые зоны посадки деревьев и кустарников в соответствии с нормами города Москвы (743-ПП, 623-ПП, 369-ПП), с учётом инженерных коммуникаций, охранных зон ЛЭП и существующих насаждений. На основании расчёта формируется план посадок автоматически либо проверяется план, подготовленный специалистом. Параметры, отсутствующие на чертеже (например, класс напряжения ЛЭП), могут быть уточнены оператором вручную, после чего допустимая зона пересчитывается. Стоимость посадочного материала обновляется на основании прайс-листа питомника (PDF/Excel/Word) с предварительным подтверждением изменений перед применением.</p>
+    <p style="font-size: 15px; max-width: 68ch; margin: 0; color: var(--muted);">При отсутствии на чертеже данных, необходимых для точного расчёта, применяется наиболее консервативное нормативное допущение, что может существенно сокращать расчётную площадь допустимой посадки. После уточнения недостающих параметров оператором площадь пересчитывается в соответствии с фактическими условиями.</p>
+  </div>
+
+  <div class="section">
+    <h2>Отступы по типам коммуникаций</h2>
+    <p class="section-note" style="max-width: 68ch;">Отступ рассчитывается отдельно для каждого типа коммуникации, а не единой общей величиной. Охранная зона ЛЭП — норма другого порядка: не арборикультурный отступ растения, а зона ограничения деятельности вокруг объекта электросетевого хозяйства. Обе нормы действуют одновременно, применяется более широкая из двух — и именно охранная зона ЛЭП, как правило, определяет итоговую площадь участка.</p>
+    <div class="tables-row">
+      <table class="norms-table">
+        <caption>743-ПП, таблица 3.6.1 — инженерные сети и объекты</caption>
+        <thead>
+          <tr><th>Коммуникация / объект</th><th class="num">Дерево</th><th class="num">Кустарник</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Газопровод</td><td class="num">1.5 м</td><td class="num">—</td></tr>
+          <tr><td>Канализация</td><td class="num">1.5 м</td><td class="num">—</td></tr>
+          <tr><td>Теплосеть</td><td class="num">2.0 м</td><td class="num">1.0 м</td></tr>
+          <tr><td>Водопровод</td><td class="num">2.0 м</td><td class="num">—</td></tr>
+          <tr><td>Дренаж</td><td class="num">2.0 м</td><td class="num">—</td></tr>
+          <tr><td>Силовой кабель</td><td class="num">2.0 м</td><td class="num">0.7 м</td></tr>
+          <tr><td>Кабель связи</td><td class="num">2.0 м</td><td class="num">0.7 м</td></tr>
+          <tr><td>Стена здания</td><td class="num">5.0 м</td><td class="num">1.5 м</td></tr>
+          <tr><td>Трамвайные пути</td><td class="num">5.0 м</td><td class="num">3.0 м</td></tr>
+          <tr><td>Школа, детский сад</td><td class="num">10.0 м</td><td class="num">1.5 м</td></tr>
+        </tbody>
+      </table>
+      <table class="norms-table lep">
+        <caption>ПП РФ № 160 — охранная зона ВЛ, по классу напряжения</caption>
+        <thead>
+          <tr><th>Класс напряжения</th><th class="num">Ширина зоны</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>до 1 кВ</td><td class="num">2 м</td></tr>
+          <tr><td>1–20 кВ</td><td class="num">10 м</td></tr>
+          <tr><td>до 35 кВ</td><td class="num">15 м</td></tr>
+          <tr><td>до 110 кВ</td><td class="num">20 м</td></tr>
+          <tr><td>до 220 кВ</td><td class="num">25 м</td></tr>
+          <tr><td>до 500 кВ</td><td class="num">30 м</td></tr>
+          <tr><td>до 750 кВ</td><td class="num">40 м</td></tr>
+          <tr><td>до 1150 кВ / класс неизвестен</td><td class="num">55 м</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size: 14px; max-width: 68ch; margin: 16px 0 0; color: var(--muted);">Если класс напряжения ВЛ не читается с чертежа, сервис применяет максимальный порог (55 м) как консервативное допущение. После уточнения оператором фактического класса напряжения зона пересчитывается по соответствующей строке таблицы.</p>
+  </div>
 
   <div class="section">
     <h2>Как это работает</h2>

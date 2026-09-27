@@ -96,6 +96,166 @@ header .controls select {
   white-space: nowrap;
 }
 
+/* 2026-09-27: тот же баг («ширина select по самому широкому option»), но в
+   ОТКРЫТОМ списке — Chromium рендерит его as-is, без переноса строк, шире
+   экрана на узких/маленьких мониторах (репортнуто на 15" ноутбуке, список
+   категорий территорий обрезался правым краем экрана). Максимальная ширина
+   у select-а не ограничивает ширину его выпадающего списка — CSS-фикса для
+   нативного <select> нет, поэтому #demo-select/#category-select дополнены
+   собственным выпадающим списком (см. enhanceSelect() в app.js): нативный
+   select остаётся в DOM (значение/событие change/доступность), но визуально
+   скрыт, поверх него — кнопка + список с переносом текста и позиционированием
+   по границам окна.
+*/
+.custom-select-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.custom-select-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-select-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+}
+
+header .controls .custom-select-btn {
+  max-width: 340px;
+}
+
+/* 2026-09-27: список должен «магнититься» к кнопке (без зазора) и по ширине
+   в точности повторять кнопку (а не собственную ширину по содержимому) —
+   прямой запрос пользователя по скриншотам. Первая версия считала ширину и
+   позицию списка в JS пикселями (getBoundingClientRect() кнопки → inline
+   width/left/top у списка) — при масштабировании страницы (`zoom`/Ctrl+/-)
+   это давало ДВОЙНОЕ масштабирование: JS брал уже отрисованную (с учётом
+   текущего масштаба) ширину кнопки и подставлял её как обычный CSS-width
+   списку, который сам находится в том же масштабированном контексте — при
+   зуме меньше 100% список получался УЖЕ, чем кнопка, из-за чего даже
+   `break-word` был вынужден резать слово посередине (не хватало места даже
+   на одно слово); при зуме больше 100% список, наоборот, оказывался ШИРЕ
+   кнопки. Исправлено — ширина/позиция списка больше не считаются в JS, а
+   заданы чистым CSS относительно `.custom-select-wrap` (width: 100%,
+   top: 100% / bottom: 100%) — это по определению не может разъехаться с
+   шириной кнопки ни при каком масштабе, потому что вычисляется браузером в
+   той же системе координат, а не подставляется приблизительным числом из
+   JS. JS (`positionMenu()` в app.js) теперь только решает, открывать список
+   вниз или вверх (через data-menu-open), без арифметики над шириной. */
+.custom-select-wrap[data-menu-open="down"] .custom-select-btn {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.custom-select-wrap[data-menu-open="down"] .custom-select-menu {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.custom-select-wrap[data-menu-open="up"] .custom-select-btn {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.custom-select-wrap[data-menu-open="up"] .custom-select-menu {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.custom-select-btn-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select-btn-arrow {
+  flex: 0 0 auto;
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.custom-select-menu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  /* Совпадение ширины с кнопкой (см. комментарий выше) верно ровно до тех
+     пор, пока кнопка не УЖЕ самого длинного слова среди вариантов списка
+     («Общеобразовательные», «внутриквартальные» и т.п., ~19-20 символов).
+     У категории с коротким текущим названием («Дворовые территории» —
+     196.9px) кнопка и без всякого зума уже уже этого слова — `break-word`
+     тогда вынужден резать слово посередине, других вариантов у него нет.
+     min-width — единственный практичный выход: список остаётся РОВНО
+     шириной с кнопкой везде, где кнопка не уже порога, и лишь чуть шире её —
+     только у коротких названий, — чтобы не резать слова. Порог посчитан по
+     самому длинному реальному слову категорий + отступы пункта/списка. */
+  min-width: 230px;
+  z-index: 50;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  max-height: min(360px, calc(100vh - 24px));
+  overflow-y: auto;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.custom-select-wrap[data-menu-open="up"] .custom-select-menu {
+  top: auto;
+  bottom: 100%;
+}
+
+.custom-select-option {
+  padding: 8px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: normal;
+  /* 2026-09-27: `anywhere` ломало слова посередине («Общеобразовательн» /
+     «ые...») даже там, где перенос по пробелу спокойно уместился бы —
+     репорт пользователя при уменьшенной ширине списка. `break-word` переносит
+     по границе слова и режет слово только если оно само по себе шире строки
+     (тут это не встречается — категории состоят из обычных слов). */
+  overflow-wrap: break-word;
+  word-break: normal;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.custom-select-option:hover {
+  background: var(--bg);
+}
+
+.custom-select-option.selected {
+  background: var(--bg);
+  font-weight: 600;
+}
+
+@media print {
+  .custom-select-menu { display: none !important; }
+}
+
 /* Кнопки загрузки/нормативной базы в шапке — по образцу Figma-мокапа
    пользователя (2026-09-24): сплошная заливка без обводки и без иконки,
    крупный скруглённый прямоугольник — раньше это были обычные тонкие
