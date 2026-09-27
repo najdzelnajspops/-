@@ -88,21 +88,49 @@ class ConstraintMapResult:
     zone_sources: list[ZoneSource] = field(default_factory=list)
     skipped_features: list[SkippedFeature] = field(default_factory=list)
     unknown_boundary_types: set[str] = field(default_factory=set)
+    # 2026-09-27, реальный объект («Макеева С. ул», 9,3 га, 104 130 объектов):
+    # счётчик объектов, геометрически исключённых пространственным
+    # пре-фильтром (см. build_constraint_map ниже) — не отдельная запись на
+    # каждый объект (это снова дало бы тысячи строк, тот же класс проблемы,
+    # что и в applied_constraint_norms_by_kind, см. interpretation_report.py),
+    # просто число для диагностики/тестов.
+    features_excluded_by_spatial_prefilter: int = 0
 
     def to_report_rows(self) -> list[dict]:
         """Строки для Interpretation Report Agent (см. docs/REPORT_DESIGN.md) —
-        по одной на каждую применённую буферную зону."""
-        return [
-            {
-                "feature_id": zs.feature_id,
-                "boundary_type": zs.boundary_type,
-                "boundary_label_ru": zs.boundary_label_ru,
-                "distance_m": zs.distance_m,
-                "verified": zs.verified,
-                "citation": zs.citation if zs.verified else "[требует верификации]",
-            }
-            for zs in self.zone_sources
-        ]
+        по одной на каждую УНИКАЛЬНУЮ норму (тип границы + отступ + статус
+        верификации + цитата), не на каждый физический объект-ограничение.
+
+        2026-09-27, найдено на реальном объекте («Макеева С. ул», 9,3 га):
+        раньше строка была на каждый zone_source — один и тот же boundary_type
+        (например, газопровод) почти всегда даёт ОДНУ и ту же норму/цитату для
+        тысяч отдельных сегментов коммуникации, и все они попадали в отчёт по
+        отдельности. Это уже второй проход по одному классу проблемы (первый —
+        2026-09-16, дублирование НА КАЖДУЮ ТОЧКУ посадки, 168 ГБ, см. git-лог
+        interpretation_report.py) — на этот раз дублирование было ВНУТРИ
+        одного и того же списка: 53 МБ из 67 МБ ответа `/generate`, ~200 сек на
+        запрос из-за одной лишь сериализации. Группировка ничего не теряет по
+        интерпретируемости — каждая РАЗЛИЧИМАЯ норма (например, разные классы
+        напряжения ЛЭП дают разный distance_m/citation) остаётся отдельной
+        строкой, схлопываются только буквально идентичные."""
+        groups: dict[tuple, dict] = {}
+        for zs in self.zone_sources:
+            effective_citation = zs.citation if zs.verified else "[требует верификации]"
+            key = (zs.boundary_type, zs.boundary_label_ru, zs.distance_m, zs.verified, effective_citation)
+            group = groups.get(key)
+            if group is None:
+                group = {
+                    "feature_id": zs.feature_id,
+                    "feature_count": 0,
+                    "boundary_type": zs.boundary_type,
+                    "boundary_label_ru": zs.boundary_label_ru,
+                    "distance_m": zs.distance_m,
+                    "verified": zs.verified,
+                    "citation": effective_citation,
+                }
+                groups[key] = group
+            group["feature_count"] += 1
+        return list(groups.values())
 
 
 def build_constraint_map(
@@ -125,6 +153,26 @@ def build_constraint_map(
     skipped: list[SkippedFeature] = []
     unknown_types: set[str] = set()
     buffer_geoms: list[BaseGeometry] = []
+    features_excluded_by_prefilter = 0
+
+    # Пространственный пре-фильтр (2026-09-27, найдено на реальном объекте
+    # «Макеева С. ул», 9,3 га, live-демо в вебе): DXF нередко содержит объекты-
+    # коммуникации далеко за пределами самого участка (тот же класс явления,
+    # что и раздутый bbox у «Кустанайской улицы», docs/DATA_STRUCTURE.md §11.5) —
+    # на этом объекте только ~46 000 из 104 130 объектов лежат в пределах 60 м
+    # от границы. Объект физически дальше максимально возможного для него
+    # отступа не может попасть ни в буферную, ни в итоговую зону — не
+    # приближение, а точный факт геометрии (то же самое buffer()+union() ниже
+    # дал бы для него тождественно то же самое, просто медленнее). Порог
+    # берётся из РЕАЛЬНЫХ чисел (реестр + фактические explicit_distance_m на
+    # входе, например у ЛЭП), не захардкожен, плюс запас ×2 на всякий случай.
+    known_max = registry.max_known_distance()
+    explicit_values = [f.explicit_distance_m for f in features if f.explicit_distance_m is not None]
+    margin_basis = max([known_max, unverified_fallback_m or 0.0, *explicit_values, 0.0])
+    safety_margin_m = margin_basis * 2
+    site_vicinity = (
+        site_boundary.buffer(safety_margin_m, quad_segs=BUFFER_QUAD_SEGS) if safety_margin_m > 0 else site_boundary
+    )
 
     for feature in features:
         if feature.explicit_distance_m is not None:
@@ -136,6 +184,9 @@ def build_constraint_map(
             verified = feature.explicit_citation is not None
             citation = feature.explicit_citation
             label_ru = feature.label or feature.boundary_type
+            if not feature.geometry.intersects(site_vicinity):
+                features_excluded_by_prefilter += 1
+                continue
             buf = feature.geometry.buffer(distance, quad_segs=BUFFER_QUAD_SEGS)
             buffer_geoms.append(buf)
             zone_sources.append(
@@ -183,6 +234,10 @@ def build_constraint_map(
             citation = registry.citation(feature.boundary_type)
             label_ru = rule.boundary_label_ru
 
+        if not feature.geometry.intersects(site_vicinity):
+            features_excluded_by_prefilter += 1
+            continue
+
         buf = feature.geometry.buffer(distance, quad_segs=BUFFER_QUAD_SEGS)
         buffer_geoms.append(buf)
         zone_sources.append(
@@ -212,4 +267,5 @@ def build_constraint_map(
         zone_sources=zone_sources,
         skipped_features=skipped,
         unknown_boundary_types=unknown_types,
+        features_excluded_by_spatial_prefilter=features_excluded_by_prefilter,
     )

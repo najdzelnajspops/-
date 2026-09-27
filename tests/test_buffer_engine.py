@@ -125,6 +125,60 @@ def test_unknown_boundary_type_is_never_silently_verified():
     assert zone.citation is None
 
 
+def test_offset_registry_max_known_distance():
+    """2026-09-27: используется пространственным пре-фильтром build_constraint_map
+    ниже — обязано быть настоящим максимумом по данным реестра (10.0 м, школа/
+    детсад), не захардкоженным числом, чтобы обновление offset_norms.yaml не
+    расходилось с фильтром молча."""
+    registry = OffsetRegistry()
+    assert registry.max_known_distance() == 10.0
+
+
+def test_spatial_prefilter_excludes_far_features_without_changing_result():
+    """Регрессионный тест на реальный баг 2026-09-27 («Макеева С. ул», 9,3 га,
+    104 130 объектов, из них ~57 700 дальше 60 м от границы участка) — Constraint
+    Engine буферизовал и объединял ВСЕ объекты, включая заведомо не влияющие на
+    итог, что давало ~90 секунд на unary_union() на плотном реальном объекте.
+
+    Доказываем, что пре-фильтр НЕ приближение: результат (allowed_zone/
+    forbidden_zone/zone_sources) с дальним объектом и без него — идентичен."""
+    site = Polygon([(0, 0), (20, 0), (20, 20), (0, 20)])
+    near_gas_pipeline = LineString([(10, 0), (10, 20)])
+    # Дальше, чем max_known_distance() * 2 (10 * 2 = 20 м) от границы участка —
+    # заведомо не может попасть ни в одну буферную зону этого прогона.
+    far_power_cable = LineString([(10_000, 0), (10_000, 20)])
+
+    registry = OffsetRegistry()
+
+    result_without_far = build_constraint_map(
+        site_boundary=site,
+        features=[ConstraintFeature(id="gas-1", boundary_type="gas_pipeline", geometry=near_gas_pipeline)],
+        planting_kind="tree",
+        registry=registry,
+    )
+    result_with_far = build_constraint_map(
+        site_boundary=site,
+        features=[
+            ConstraintFeature(id="gas-1", boundary_type="gas_pipeline", geometry=near_gas_pipeline),
+            ConstraintFeature(id="cable-far", boundary_type="power_cable", geometry=far_power_cable),
+        ],
+        planting_kind="tree",
+        registry=registry,
+    )
+
+    assert result_with_far.allowed_zone.equals(result_without_far.allowed_zone)
+    assert result_with_far.forbidden_zone.equals(result_without_far.forbidden_zone)
+    # Дальний объект не попал в zone_sources — не потому что тип неизвестен
+    # (power_cable известен реестру), а потому что геометрически не мог повлиять.
+    assert len(result_with_far.zone_sources) == len(result_without_far.zone_sources) == 1
+    assert result_with_far.features_excluded_by_spatial_prefilter == 1
+    assert result_without_far.features_excluded_by_spatial_prefilter == 0
+    # unknown_boundary_types/skipped_features — НЕ путать с пространственным
+    # исключением: у дальнего объекта тип известен, просто он геометрически
+    # не мог повлиять, это не то же самое, что "неизвестный тип нормы".
+    assert result_with_far.unknown_boundary_types == set()
+
+
 def test_invasive_species_registry_blocks_known_invasive_species():
     registry = InvasiveSpeciesRegistry()
 
@@ -144,5 +198,7 @@ if __name__ == "__main__":
     test_buffer_engine_forbids_tree_near_gas_pipeline()
     test_buffer_engine_skips_shrub_offset_where_norm_has_none()
     test_unknown_boundary_type_is_never_silently_verified()
+    test_offset_registry_max_known_distance()
+    test_spatial_prefilter_excludes_far_features_without_changing_result()
     test_invasive_species_registry_blocks_known_invasive_species()
     print("OK: все синтетические тесты Constraint Engine прошли")

@@ -175,6 +175,51 @@ def test_report_size_scales_linearly_not_multiplicatively_with_points_and_norms(
     assert serialized_length < 5_000_000  # 5 МБ — большой запас, но на порядки меньше "перемноженного" объёма
 
 
+def test_identical_norms_are_grouped_not_repeated_one_row_per_feature():
+    """Регрессионный тест на реальный баг 2026-09-27 («Макеева С. ул», 9,3 га,
+    реальный демо-объект): даже при «линейном» росте (тест выше) один и тот же
+    boundary_type почти всегда даёт ОДНУ И ТУ ЖЕ норму/цитату для тысяч отдельных
+    сегментов коммуникации — раньше каждый сегмент давал отдельную строку в
+    applied_constraint_norms_by_kind, а не одну строку с feature_count. На
+    реальном объекте это дало 53 МБ из 67 МБ ответа /generate и ~200 секунд на
+    один запрос (сериализация), хотя различимых норм там — единицы. Здесь —
+    50 000 практически идентичных объектов-ограничений (реалистичный порядок
+    величины для плотного городского участка), отчёт обязан остаться на
+    порядки меньше «линейного» бюджета из теста выше."""
+    zone = box(0, 0, 1000, 1000)
+    identical_norms = [
+        ZoneSource(
+            feature_id=f"gas-{i}",
+            boundary_type="gas_pipeline",
+            boundary_label_ru="Газопровод",
+            distance_m=1.5,
+            verified=True,
+            citation="ППМ № 743-ПП — «Газопровод»",
+            buffer_geometry=box(0, 0, 1, 1),
+        )
+        for i in range(50_000)
+    ]
+    constraint_result = ConstraintMapResult(
+        planting_kind="tree",
+        site_boundary=zone,
+        allowed_zone=zone,
+        forbidden_zone=GeometryCollection(),
+        zone_sources=identical_norms,
+    )
+    report = build_report(
+        territory_category="dvorovye",
+        constraint_results=[constraint_result],
+        placement_results=[_sample_placement_result()],
+        source_files=["up.dxf"],
+    )
+    norms = report["applied_constraint_norms_by_kind"]["tree"]
+    assert len(norms) == 1  # 50 000 идентичных объектов схлопнулись в одну норму
+    assert norms[0]["feature_count"] == 50_000
+    assert norms[0]["citation"] == "ППМ № 743-ПП — «Газопровод»"
+    serialized_length = len(json.dumps(report, ensure_ascii=False))
+    assert serialized_length < 50_000  # было бы ~50 000 строк (мегабайты) без группировки
+
+
 def test_species_choices_report_eligible_alternatives_and_tie_break():
     """Отчёт обязан честно показывать не только выбранный вид, но и все равно
     допустимые альтернативы + объяснение тай-брейка (см. TIE_BREAK_EXPLANATION
