@@ -125,17 +125,19 @@
       <p class="hint">Колесо мыши — приблизить/отдалить, перетаскивание фона — сдвинуть вид, двойной клик — сбросить масштаб. Плотные группы кустарника на общем виде могут визуально сливаться — приблизьтесь, чтобы различить каждую точку.</p>
     </div>
     <div class="side-panel">
-      <h2>Выбор видов <span class="hint-inline">(необязательно)</span></h2>
-      <p class="hint">Ничего не отмечено — сервис сам выберет один вид по умолчанию (первый по алфавиту среди рекомендованных), как раньше. Отметьте один или несколько видов — сервис распределит их по точкам посадки по кругу, в алфавитном порядке.</p>
-      <div class="species-picker" id="species-picker-tree">
-        <div class="species-picker-header">🌳 Деревья</div>
-        <input type="text" class="species-picker-search" placeholder="Поиск по названию..." data-life-form="tree">
-        <div class="species-picker-list" data-life-form="tree"><span class="hint">Загрузка...</span></div>
-      </div>
-      <div class="species-picker" id="species-picker-shrub">
-        <div class="species-picker-header">🌿 Кустарники</div>
-        <input type="text" class="species-picker-search" placeholder="Поиск по названию..." data-life-form="shrub">
-        <div class="species-picker-list" data-life-form="shrub"><span class="hint">Загрузка...</span></div>
+      <div id="species-picker-section">
+        <h2>Выбор видов <span class="hint-inline">(необязательно)</span></h2>
+        <p class="hint">Ничего не отмечено — сервис сам выберет один вид по умолчанию (первый по алфавиту среди рекомендованных), как раньше. Отметьте один или несколько видов — сервис распределит их по точкам посадки по кругу, в алфавитном порядке.</p>
+        <div class="species-picker" id="species-picker-tree">
+          <div class="species-picker-header">🌳 Деревья</div>
+          <input type="text" class="species-picker-search" placeholder="Поиск по названию..." data-life-form="tree">
+          <div class="species-picker-list" data-life-form="tree"><span class="hint">Загрузка...</span></div>
+        </div>
+        <div class="species-picker" id="species-picker-shrub">
+          <div class="species-picker-header">🌿 Кустарники</div>
+          <input type="text" class="species-picker-search" placeholder="Поиск по названию..." data-life-form="shrub">
+          <div class="species-picker-list" data-life-form="shrub"><span class="hint">Загрузка...</span></div>
+        </div>
       </div>
       <h2>Результат</h2>
       <button class="primary" id="generate-btn-2">Сгенерировать план</button>
