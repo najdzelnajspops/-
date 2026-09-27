@@ -33,6 +33,112 @@ async function fetchJSON(url, options) {
 function updateSelectTitle(selectEl) {
   const opt = selectEl.options[selectEl.selectedIndex];
   selectEl.title = opt ? opt.text : "";
+  if (selectEl._customUI) selectEl._customUI.refresh();
+}
+
+// Тот же длинный текст категорий ломает не закрытый select (см. выше), а его
+// ОТКРЫТЫЙ список — Chromium не переносит текст в <option> и не ограничивает
+// ширину списка шириной select-а, из-за чего на небольших экранах (репорт
+// пользователя — 15" ноутбук) список обрезается краем экрана (2026-09-27).
+// Нативного CSS-решения для этого нет, поэтому #demo-select/#category-select
+// получают собственный визуальный слой (кнопка + список с переносом текста и
+// позиционированием в границах окна), а сам <select> остаётся в DOM скрытым —
+// это по-прежнему источник истины для .value/"change", вся остальная логика
+// приложения его не замечает.
+function enhanceSelect(selectEl) {
+  if (selectEl._customUI) return selectEl._customUI;
+
+  const wrap = document.createElement("span");
+  wrap.className = "custom-select-wrap";
+  selectEl.parentNode.insertBefore(wrap, selectEl);
+  wrap.appendChild(selectEl);
+  selectEl.classList.add("custom-select-native");
+  selectEl.tabIndex = -1;
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "custom-select-btn";
+  btn.setAttribute("aria-haspopup", "listbox");
+  btn.setAttribute("aria-expanded", "false");
+  btn.innerHTML = '<span class="custom-select-btn-label"></span><span class="custom-select-btn-arrow">▾</span>';
+  wrap.appendChild(btn);
+
+  const menu = document.createElement("ul");
+  menu.className = "custom-select-menu";
+  menu.setAttribute("role", "listbox");
+  menu.hidden = true;
+  wrap.appendChild(menu);
+
+  function onOutsideClick(e) {
+    if (!wrap.contains(e.target)) closeMenu();
+  }
+  function onEscape(e) {
+    if (e.key === "Escape") closeMenu();
+  }
+  function closeMenu() {
+    menu.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    delete wrap.dataset.menuOpen;
+    document.removeEventListener("mousedown", onOutsideClick, true);
+    document.removeEventListener("keydown", onEscape, true);
+  }
+  // 2026-09-27, прямой запрос пользователя по скриншотам: список должен
+  // (1) вплотную прилегать к кнопке, без зазора и (2) быть РОВНО той же
+  // ширины, что и кнопка. Первая версия считала ширину/позицию списка в JS
+  // пикселями (getBoundingClientRect() кнопки → inline width/left/top) — при
+  // масштабировании страницы это давало ДВОЙНОЕ масштабирование (JS брал уже
+  // отрисованную с учётом зума ширину и подставлял её как обычный CSS-width
+  // списку в том же зумированном контексте), из-за чего при зуме меньше 100%
+  // список получался УЖЕ кнопки и даже `break-word` был вынужден резать слово
+  // посередине. Исправлено — ширина/положение списка заданы чистым CSS
+  // (`width: 100%`, `top: 100%`/`bottom: 100%` от `.custom-select-wrap`, см.
+  // style.css) и поэтому не могут разъехаться с кнопкой ни при каком
+  // масштабе. Единственное, что решает JS — открывать вниз или вверх (по
+  // месту), через data-menu-open (он же переключает CSS top/bottom и
+  // скругление стыкующихся углов).
+  function positionMenu() {
+    const r = wrap.getBoundingClientRect();
+    const mh = menu.offsetHeight;
+    const opensAbove = r.bottom + mh > window.innerHeight - 8 && r.top - mh > 8;
+    wrap.dataset.menuOpen = opensAbove ? "up" : "down";
+  }
+  function openMenu() {
+    menu.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    positionMenu();
+    document.addEventListener("mousedown", onOutsideClick, true);
+    document.addEventListener("keydown", onEscape, true);
+  }
+
+  btn.addEventListener("click", () => (menu.hidden ? openMenu() : closeMenu()));
+  window.addEventListener("resize", () => {
+    if (!menu.hidden) positionMenu();
+  });
+
+  const ui = {
+    refresh() {
+      const opts = Array.from(selectEl.options);
+      const selected = selectEl.options[selectEl.selectedIndex];
+      const label = selected ? selected.text : "";
+      btn.querySelector(".custom-select-btn-label").textContent = label;
+      btn.title = label;
+      menu.innerHTML = "";
+      opts.forEach((opt) => {
+        const li = document.createElement("li");
+        li.textContent = opt.text;
+        li.setAttribute("role", "option");
+        li.className = "custom-select-option" + (opt.value === selectEl.value ? " selected" : "");
+        li.addEventListener("click", () => {
+          selectEl.value = opt.value;
+          closeMenu();
+          selectEl.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+        menu.appendChild(li);
+      });
+    },
+  };
+  selectEl._customUI = ui;
+  return ui;
 }
 
 // ---------- инициализация ----------
@@ -44,11 +150,13 @@ async function init() {
   ]);
 
   const demoSelect = document.getElementById("demo-select");
+  enhanceSelect(demoSelect);
   demoSelect.innerHTML = demos.map((d) => `<option value="${d.id}">${d.label_ru}</option>`).join("");
   state.demoId = demos[0].id;
   state.territoryCategory = demos[0].default_territory_category;
 
   const categorySelect = document.getElementById("category-select");
+  enhanceSelect(categorySelect);
   categorySelect.innerHTML = categories.map((c) => `<option value="${c.id}">${c.label_ru}</option>`).join("");
   categorySelect.value = state.territoryCategory;
   // Некоторые названия категорий (например, "магистрали") — длинные
