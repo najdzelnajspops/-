@@ -352,10 +352,73 @@ def ingest_dxf(path: str | Path, classifier: LayerClassifier | None = None) -> I
     return ingest_dxf_files([path], classifier=classifier)
 
 
+# 2026-09-28, прямой запрос пользователя (веб-сервис на VPS ощутимо медленнее
+# dev-машины, «оч долго грузится» один и тот же демо-объект при каждом
+# запросе): ingest_dxf_files() — самая дорогая по времени операция в пайплайне
+# (полный разбор ezdxf, 14-44 сек на реальных объектах, см. docs/BUGS.md
+# 2026-09-27) и при этом ЧИСТАЯ функция от содержимого входных файлов — один и
+# тот же демо-объект даёт один и тот же результат при каждом запросе веб-UI
+# (/geometry, /generate, /review — все дергают его заново на каждый клик).
+# Кешируем по абсолютным путям + (размер, mtime) каждого файла — если кто-то
+# всё же заменит файл демо-объекта на диске, кеш для него сам инвалидируется,
+# без необходимости перезапускать сервер. Кеш только для ВЫЗОВОВ С ДЕФОЛТНЫМ
+# classifier (все реальные вызовы в проекте) — нестандартный classifier
+# (используется только в тестах) идёт в обход кеша, чтобы не усложнять ключ.
+_ingest_cache: dict[tuple, "IngestResult"] = {}
+
+
+def _ingest_cache_key(paths: list[str | Path]) -> tuple | None:
+    try:
+        entries = []
+        for p in sorted(str(Path(p).resolve()) for p in paths):
+            st = Path(p).stat()
+            entries.append((p, st.st_size, st.st_mtime_ns))
+        return tuple(entries)
+    except OSError:
+        # Путь мог исчезнуть между сборкой списка и обращением к нему (гонка,
+        # временный файл загрузки) — тогда просто не кешируем этот вызов.
+        return None
+
+
+def _copy_ingest_result(result: "IngestResult") -> "IngestResult":
+    """Защитная неглубокая копия — вызывающий код (`_prepared_site` и т.п.)
+    переприсваивает `features`/т.п. в новую переменную, а не мутирует список
+    на месте (ConstraintFeature — frozen dataclass, мутация невозможна), но
+    `skipped_entity_types`/`unclassified_layers` — обычные set/dict; копия
+    исключает даже теоретическую возможность, что один запрос испортит кеш
+    для всех следующих."""
+    return IngestResult(
+        site_boundary=result.site_boundary,
+        site_boundary_status=result.site_boundary_status,
+        features=list(result.features),
+        lep_features_needing_voltage=list(result.lep_features_needing_voltage),
+        unclassified_layers=dict(result.unclassified_layers),
+        ignored_entity_count=result.ignored_entity_count,
+        skipped_entity_types=set(result.skipped_entity_types),
+        source_files=list(result.source_files),
+    )
+
+
 def ingest_dxf_files(paths: list[str | Path], classifier: LayerClassifier | None = None) -> IngestResult:
     """Разбор НАБОРА DXF-файлов одного объекта (главный файл + up/tp/kl-компоненты
     eTransmit-бандла) как единой геомодели. Порядок paths не влияет на результат —
-    объекты сортируются по (имя_файла, handle) внутри объединения, см. ниже."""
+    объекты сортируются по (имя_файла, handle) внутри объединения, см. ниже.
+
+    Кеширует результат по содержимому входных файлов (см. _ingest_cache выше) —
+    для явного classifier (нестандартный, только в тестах) кеш не используется."""
+    if classifier is None:
+        cache_key = _ingest_cache_key(paths)
+        if cache_key is not None:
+            cached = _ingest_cache.get(cache_key)
+            if cached is not None:
+                return _copy_ingest_result(cached)
+            result = _ingest_dxf_files_uncached(paths, classifier)
+            _ingest_cache[cache_key] = result
+            return _copy_ingest_result(result)
+    return _ingest_dxf_files_uncached(paths, classifier)
+
+
+def _ingest_dxf_files_uncached(paths: list[str | Path], classifier: LayerClassifier | None = None) -> IngestResult:
     classifier = classifier or LayerClassifier()
     lep_registry = LepZoneRegistry()
     lep_fallback_width = lep_registry.most_conservative_width_m()

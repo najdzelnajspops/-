@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import ezdxf
 
-from pipeline.ingest.dxf_ingest import ingest_dxf
+from pipeline.ingest.dxf_ingest import ingest_dxf, ingest_dxf_files
 from pipeline.ingest.layer_classifier import LayerClassifier
 
 
@@ -201,10 +201,64 @@ def test_layer_classifier_matches_real_convention_examples():
     assert c4.status == "unclassified"
 
 
+def test_ingest_dxf_files_cache_hit_returns_equal_but_independent_result():
+    """Регрессионный тест на кеш 2026-09-28 (прямой запрос пользователя —
+    веб-сервис на VPS «оч долго грузится» один и тот же демо-объект при каждом
+    запросе): ingest_dxf_files() — чистая функция от содержимого входных
+    файлов, повторный вызов с теми же путями обязан вернуть результат с тем же
+    содержимым, но НЕЗАВИСИМЫЙ объект (мутация одного результата не должна
+    портить кеш для следующего вызова)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dxf_path = Path(tmp) / "synthetic.dxf"
+        _build_synthetic_dxf(dxf_path)
+
+        first = ingest_dxf_files([dxf_path])
+        second = ingest_dxf_files([dxf_path])
+
+        assert first is not second
+        assert len(first.features) == len(second.features) == len(first.features)
+        assert first.site_boundary.equals(second.site_boundary)
+        assert first.unclassified_layers.keys() == second.unclassified_layers.keys()
+
+        # Мутация результата первого вызова не должна повлиять на третий вызов
+        # (доказывает, что из кеша каждый раз отдаётся защитная копия, а не
+        # общий изменяемый объект).
+        first.skipped_entity_types.add("ПОДДЕЛЬНЫЙ_ТИП_ДЛЯ_ТЕСТА")
+        first.features.append(first.features[0])
+
+        third = ingest_dxf_files([dxf_path])
+        assert "ПОДДЕЛЬНЫЙ_ТИП_ДЛЯ_ТЕСТА" not in third.skipped_entity_types
+        assert len(third.features) == len(second.features)
+
+
+def test_ingest_dxf_files_cache_invalidates_when_file_changes_on_disk():
+    """Если файл демо-объекта реально заменили на диске (другое содержимое,
+    другой mtime) — кеш обязан не отдать старый результат молча."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dxf_path = Path(tmp) / "synthetic.dxf"
+        _build_synthetic_dxf(dxf_path)
+        first = ingest_dxf_files([dxf_path])
+        first_feature_count = len(first.features)
+
+        # Полностью новый DXF с другим числом объектов, тот же путь.
+        doc = ezdxf.new("R2018")
+        doc.layers.new(name="obj|Граница площадки")
+        doc.modelspace().add_lwpolyline(
+            [(0, 0), (50, 0), (50, 50), (0, 50)], close=True, dxfattribs={"layer": "obj|Граница площадки"}
+        )
+        doc.saveas(str(dxf_path))
+
+        second = ingest_dxf_files([dxf_path])
+        assert len(second.features) != first_feature_count
+        assert second.site_boundary.area == 50 * 50
+
+
 if __name__ == "__main__":
     test_dxf_ingest_classifies_real_layer_naming_convention()
     test_dxf_ingest_is_deterministic_across_independent_calls()
     test_site_boundary_resolves_insert_block_on_boundary_layer()
     test_site_boundary_prefers_reliable_geometry_over_higher_ranked_layer_name()
     test_layer_classifier_matches_real_convention_examples()
+    test_ingest_dxf_files_cache_hit_returns_equal_but_independent_result()
+    test_ingest_dxf_files_cache_invalidates_when_file_changes_on_disk()
     print("OK: DXF Ingest tests passed")
