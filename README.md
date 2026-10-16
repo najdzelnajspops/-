@@ -6,6 +6,36 @@
 
 Проект опирается на реальный датасет хакатона (20 объектов, «Пилотный проект 20 улиц») — структура и выводы из его изучения зафиксированы в `docs/DATA_STRUCTURE.md`.
 
+## Быстрый старт
+
+Все команды — из корня проекта (папка, где лежит этот README). Нужен **Docker** или **Python 3.14** (проверено на нём).
+
+**Веб-интерфейс, вариант 1 — Docker** (Linux, MosTex.OS, Windows с Docker Desktop):
+```
+docker compose up web
+```
+Первый раз образ собирается несколько минут. Затем откройте `http://localhost:8000` (Swagger API — `http://localhost:8000/docs`).
+
+**Веб-интерфейс, вариант 2 — без Docker.** Скрипт при первом запуске сам создаёт окружение `.venv` и ставит зависимости, дальше запускается сразу:
+- Windows: двойной клик по `start_web_ui.bat` (браузер откроется сам);
+- Linux / MosTex.OS: `sh start_web_ui.sh`, затем откройте `http://127.0.0.1:8000`.
+
+То же вручную:
+```
+python -m venv .venv
+.venv\Scripts\activate            # Windows;  на Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python -m uvicorn pipeline.web.app:app
+```
+
+В интерфейсе выберите демо-объект в шапке («Песчаный переулок», «Багрицкого улица», «Макеева С. ул») — это реальные чертежи датасета, свои DWG/DXF загружаются кнопкой «Загрузить свой DWG/DXF».
+
+**CLI — проверка одной командой** на демо-объекте (после установки зависимостей, около 15 секунд):
+```
+python -m pipeline.run --input data/demo_objects/peschany_pereulok/output_1-5__3_ДЖКХ-25_00752tp.dxf data/demo_objects/peschany_pereulok/output_1-5__3_ДЖКХ-25_00752up.dxf data/demo_objects/peschany_pereulok/output_1-5__brd.dxf --base-dxf data/demo_objects/peschany_pereulok/output_1-5__3_ДЖКХ-25_00752tp.dxf --territory-category dvorovye --output-dxf out/result.dxf --output-report out/report.json
+```
+Результат: `out/result.dxf` (исходный чертёж + новые слои `GREEN_AI_*` с посадками) и `out/report.json` (каждая посадка с обоснованием и ссылкой на норму).
+
 ## Презентация
 
 `docs/presentation.pdf` — презентация проекта для сдачи кейса.
@@ -46,7 +76,7 @@ docker compose run --rm app python -m pytest tests/ -q
 
 **Веб-UI** (второй способ запуска, не замена CLI — см. `docs/TASK_BRIEF.md`): визуализация плана + два режима работы (автогенерация и проверка предложенной человеком посадки drag-and-drop). Swagger/OpenAPI — на `/docs`.
 ```
-uvicorn pipeline.web.app:app --reload          # локально, http://127.0.0.1:8000
+python -m uvicorn pipeline.web.app:app --reload   # локально, http://127.0.0.1:8000
 docker compose up web                          # в Docker, http://localhost:8000
 ```
 Работает на заранее подготовленных демо-объектах (`data/demo_objects/`) и, с 2026-09-19, на объектах, загруженных прямо в интерфейсе — кнопка «📤 Загрузить свой DWG/DXF» в шапке (несколько файлов сразу, DWG конвертируется через `pipeline/ingest/dwg_convert.py`, требует ODA File Converter на сервере). Обработка синхронная, со спиннером — крупные объекты (десятки гектаров) могут занять несколько минут. Карта + реестр зданий data.mos.ru — отдельная, более поздняя задача.
