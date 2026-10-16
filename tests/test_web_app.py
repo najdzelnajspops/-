@@ -362,3 +362,22 @@ if __name__ == "__main__":
     test_review_no_proposals_is_ok()
     test_index_page_served()
     print("OK: web app tests passed")
+
+
+def test_unknown_territory_category_gives_422_not_500():
+    """Найдено 2026-10-16 при проверке в Docker: произвольная категория (например «string» из
+    примера Swagger) давала 500 Internal Server Error. Ожидаем 422 и перечень допустимых значений."""
+    bad = "string"
+    checks = [
+        client.get("/api/demo-objects/peschany_pereulok/geometry", params={"territory_category": bad}),
+        client.get("/api/species", params={"territory_category": bad, "life_form": "tree"}),
+        client.post("/api/demo-objects/peschany_pereulok/generate", json={"territory_category": bad}),
+        client.post(
+            "/api/demo-objects/peschany_pereulok/review",
+            json={"territory_category": bad, "proposals": [
+                {"id": "a", "species_name_ru": "x", "life_form": "tree", "x": 0.0, "y": 0.0}]},
+        ),
+    ]
+    for resp in checks:
+        assert resp.status_code == 422, resp.request.url
+        assert "dvorovye" in resp.json()["detail"]
