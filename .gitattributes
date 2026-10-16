@@ -1,0 +1,4 @@
+# Скрипты запуска: на Linux (MosTex.OS) shell-скрипт с окончаниями строк CRLF не запускается,
+# а cmd на Windows надёжнее читает .bat с CRLF.
+*.sh  text eol=lf
+*.bat text eol=crlf
