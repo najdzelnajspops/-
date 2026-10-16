@@ -168,6 +168,45 @@ def _entity_to_geometry(entity) -> BaseGeometry | None:
     return None
 
 
+# Замыкание «почти замкнутых» полилиний (2026-10-16, замечание экспертов финала:
+# «не всегда незамкнутые полигоны распознавались»). В реальных DXF датасета флаг
+# closed не стоит ни у одной полилинии (проверено на 16 объектах), поэтому ветка
+# `entity.closed` в _entity_to_geometry() на них не срабатывает: контур здания или
+# границы приходит открытой полилинией с совпадающими концами или щелью в сантиметры.
+# Допуск 0,5 м — по тем же 16 объектам: у слоя стен 318 контуров с совпадающими
+# концами и 35 со щелью до 0,5 м; остальные 982 — открытые линии со щелью больше
+# (не контуры), их не трогаем.
+_NEAR_CLOSED_TOLERANCE_M = 0.5
+# Отсев вырожденных «контуров» (точки на одной прямой, крошечные петли).
+_MIN_CLOSED_AREA_M2 = 1.0
+# Типы ограничений, у которых полилиния — контур площадного объекта. Сети (трубы,
+# кабели) не замыкаем: кольцевая труба даёт отступ вдоль себя, а не запрет внутри кольца.
+_CLOSABLE_BOUNDARY_TYPES = {"building_wall"}
+
+
+def _close_if_nearly_closed(geom: BaseGeometry) -> Polygon | None:
+    """Полигон из линии, если у неё не меньше трёх точек и концы ближе
+    _NEAR_CLOSED_TOLERANCE_M; иначе None (самопересекающийся или вырожденный
+    контур тоже None — остаётся линией, как раньше)."""
+    if not isinstance(geom, LineString):
+        return None
+    coords = list(geom.coords)
+    if len(coords) < 3:
+        return None
+    (x0, y0), (x1, y1) = coords[0][:2], coords[-1][:2]
+    if ((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5 > _NEAR_CLOSED_TOLERANCE_M:
+        return None
+    try:
+        poly = Polygon(coords)
+        if not poly.is_valid:
+            poly = poly.buffer(0)
+    except Exception:
+        return None
+    if not isinstance(poly, Polygon) or poly.area < _MIN_CLOSED_AREA_M2:
+        return None
+    return poly
+
+
 # Порог покрытия для доверия результату polygonize() — см. докстринг ниже.
 # Подобран не из формального расчёта, а из наблюдения на реальном объекте
 # («Олимпийская деревня»): там polygonize собрал полигон площадью 47 кв.м из
@@ -226,6 +265,15 @@ def _find_site_boundary_in_doc(
     """
     direct_polygons: list[tuple[int, str, BaseGeometry, float]] = []
     lines_by_rank: dict[int, list[LineString]] = {}
+    # Почти замкнутые полилинии (щель между концами ≤ допуска, включая точное
+    # совпадение концов): polygonize() не замыкает щель, а на реальных пересекающихся
+    # линиях не собирает и точно замкнутое кольцо (нужна узловая разметка всех линий;
+    # проверено на «2-я Прядильная»: без этого граница не находилась). Идут в кандидаты с той же
+    # уверенностью по охвату, что и polygonize, а НЕ с 1.0 как явный замкнутый
+    # контур: иначе мелкая почти замкнутая метка на слое границы вытесняет настоящий
+    # периметр (проверено: «Олимпийская деревня» 494 316 -> 33 м², «Старый Гай»
+    # 250 382 -> 13 м²).
+    nearly_closed_by_rank: dict[int, list[tuple[str, Polygon]]] = {}
 
     for entity in modelspace:
         rank = classifier.site_boundary_priority_rank(entity.dxf.layer)
@@ -248,6 +296,9 @@ def _find_site_boundary_in_doc(
             direct_polygons.append((rank, entity.dxf.handle, geom, 1.0))
         elif isinstance(geom, LineString):
             lines_by_rank.setdefault(rank, []).append(geom)
+            closed = _close_if_nearly_closed(geom)
+            if closed is not None:
+                nearly_closed_by_rank.setdefault(rank, []).append((entity.dxf.handle, closed))
 
     candidates: list[tuple[int, str, BaseGeometry, float]] = list(direct_polygons)
 
@@ -260,6 +311,9 @@ def _find_site_boundary_in_doc(
         for i, poly in enumerate(assembled):
             confidence = _bbox_diagonal(poly.bounds) / full_diag if full_diag > 0 else 0.0
             candidates.append((rank, f"polygonize#{i}", poly, confidence))
+        for handle, poly in nearly_closed_by_rank.get(rank, []):
+            confidence = _bbox_diagonal(poly.bounds) / full_diag if full_diag > 0 else 0.0
+            candidates.append((rank, f"nearly_closed:{handle}", poly, confidence))
 
     return candidates
 
@@ -332,6 +386,11 @@ def _ingest_document(
             )
             lep_needing_voltage.append(feature_id)
             continue
+
+        if classification.boundary_type in _CLOSABLE_BOUNDARY_TYPES:
+            closed = _close_if_nearly_closed(geom)
+            if closed is not None:
+                geom = closed  # контур здания: буфер отступа закрывает и внутренность
 
         features.append(
             ConstraintFeature(id=feature_id, boundary_type=classification.boundary_type, geometry=geom)

@@ -253,6 +253,86 @@ def test_ingest_dxf_files_cache_invalidates_when_file_changes_on_disk():
         assert second.site_boundary.area == 50 * 50
 
 
+def _open_polyline(msp, points, layer):
+    """Полилиния БЕЗ флага closed — так лежат все контуры в реальных DXF датасета."""
+    return msp.add_lwpolyline(points, dxfattribs={"layer": layer})
+
+
+def test_building_contour_without_closed_flag_becomes_polygon():
+    """Замечание экспертов финала (2026-10-16): «не всегда незамкнутые полигоны
+    распознавались». В реальных DXF у контура здания нет флага closed, концы совпадают
+    или расходятся на сантиметры. Такой контур должен стать полигоном (буфер отступа
+    закрывает и внутренность здания), а настоящая открытая линия — остаться линией."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dxf_path = Path(tmp) / "buildings.dxf"
+        doc = ezdxf.new("R2018")
+        doc.layers.new(name="obj|Здания")
+        msp = doc.modelspace()
+        _open_polyline(msp, [(0, 0), (20, 0), (20, 10), (0, 10), (0, 0)], "obj|Здания")        # концы совпадают
+        _open_polyline(msp, [(50, 0), (70, 0), (70, 10), (50, 10), (50, 0.3)], "obj|Здания")   # щель 0,3 м
+        _open_polyline(msp, [(100, 0), (120, 0), (120, 10), (100, 10), (100, 5)], "obj|Здания")  # щель 5 м — не контур
+        doc.saveas(str(dxf_path))
+
+        walls = [f for f in ingest_dxf(dxf_path).features if f.boundary_type == "building_wall"]
+
+        kinds = sorted(f.geometry.geom_type for f in walls)
+        assert kinds == ["LineString", "Polygon", "Polygon"]
+        areas = sorted(round(f.geometry.area) for f in walls if f.geometry.geom_type == "Polygon")
+        assert areas == [200, 200]
+
+
+def test_utility_ring_is_not_closed_into_polygon():
+    """Замыкание только для контуров зданий: кольцевая труба с совпадающими концами —
+    по-прежнему линия (отступ вдоль трубы, а не запрет на всю площадь внутри кольца)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dxf_path = Path(tmp) / "gas_ring.dxf"
+        doc = ezdxf.new("R2018")
+        doc.layers.new(name="obj|Газопровод")
+        msp = doc.modelspace()
+        _open_polyline(msp, [(0, 0), (30, 0), (30, 30), (0, 30), (0, 0)], "obj|Газопровод")
+        doc.saveas(str(dxf_path))
+
+        gas = [f for f in ingest_dxf(dxf_path).features if f.boundary_type == "gas_pipeline"]
+
+        assert [f.geometry.geom_type for f in gas] == ["LineString"]
+
+
+def test_site_boundary_from_nearly_closed_polyline():
+    """Граница участка одной полилинией со щелью 0,2 м (реальный случай «2-я Прядильная»:
+    без замыкания граница не находилась). Мелкая почти замкнутая метка рядом не должна
+    вытеснить настоящий периметр: замкнутые контуры соревнуются по охвату, а не
+    получают уверенность 1,0 (иначе «Олимпийская деревня» падала с 494 316 до 33 м²)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dxf_path = Path(tmp) / "boundary_gap.dxf"
+        doc = ezdxf.new("R2018")
+        doc.layers.new(name="obj|Граница заказа")
+        msp = doc.modelspace()
+        _open_polyline(msp, [(0, 0), (100, 0), (100, 100), (0, 100), (0, 0.2)], "obj|Граница заказа")
+        _open_polyline(msp, [(10, 10), (12, 10), (12, 12), (10, 12), (10, 10.1)], "obj|Граница заказа")
+        doc.saveas(str(dxf_path))
+
+        result = ingest_dxf(dxf_path)
+
+        assert result.site_boundary_status == "found"
+        assert abs(result.site_boundary.area - 100 * 100) < 20
+
+
+def test_site_boundary_ignores_degenerate_nearly_closed_polyline():
+    """Почти замкнутая полилиния нулевой площади (точки на одной прямой) не становится
+    границей — без неё граница не найдена, как и раньше."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dxf_path = Path(tmp) / "boundary_degenerate.dxf"
+        doc = ezdxf.new("R2018")
+        doc.layers.new(name="obj|Граница заказа")
+        msp = doc.modelspace()
+        _open_polyline(msp, [(0, 0), (50, 0), (100, 0), (0.1, 0)], "obj|Граница заказа")
+        doc.saveas(str(dxf_path))
+
+        result = ingest_dxf(dxf_path)
+
+        assert result.site_boundary is None or result.site_boundary.area >= 1
+
+
 if __name__ == "__main__":
     test_dxf_ingest_classifies_real_layer_naming_convention()
     test_dxf_ingest_is_deterministic_across_independent_calls()
