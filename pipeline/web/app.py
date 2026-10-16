@@ -58,6 +58,7 @@ from pipeline.web.demo_objects import get_demo_object, list_demo_objects, resolv
 from pipeline.web.geometry_utils import geometry_bounds, polygon_to_rings
 from pipeline.web.uploads import (
     UploadValidationError,
+    forget_upload,
     get_uploaded_object,
     list_uploaded_objects,
     register_upload,
@@ -78,6 +79,15 @@ _TERRITORY_CATEGORIES = [
     "dvorovye", "doshkolnye", "obscheobr", "zdravoohr",
     "magistrali", "ploschadi", "parki", "proizvodstvennye",
 ]
+
+
+def _require_territory_category(value: str | None) -> None:
+    """Неизвестная категория — ошибка запроса (422 с перечнем допустимых), а не 500."""
+    if value is not None and value not in _TERRITORY_CATEGORIES:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Неизвестная категория территории {value!r}. Допустимые значения: {', '.join(_TERRITORY_CATEGORIES)}.",
+        )
 
 
 class ProposalIn(BaseModel):
@@ -212,11 +222,28 @@ def api_upload(files: list[UploadFile] = File(...), label_ru: str | None = Form(
     # Сразу проверяем, что из загруженных файлов вообще извлекается граница
     # участка — честная быстрая обратная связь, а не ждать первого клика по
     # «Сгенерировать план», чтобы узнать, что файлы не подходят.
+    # Это проблема загруженного файла, а не сбой сервера: отвечаем 422 с понятным текстом
+    # (раньше битый DXF давал голый 500, а негодный объект оставался в списке) и
+    # убираем объект из реестра.
     try:
         _prepared_site(obj.id)
     except HTTPException as exc:
+        forget_upload(obj.id)
+        detail = (
+            "Граница участка в загруженных файлах не найдена — нужен слой границы участка "
+            "(например «Граница заказа» или «Граница работ»). Проверьте состав файлов."
+        )
         log_event("upload", obj.id, "-", {"filenames": [f.filename for f in files]}, {"error": exc.detail})
-        raise
+        raise HTTPException(status_code=422, detail=detail) from exc
+    except Exception as exc:
+        forget_upload(obj.id)
+        # Текст исключения — только в журнал: в нём служебные пути и английский текст библиотеки.
+        log_event("upload", obj.id, "-", {"filenames": [f.filename for f in files]}, {"error": f"{type(exc).__name__}: {exc}"})
+        raise HTTPException(
+            status_code=422,
+            detail="Не удалось прочитать загруженные файлы как DXF-чертёж. Проверьте, что файл не повреждён "
+            "и это настоящий DXF (или DWG).",
+        ) from exc
 
     log_event(
         "upload",
@@ -264,6 +291,7 @@ def api_data_sources():
 
 @app.get("/api/demo-objects/{demo_id}/geometry")
 def api_geometry(demo_id: str, territory_category: str | None = None, lep_voltage_kv: float | None = None):
+    _require_territory_category(territory_category)
     obj, ingest_result, features = _prepared_site(demo_id, lep_voltage_kv)
     category = territory_category or obj.default_territory_category
     registry = OffsetRegistry()
@@ -298,6 +326,7 @@ def api_lep_voltage_tiers():
 
 @app.get("/api/species")
 def api_species(territory_category: str, life_form: Literal["tree", "shrub"]):
+    _require_territory_category(territory_category)
     catalog = DpioosSpeciesCatalog()
     entries = sorted(
         catalog.recommended_for(territory_category, life_form),
@@ -314,6 +343,7 @@ def api_species(territory_category: str, life_form: Literal["tree", "shrub"]):
 
 @app.post("/api/demo-objects/{demo_id}/generate")
 def api_generate(demo_id: str, request: GenerateRequest):
+    _require_territory_category(request.territory_category)
     obj = _resolve_object(demo_id)
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -336,6 +366,7 @@ def api_generate(demo_id: str, request: GenerateRequest):
 
 @app.post("/api/demo-objects/{demo_id}/review")
 def api_review(demo_id: str, request: ReviewRequest):
+    _require_territory_category(request.territory_category)
     obj, ingest_result, features = _prepared_site(demo_id, request.lep_voltage_kv)
 
     proposals = [

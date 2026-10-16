@@ -54,6 +54,10 @@ RUN chmod +x /entrypoint.sh && sed -i 's/\r$//' /entrypoint.sh
 COPY pipeline/ pipeline/
 COPY tests/ tests/
 COPY data/reference/ data/reference/
+# config/templates/ — шаблоны человекочитаемого отчёта (pipeline/report/human_report.py);
+# без них отчёт в контейнере не строится (TemplateNotFound), найдено 2026-10-16
+# при проверке образа на чистой копии: 4 теста test_human_report.py падали.
+COPY config/ config/
 # data/demo_objects/ — заранее сконвертированные DXF для веб-UI (pipeline/web/),
 # см. докстринг pipeline/web/demo_objects.py — коммитятся в git (небольшие,
 # не 23-ГБ сырой датасет), нужны для живой демонстрации без ODA File Converter.

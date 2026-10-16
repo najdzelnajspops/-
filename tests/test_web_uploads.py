@@ -64,3 +64,40 @@ def test_upload_rejects_unsupported_extension(tmp_path):
 def test_upload_rejects_empty_file_list():
     resp = client.post("/api/uploads", files=[])
     assert resp.status_code in (400, 422)
+
+
+def _uploaded_ids():
+    return {o["id"] for o in client.get("/api/demo-objects").json() if o["id"].startswith("upload_")}
+
+
+def test_upload_broken_dxf_gives_clear_4xx_and_is_not_registered():
+    """Найдено 2026-10-16 при проверке в Docker: битый DXF давал 500 Internal Server Error
+    без пояснения, а объект оставался в списке. Ожидаем понятную ошибку 422 и чистый список."""
+    before = _uploaded_ids()
+    resp = client.post("/api/uploads", files=[("files", ("broken.dxf", b"0\nGARBAGE\n", "application/dxf"))])
+    assert resp.status_code == 422
+    assert "dxf" in resp.json()["detail"].lower()
+    assert _uploaded_ids() == before
+
+
+def test_upload_empty_dxf_gives_clear_4xx_and_is_not_registered():
+    before = _uploaded_ids()
+    resp = client.post("/api/uploads", files=[("files", ("empty.dxf", b"", "application/dxf"))])
+    assert 400 <= resp.status_code < 500
+    assert _uploaded_ids() == before
+
+
+def test_upload_dxf_without_site_boundary_gives_4xx_and_is_not_registered(tmp_path):
+    """Корректный DXF без слоя границы участка: это проблема файла пользователя (4xx), не сбой сервера (500)."""
+    import ezdxf
+
+    path = tmp_path / "no_boundary.dxf"
+    doc = ezdxf.new("R2018")
+    doc.modelspace().add_line((0, 0), (10, 10))
+    doc.saveas(str(path))
+    before = _uploaded_ids()
+    with open(path, "rb") as f:
+        resp = client.post("/api/uploads", files=[("files", ("no_boundary.dxf", f, "application/dxf"))])
+    assert resp.status_code == 422
+    assert "границ" in resp.json()["detail"].lower()
+    assert _uploaded_ids() == before

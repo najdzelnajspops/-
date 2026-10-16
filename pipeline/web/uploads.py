@@ -63,6 +63,12 @@ def get_uploaded_object(object_id: str) -> UploadedObject | None:
     return _UPLOADS.get(object_id)
 
 
+def forget_upload(object_id: str) -> None:
+    """Убирает загрузку из реестра (файл не прошёл проверку сразу после загрузки) —
+    чтобы негодный объект не оставался в выпадающем списке интерфейса."""
+    _UPLOADS.pop(object_id, None)
+
+
 def _validate(filename: str, size: int) -> None:
     ext = Path(filename).suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
