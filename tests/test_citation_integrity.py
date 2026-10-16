@@ -176,3 +176,57 @@ if __name__ == "__main__":
     test_species_citation_without_species_name_is_flagged()
     test_no_recommended_species_point_with_no_citation_passes()
     print("OK: citation integrity (Agent OTK 6.3) tests passed")
+
+
+# --- ручной выбор класса напряжения ЛЭП (найдено 2026-10-16) -------------------------
+# К цитате ПП РФ № 160 при ручном выборе дописывается пояснение «класс напряжения (N кВ)
+# указан оператором вручную…». Раньше буквальная сверка принимала за нарушение и такую
+# верную цитату (ложная тревога: 2 из 2093 в прогоне с 10 кВ). Теперь принимается ровно
+# каноническая приписка, у которой число кВ сверено с реестром, а отступ в строке равен
+# ширине зоны из реестра для этого напряжения; любое отклонение — по-прежнему нарушение.
+
+def _operator_lep_row(voltage_kv=10.0, citation=None, distance_m=None):
+    from shapely.geometry import Point
+
+    from pipeline.constraints.buffer_engine import ConstraintFeature
+    from pipeline.constraints.lep_voltage_override import UNKNOWN_VOLTAGE_BOUNDARY_TYPE, apply_lep_voltage_override
+    from pipeline.constraints.lep_zones import LepZoneRegistry
+
+    registry = LepZoneRegistry()
+    feature = ConstraintFeature(id="lep1", boundary_type=UNKNOWN_VOLTAGE_BOUNDARY_TYPE, geometry=Point(0, 0))
+    produced = apply_lep_voltage_override([feature], voltage_kv, registry)[0]  # строка так, как её реально строит пайплайн
+    return {
+        "feature_id": "lep1",
+        "boundary_type": UNKNOWN_VOLTAGE_BOUNDARY_TYPE,
+        "boundary_label_ru": "ЛЭП",
+        "distance_m": distance_m if distance_m is not None else produced.explicit_distance_m,
+        "verified": True,
+        "citation": citation if citation is not None else produced.explicit_citation,
+    }
+
+
+def test_operator_chosen_lep_voltage_citation_passes():
+    for kv in (0.4, 10.0, 35.0, 110.0, 1150.0):
+        report = {"applied_constraint_norms_by_kind": {"tree": [_operator_lep_row(kv)]}, "placements": []}
+        result = check_citation_integrity(report)
+        assert result.verdict == "ok", (kv, result.violations)
+
+
+def test_operator_lep_citation_with_wrong_distance_is_flagged():
+    report = {"applied_constraint_norms_by_kind": {"tree": [_operator_lep_row(10.0, distance_m=55.0)]}, "placements": []}
+    result = check_citation_integrity(report)
+    assert result.verdict != "ok"
+
+
+def test_operator_lep_citation_with_altered_text_is_flagged():
+    row = _operator_lep_row(10.0)
+    row["citation"] = row["citation"].replace("указан оператором вручную", "подтверждён чертежом")
+    report = {"applied_constraint_norms_by_kind": {"tree": [row]}, "placements": []}
+    assert check_citation_integrity(report).verdict != "ok"
+
+
+def test_operator_lep_citation_on_other_boundary_type_is_flagged():
+    row = _operator_lep_row(10.0)
+    row["boundary_type"] = "building_wall"
+    report = {"applied_constraint_norms_by_kind": {"tree": [row]}, "placements": []}
+    assert check_citation_integrity(report).verdict != "ok"

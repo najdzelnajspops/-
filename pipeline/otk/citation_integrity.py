@@ -33,6 +33,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from pipeline.catalog.dpioos_species_catalog import DpioosSpeciesCatalog
@@ -41,6 +42,21 @@ from pipeline.constraints.offset_registry import OffsetRegistry
 from pipeline.placement.generator import GRID_SPACING_CITATION
 
 UNVERIFIED_PLACEHOLDER = "[требует верификации]"
+
+# Ручной выбор класса напряжения ЛЭП оператором (2026-09-25): к цитате ПП РФ № 160
+# пайплайн дописывает пояснение, что класс указан оператором, а не взят с чертежа.
+# Каноническая форма записана здесь НАМЕРЕННО отдельно от генератора (принцип независимости
+# ОТК, docs/AGENTS_PLAN.md п. 6): если генератор изменит текст, проверка это поймает, а
+# тест tests/test_citation_integrity.py (строит строку настоящим генератором) покажет расхождение.
+# Принимается только эта форма, у которой число кВ сверено с реестром, а отступ в строке равен
+# ширине зоны из реестра для этого напряжения (2026-10-16: раньше такая верная цитата
+# считалась нарушением — ложная тревога).
+_OPERATOR_VOLTAGE_SUFFIX = (
+    " — класс напряжения ({kv:g} кВ) указан оператором вручную по дополнительным "
+    "материалам объекта, не определён по данным чертежа"
+)
+_OPERATOR_VOLTAGE_RE = re.compile(r"класс напряжения \((\d+(?:[.,]\d+)?) кВ\) указан оператором вручную")
+_UNKNOWN_VOLTAGE_BOUNDARY_TYPE = "power_line_overhead_unknown_voltage"
 
 
 @dataclass(frozen=True)
@@ -59,13 +75,34 @@ class CitationIntegrityCheck:
     explanation: str = ""
 
 
+def _is_valid_operator_voltage_row(row: dict, lep_registry: LepZoneRegistry, lep_citation: str) -> bool:
+    """Цитата ручного выбора класса напряжения: ровно каноническая форма для этого числа кВ,
+    и отступ в строке равен ширине охранной зоны из реестра ПП РФ № 160 для него."""
+    citation = row.get("citation")
+    if not isinstance(citation, str):
+        return False
+    match = _OPERATOR_VOLTAGE_RE.search(citation)
+    if match is None:
+        return False
+    voltage_kv = float(match.group(1).replace(",", "."))
+    if citation != lep_citation + _OPERATOR_VOLTAGE_SUFFIX.format(kv=voltage_kv):
+        return False
+    try:
+        expected_width_m = lep_registry.overhead_line_zone_width_m(voltage_kv)
+    except Exception:
+        return False
+    distance_m = row.get("distance_m")
+    return isinstance(distance_m, (int, float)) and abs(distance_m - expected_width_m) < 1e-9
+
+
 def check_citation_integrity(report: dict) -> CitationIntegrityCheck:
     """Независимая сверка каждой ссылки на норму в готовом JSON-отчёте: строка
     цитаты пересчитывается заново из соответствующего верифицированного реестра
     и сравнивается буквально с тем, что попало в отчёт."""
     registry = OffsetRegistry()
     species_catalog = DpioosSpeciesCatalog()
-    lep_citation = LepZoneRegistry().citation()
+    lep_registry = LepZoneRegistry()
+    lep_citation = lep_registry.citation()
 
     violations: list[CitationViolation] = []
     checked = 0
@@ -96,6 +133,10 @@ def check_citation_integrity(report: dict) -> CitationIntegrityCheck:
 
             expected_offset_citation = registry.citation(boundary_type)
             if citation == expected_offset_citation or citation == lep_citation:
+                continue
+            if boundary_type == _UNKNOWN_VOLTAGE_BOUNDARY_TYPE and _is_valid_operator_voltage_row(
+                row, lep_registry, lep_citation
+            ):
                 continue
             violations.append(
                 CitationViolation(
