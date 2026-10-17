@@ -88,3 +88,17 @@ def test_old_results_are_evicted(tmp_path, monkeypatch):
     assert results.get_result(ids[2]) is not None
     for i in ids:
         results.forget_result(i)
+
+
+def test_report_with_user_voltage_has_no_conflicting_warning(tmp_path):
+    """Если пользователь указал класс напряжения, отчёт не пишет «применён максимально
+    консервативный отступ 55 м» — отступ посчитан по его выбору."""
+    resp = client.post(
+        "/api/demo-objects/peschany_pereulok/generate",
+        json={"territory_category": "dvorovye", "lep_voltage_kv": 10},
+    )
+    rid = resp.json()["result_id"]
+    page = client.get(f"/api/results/{rid}/report/human_report.html").text
+    assert "указан пользователем: 10 кВ" in page
+    assert "Применён максимально консервативный отступ" not in page
+    assert 'class="warn"' not in page

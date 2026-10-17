@@ -54,8 +54,10 @@
 <div class="warn">⚠️ <strong>Граница участка не найдена надёжно.</strong> Малое или нулевое число посадок ниже может объясняться именно этим, а не тем, что участок действительно весь занят ограничениями.</div>
 {% endif %}
 
-{% if report.lep_unknown_voltage.count > 0 %}
+{% if report.lep_unknown_voltage.count > 0 and report.lep_unknown_voltage.operator_override_kv is none %}
 <div class="warn">⚠️ <strong>{{ report.lep_unknown_voltage.count }} объектов ЛЭП с неопределённым классом напряжения.</strong> Применён максимально консервативный отступ {{ "%.0f"|format(report.lep_unknown_voltage.fallback_distance_m) }} м. {{ report.lep_unknown_voltage.explanation }}</div>
+{% elif report.lep_unknown_voltage.count > 0 %}
+<p class="meta">Класс напряжения ЛЭП ({{ report.lep_unknown_voltage.count }} объектов) указан пользователем: {{ "%g"|format(report.lep_unknown_voltage.operator_override_kv) }} кВ, применён отступ {{ "%.0f"|format(report.lep_unknown_voltage.applied_distance_m) }} м (ПП РФ №160).</p>
 {% endif %}
 
 <h2>1. Сводка</h2>
