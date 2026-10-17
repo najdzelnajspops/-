@@ -74,7 +74,7 @@ def compute_budget_constrained_spacing(
             f"чтобы уложиться в оставшийся бюджет ({remaining_budget_rub:,.0f} руб. из целевых "
             f"{target_budget_rub:,.0f} руб/участок при цене {unit_cost_rub:,.0f} руб/шт.) — "
             "физическая норма 743-ПП допускала бы более густую посадку, но это дало бы "
-            "нереалистичное число экземпляров (см. docs/OPEN_QUESTIONS.md, 2026-09-16)."
+            "нереалистичное число экземпляров."
         ).replace(",", " ")
     else:
         final_spacing = norm_spacing_m

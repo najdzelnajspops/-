@@ -34,12 +34,19 @@ import matplotlib.pyplot as plt
 from jinja2 import Environment, FileSystemLoader
 from shapely.geometry.base import BaseGeometry
 
+from pipeline.catalog.dpioos_species_catalog import DpioosSpeciesCatalog
 from pipeline.constraints.buffer_engine import ConstraintMapResult
 from pipeline.placement.generator import PlacementPoint, PlacementResult
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[2] / "config" / "templates"
 
 _KIND_LABEL_RU = {"tree": "деревья", "shrub": "кустарники"}
+
+_BOUNDARY_STATUS_RU = {
+    "found": "найдена",
+    "found_low_confidence": "найдена, но ненадёжно",
+    "not_found": "не найдена",
+}
 
 
 @dataclass
@@ -134,8 +141,15 @@ def render_human_report(
     _render_scheme_image(constraint_results, placements_by_kind, "После размещения", scheme_after_path)
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)), trim_blocks=True, lstrip_blocks=True)
+    category_code = report.get("territory_category", "")
+    try:
+        territory_label = DpioosSpeciesCatalog().territory_categories.get(category_code, category_code)
+    except Exception:  # справочник недоступен — в отчёте останется код категории
+        territory_label = category_code
     context = {
         "object_label": object_label,
+        "territory_label": territory_label,
+        "boundary_status_ru": _BOUNDARY_STATUS_RU.get(report.get("site_boundary_status"), report.get("site_boundary_status")),
         "report": report,
         "scheme_before_name": scheme_before_path.name,
         "scheme_after_name": scheme_after_path.name,
