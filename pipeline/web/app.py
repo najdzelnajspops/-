@@ -1,8 +1,8 @@
 """Веб-UI (FastAPI) — второй способ запуска сервиса, РЯДОМ с CLI (pipeline/run.py,
 pipeline/review_run.py), не вместо него (см. docs/TASK_BRIEF.md — CLI остаётся
 основным способом по ТЗ, UI — плюс). Прямой запрос пользователя, 2026-09-18:
-живой веб-сервис, оба режима работы (автогенерация + проверка человеческого
-выбора), карта/реестр зданий data.mos.ru — отдельным шагом позже, не здесь.
+живой веб-сервис, оба режима работы (автогенерация + проверка выбора
+пользователя), карта/реестр зданий data.mos.ru — отдельным шагом позже, не здесь.
 
 Запуск: `uvicorn pipeline.web.app:app --reload` (dev) или без --reload в проде.
 Swagger/OpenAPI — на /docs "из коробки" (отдельный критерий оценки ТЗ).
@@ -25,7 +25,7 @@ from typing import Literal
 
 import yaml
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -51,8 +51,10 @@ from pipeline.ingest.dwg_convert import ConversionFailedError, ConverterNotFound
 from pipeline.ingest.dxf_ingest import ingest_dxf_files
 from pipeline.ingest.layer_classifier import LayerClassifier
 from pipeline.placement.density import PlantingDensityRegistry
+from pipeline.report.human_report import render_human_report
 from pipeline.review.placement_review import ProposedPlanting, review_human_placements
 from pipeline.run import run_service_a
+from pipeline.web import results as result_store
 from pipeline.web.audit_log import log_event
 from pipeline.web.demo_objects import get_demo_object, list_demo_objects, resolve_base_dxf, resolve_input_paths
 from pipeline.web.geometry_utils import geometry_bounds, polygon_to_rings
@@ -68,7 +70,7 @@ app = FastAPI(
     title="Проект озеленения территории — веб-UI",
     description=(
         "Второй способ запуска сервиса (рядом с CLI): визуализация плана + "
-        "проверка предложенной человеком посадки (Placement Review Agent)."
+        "проверка предложенной пользователем посадки (Placement Review Agent)."
     ),
     version="0.1.0",
 )
@@ -107,8 +109,8 @@ class ReviewRequest(BaseModel):
 
 class GenerateRequest(BaseModel):
     territory_category: str
-    # Ручное указание класса напряжения ЛЭП оператором (2026-09-25, прямой
-    # запрос пользователя — «человек имеет дополнительные материалы на руках и
+    # Ручное указание класса напряжения ЛЭП пользователем (2026-09-25, прямой
+    # запрос пользователя — «пользователь имеет дополнительные материалы на руках и
     # может самостоятельно определить класс объекта»): если задан, ВСЕ ЛЭП с
     # неопределённым по чертежу классом напряжения на этом участке получают
     # отступ по этому классу (ПП РФ №160) вместо максимально консервативного
@@ -167,7 +169,7 @@ def _prepared_site(object_id: str, lep_voltage_kv: float | None = None):
     veg_policy = ExistingVegetationPolicy()
     features = veg_policy.apply_to_features(ingest_result.features)
     features = apply_red_lines_policy(features)
-    # Ручное указание класса напряжения ЛЭП оператором (2026-09-25, прямой
+    # Ручное указание класса напряжения ЛЭП пользователем (2026-09-25, прямой
     # запрос пользователя) — см. pipeline/constraints/lep_voltage_override.py.
     # None (по умолчанию) не меняет поведение.
     features = apply_lep_voltage_override(features, lep_voltage_kv, LepZoneRegistry())
@@ -318,7 +320,7 @@ def api_geometry(demo_id: str, territory_category: str | None = None, lep_voltag
 
 @app.get("/api/lep-voltage-tiers")
 def api_lep_voltage_tiers():
-    """Типовые классы напряжения ЛЭП (ПП РФ №160) для ручного выбора оператором
+    """Типовые классы напряжения ЛЭП (ПП РФ №160) для ручного выбора пользователем
     (2026-09-25, прямой запрос пользователя) — см.
     pipeline/constraints/lep_voltage_override.py."""
     return LepZoneRegistry().tier_options()
@@ -346,22 +348,71 @@ def api_generate(demo_id: str, request: GenerateRequest):
     _require_territory_category(request.territory_category)
     obj = _resolve_object(demo_id)
 
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp_path = Path(tmp)
+    # Файлы результата (DXF и отчёт для пользователя) остаются на сервере для
+    # скачивания из окна сервиса — см. pipeline/web/results.py (хранятся последние
+    # несколько результатов).
+    result_dir = result_store.new_result_dir()
+    try:
         result = run_service_a(
             input_dxf_paths=obj.input_paths,
             base_dxf_path_for_export=obj.base_dxf_path,
             territory_category=request.territory_category,
-            output_dxf_path=tmp_path / "result.dxf",
-            output_report_path=tmp_path / "report.json",
+            output_dxf_path=result_dir / result_store.DXF_NAME,
+            output_report_path=result_dir / "report.json",
             selected_species_names=request.selected_species,
             lep_voltage_kv_override=request.lep_voltage_kv,
         )
-        # DXF/JSON — во временной директории, которая удаляется по выходу из
-        # `with`; для UI-демонстрации достаточно отчёта в памяти (result.report),
-        # скачивание файла результата — отдельная, более поздняя задача.
-        log_event("generate", demo_id, request.territory_category, request.model_dump(), result.report)
-        return result.report
+        # Отчёт для пользователя не должен ломать генерацию: схема или шаблон могут
+        # подвести, а расчёт и DXF от этого не зависят — тогда кнопка отчёта не покажется.
+        report_ready = True
+        try:
+            render_human_report(
+                result.report,
+                result.constraint_results,
+                result.placement_results,
+                output_dir=result_dir / result_store.REPORT_DIR_NAME,
+                object_label=obj.label_ru,
+            )
+        except Exception:
+            report_ready = False
+        result_id = result_store.register_result(result_dir, demo_id)
+    except BaseException:
+        shutil.rmtree(result_dir, ignore_errors=True)
+        raise
+
+    response = {**result.report, "result_id": result_id, "report_available": report_ready}
+    log_event("generate", demo_id, request.territory_category, request.model_dump(), response)
+    return response
+
+
+def _require_result(result_id: str) -> result_store.ResultEntry:
+    entry = result_store.get_result(result_id)
+    if entry is None or not entry.dxf_path.is_file():
+        raise HTTPException(
+            status_code=404,
+            detail="Результат не найден: он мог устареть (хранятся последние несколько генераций) — сгенерируйте план заново.",
+        )
+    return entry
+
+
+@app.get("/api/results/{result_id}/dxf")
+def api_result_dxf(result_id: str):
+    entry = _require_result(result_id)
+    return FileResponse(
+        entry.dxf_path,
+        media_type="application/dxf",
+        filename=f"zelyonyj_kontur_{entry.demo_id}.dxf",
+    )
+
+
+@app.get("/api/results/{result_id}/report/{filename}")
+def api_result_report_file(result_id: str, filename: str):
+    entry = _require_result(result_id)
+    media_type = result_store.REPORT_FILES.get(filename)
+    path = entry.report_dir / filename
+    if media_type is None or not path.is_file():
+        raise HTTPException(status_code=404, detail="Файл отчёта не найден.")
+    return Response(content=path.read_bytes(), media_type=media_type)
 
 
 @app.post("/api/demo-objects/{demo_id}/review")
@@ -477,7 +528,7 @@ def api_price_list_apply(request: PriceListApplyRequest):
     """Применяет подтверждённые пользователем изменения цен ПРЯМО на сервере
     (решение пользователя, 2026-09-19: «сразу применить на сервере, с
     бэкапом» — в отличие от нормативных актов, цены явно помечены как
-    редактируемые человеком, не норма, см. planting_cost_estimates.yaml)."""
+    редактируемые пользователем, не норма, см. planting_cost_estimates.yaml)."""
     if not request.updates:
         raise HTTPException(status_code=400, detail="Нет ни одного изменения для применения.")
 

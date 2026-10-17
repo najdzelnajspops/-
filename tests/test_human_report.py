@@ -1,4 +1,4 @@
-"""Тесты человекочитаемого отчёта (pipeline/report/human_report.py) — прямой
+"""Тесты отчётё для пользователя (pipeline/report/human_report.py) — прямой
 ответ на разрыв, найденный при анализе требований ТЗ (2026-09-23): JSON-отчёт
 полный, но без CAD/умения читать JSON результат физически не увидеть."""
 
@@ -103,6 +103,19 @@ def test_human_report_html_contains_key_sections(tmp_path):
     assert "tree_0001" in text
     assert "scheme_before.png" in text
     assert "scheme_after.png" in text
+
+
+def test_human_report_html_is_printable_to_pdf(tmp_path):
+    """Печать из браузера («Сохранить как PDF») — штатный путь получить PDF без серверной зависимости:
+    нужны стили печати, повтор шапки длинной таблицы и кнопка печати."""
+    report, constraint_results, placement_results = _make_fixture()
+    paths = render_human_report(report, constraint_results, placement_results, output_dir=tmp_path)
+
+    text = paths.html_path.read_text(encoding="utf-8")
+    assert "@media print" in text
+    assert "@page" in text
+    assert "<thead>" in text  # шапка таблицы обоснований повторяется на каждой странице
+    assert "window.print()" in text
 
 
 def test_human_report_reflects_otk_violation_honestly(tmp_path):
