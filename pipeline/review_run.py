@@ -1,6 +1,6 @@
 """CLI точка входа — Placement Review Agent (второй режим работы Service A).
 
-См. pipeline/review/placement_review.py: человек сам решает, что и куда
+См. pipeline/review/placement_review.py: пользователь сам решает, что и куда
 сажать (список предложенных посадок во входном JSON) — сервис только
 проверяет и объясняет, не меняет и не подбирает решение сам. Добавлено
 РЯДОМ с автоматической генерацией (pipeline/run.py), не заменяет её —
@@ -87,7 +87,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Проект озеленения территории — Placement Review Agent: независимая проверка "
-            "ЧЕЛОВЕЧЕСКОГО выбора посадки (второй режим, см. pipeline/review/placement_review.py)."
+            "выбора посадки, сделанного пользователем (второй режим, см. pipeline/review/placement_review.py)."
         )
     )
     parser.add_argument(
@@ -106,7 +106,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         "--proposals",
         required=True,
         help=(
-            "JSON-файл со списком предложенных человеком посадок: "
+            "JSON-файл со списком предложенных пользователем посадок: "
             '[{"id": "...", "species_name_ru": "...", "life_form": "tree"|"shrub", '
             '"x": ..., "y": ...}, ...] — формат ввода намеренно не привязан к DXF/UI, '
             "см. докстринг pipeline/review/placement_review.py."

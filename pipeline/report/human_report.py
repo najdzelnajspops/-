@@ -1,4 +1,4 @@
-"""Человекочитаемый отчёт (Markdown + HTML) — см. docs/REPORT_DESIGN.md.
+"""Отчётё для пользователя (Markdown + HTML) — см. docs/REPORT_DESIGN.md.
 
 Прямой ответ на разрыв, найденный при анализе требований ТЗ (2026-09-23):
 JSON-отчёт (pipeline/report/interpretation_report.py) полный и правильный, но
@@ -119,7 +119,7 @@ def render_human_report(
     output_dir: str | Path,
     object_label: str = "",
 ) -> HumanReportPaths:
-    """Собирает человекочитаемый отчёт (Markdown + HTML) из уже посчитанного
+    """Собирает отчётё для пользователя (Markdown + HTML) из уже посчитанного
     JSON-отчёта (`report`, см. pipeline/report/interpretation_report.py) и
     геометрий Constraint Engine (только для схемы "до/после" — в самом JSON
     геометрий зон нет, только координаты точек)."""

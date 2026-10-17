@@ -17,7 +17,7 @@ services:
     #   docker compose run --rm app python -m pipeline.run --input ... --base-dxf ... \
     #     --territory-category dvorovye --output-dxf /app/data/out/result.dxf \
     #     --output-report /app/data/out/report.json
-    # Второй режим (проверка человеческого выбора):
+    # Второй режим (проверка выбора пользователя):
     #   docker compose run --rm app python -m pipeline.review_run --input ... \
     #     --territory-category dvorovye --proposals /app/data/proposals.json \
     #     --output-report /app/data/out/review_report.json

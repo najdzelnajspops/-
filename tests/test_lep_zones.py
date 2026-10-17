@@ -38,7 +38,7 @@ def test_overhead_line_above_known_tariff_raises_instead_of_guessing():
 
 def test_tier_options_matches_all_8_source_tariffs():
     """2026-09-25, прямой запрос пользователя — ручное указание класса
-    напряжения оператором в UI берёт варианты отсюда, а не придумывает свои."""
+    напряжения пользователем в UI берёт варианты отсюда, а не придумывает свои."""
     lep = LepZoneRegistry()
     options = lep.tier_options()
 

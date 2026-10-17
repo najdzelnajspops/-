@@ -59,8 +59,8 @@ class PlantingDensityRegistry:
         self, territory_category: TerritoryCategory, life_form: LifeForm, area_m2: float
     ) -> int:
         """Нижняя граница диапазона нормы — для проверки, что предложенное
-        человеком число посадок не занижено относительно 623-ПП, Таблица В.1
-        (см. pipeline/review/placement_review.py, проверка человеческого выбора)."""
+        пользователем число посадок не занижено относительно 623-ПП, Таблица В.1
+        (см. pipeline/review/placement_review.py, проверка выбора пользователя)."""
         lo, _ = self._range_per_ha(territory_category, life_form)
         area_ha = area_m2 / 10_000
         return max(0, round(lo * area_ha))

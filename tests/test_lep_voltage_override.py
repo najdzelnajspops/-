@@ -1,5 +1,5 @@
-"""Ручное указание класса напряжения ЛЭП оператором (2026-09-25, прямой запрос
-пользователя — «человек имеет дополнительные материалы на руках и может
+"""Ручное указание класса напряжения ЛЭП пользователем (2026-09-25, прямой запрос
+пользователя — «пользователь имеет дополнительные материалы на руках и может
 самостоятельно определить класс объекта — сервис должен пересчитать параметры
 участка»).
 
@@ -66,7 +66,7 @@ def test_override_replaces_distance_and_citation_only_for_unknown_voltage_lep():
     assert lep_out.explicit_distance_m == 10.0  # тариф 1-20 кВ по ПП РФ №160
     assert lep_out.explicit_citation is not None
     assert "10 кВ" in lep_out.explicit_citation
-    assert "вручную" in lep_out.explicit_citation
+    assert "указан пользователем" in lep_out.explicit_citation
 
     # Другой тип фичи не тронут вообще (тот же объект, не копия с теми же полями).
     assert gas_out is features[1]
@@ -141,10 +141,10 @@ def test_run_service_a_with_operator_voltage_override_recovers_allowed_zone(tmp_
     assert result.report["lep_unknown_voltage"]["operator_override_kv"] == 10.0
     assert result.report["lep_unknown_voltage"]["applied_distance_m"] == 10.0
     assert result.report["lep_unknown_voltage"]["fallback_distance_m"] == 55.0  # что было бы по умолчанию
-    # Честность отчёта: known_simplifications должен явно называть это
-    # человеческим решением, а не автоматическим определением по чертежу.
+    # Честность отчёта: known_simplifications называет источник класса напряжения —
+    # указание пользователя по дополнительным материалам, а не определение по чертежу.
     joined = " ".join(result.report["known_simplifications"])
-    assert "оператор" in joined.lower()
+    assert "пользователь" in joined.lower()
     assert "10" in joined
 
 

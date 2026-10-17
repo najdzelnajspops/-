@@ -6,7 +6,7 @@ docs/DATA_STRUCTURE.md §9): "<источник>|<категория>". Матч
 
 Принцип (см. AGENTS.md): нераспознанный слой — это статус `unclassified`,
 а не тихий пропуск и не догадка. Вызывающий код (Territory Onboarding Agent)
-обязан показать список unclassified слоёв оператору, а не спрятать их.
+обязан показать список unclassified слоёв пользователю, а не спрятать их.
 """
 
 from __future__ import annotations

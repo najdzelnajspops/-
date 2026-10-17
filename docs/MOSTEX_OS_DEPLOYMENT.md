@@ -50,7 +50,7 @@ docker compose run --rm app python -m pipeline.run \
 - **`result.dxf`**: должны появиться новые слои `GREEN_AI_TREE_PROPOSED`/`GREEN_AI_SHRUB_PROPOSED` (и `_REJECTED`, если что-то было отклонено) — при этом все исходные слои и объекты должны остаться неизменными (это отдельно проверяет агент ОТК внутри самого прогона, см. `pipeline/otk/layer_integrity.py`).
 - **Открытие в CAD-просмотрщике** — подтверждено (2026-09-24): результат на реальном объекте открыт в ZWCAD Viewer (Windows, AutoCAD-совместимый) без ошибок, схема отобразилась корректно (см. `docs/LIMITATIONS.md`). Открытие именно на самом MosTex.OS/Linux (например, nanoCAD для Linux) по-прежнему не проверено — нет доступа к реальной машине с этой ОС; но файл — валидный DXF (ACAD2018), уже прочитан настоящим CAD-приложением семейства AutoCAD, а не только программно через `ezdxf.readfile()`.
 
-## Второй режим (проверка человеческого выбора)
+## Второй режим (проверка выбора пользователя)
 
 ```bash
 docker compose run --rm app python -m pipeline.review_run \
@@ -60,7 +60,7 @@ docker compose run --rm app python -m pipeline.review_run \
   --output-report /app/data/out/review_report.json
 ```
 
-`proposals.json` — список предложенных человеком посадок (id/вид/жизненная форма/координаты), формат см. в докстринге `pipeline/review/placement_review.py`.
+`proposals.json` — список предложенных пользователем посадок (id/вид/жизненная форма/координаты), формат см. в докстринге `pipeline/review/placement_review.py`.
 
 ## Веб-UI (второй способ запуска, не обязателен по ТЗ)
 
