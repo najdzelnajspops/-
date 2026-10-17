@@ -610,6 +610,13 @@ button.primary:disabled { background: #a9b6a2; cursor: not-allowed; }
 #review-btn, #generate-btn, #generate-btn-2, #upload-submit-btn { background: var(--header-bg); }
 #review-btn:hover, #generate-btn:hover, #generate-btn-2:hover, #upload-submit-btn:hover { background: #263316; }
 
+/* Ссылки на итоговый DXF и отчёт под кнопкой «Сгенерировать план» (2026-10-17):
+   внешне как кнопки шапки, но это обычные ссылки — скачивание и новая вкладка. */
+.result-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.result-links[hidden] { display: none; }
+a.result-link { flex: 1 1 auto; text-align: center; text-decoration: none; background: var(--header-bg); color: #fff; padding: 8.5px 14px; border-radius: 5px; font-size: 14px; }
+a.result-link:hover { background: #263316; }
+
 /* Вторая рабочая кнопка «Сгенерировать план» в блоке «Результат»
    (2026-09-24, прямой запрос пользователя) — та же кнопка, тот же обработчик,
    просто доступна и рядом с результатом, не только в панели инструментов
@@ -796,6 +803,7 @@ button.secondary {
      что было отмечено). Кнопка «Сгенерировать план» рядом — по той же причине
      (действие, не результат), уже неактивна к моменту печати. */
   #species-picker-section,
+  .result-links,
   #generate-btn-2 {
     display: none !important;
   }

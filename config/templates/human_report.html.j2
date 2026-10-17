@@ -16,9 +16,35 @@
   .warn { background: #fbeaea; border-left: 4px solid #b33f3f; padding: 10px 14px; margin: 16px 0; border-radius: 6px; }
   .note { color: #5b6a58; font-size: 13px; }
   ul { padding-left: 20px; }
+  .print-bar { text-align: right; margin-bottom: 8px; }
+  .print-bar button { font: inherit; font-size: 14px; padding: 6px 14px; border: 1px solid #2f6b3a; background: #fff; color: #2f6b3a; border-radius: 6px; cursor: pointer; }
+  .keep { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+
+  /* Печать / «Сохранить как PDF» из браузера */
+  @page { size: A4; margin: 15mm 14mm; }
+  @media print {
+    body { max-width: none; margin: 0; padding: 0; background: #fff; font-size: 10.5pt; line-height: 1.4; }
+    .print-bar { display: none; }
+    h1 { font-size: 20pt; }
+    h2 { font-size: 14pt; margin-top: 18pt; }
+    h3 { font-size: 11.5pt; margin-top: 12pt; }
+    table { font-size: 9pt; }
+    th, td { padding: 3pt 6pt; }
+    thead { display: table-header-group; }   /* шапка таблицы повторяется на каждой странице */
+    tr { break-inside: avoid; }
+    img { max-height: 120mm; width: auto; object-fit: contain; }
+    .warn { break-inside: avoid; }
+    table.placements col.c-id { width: 9%; }
+    table.placements col.c-xy { width: 13%; }
+    table.placements col.c-status { width: 11%; }
+    table.placements col.c-species { width: 17%; }
+  }
 </style>
 </head>
 <body>
+
+<div class="print-bar"><button type="button" onclick="window.print()">Печать / сохранить в PDF</button></div>
 
 <h1>Отчёт по итогам озеленения{% if object_label %} — {{ object_label }}{% endif %}</h1>
 <p class="meta">Категория территории: <strong>{{ report.territory_category }}</strong> · Схема отчёта: <code>{{ report.schema_version }}</code> · Статус границы участка: <strong>{{ report.site_boundary_status }}</strong></p>
@@ -54,24 +80,31 @@
 {% endfor %}
 </ul>
 
+<div class="keep">
 <h2>2. Схема «до посадки»</h2>
 <p class="note">Допустимая (зелёным) и запрещённая (красным) для посадки зона, рассчитанная по нормативным отступам от коммуникаций и охранных зон.</p>
 <img src="{{ scheme_before_name }}" alt="Схема до посадки">
+</div>
 
+<div class="keep">
 <h2>3. Схема «после размещения»</h2>
 <p class="note">То же + предложенные точки (тёмно-зелёным) и отклонённые кандидаты (крестиком).</p>
 <img src="{{ scheme_after_name }}" alt="Схема после размещения">
+</div>
 
 <h2>4. Таблица обоснований</h2>
 <p class="note">Полный список — в машиночитаемом JSON-отчёте (<code>report.json</code>, поле <code>placements</code>). Здесь — по деревьям поимённо, по кустарникам — сводкой по группе/виду (см. также схему выше и DXF-экспорт: кустарник показан группами по ГОСТ 21.508-2020, не поточечно).</p>
 
 <h3>Деревья</h3>
 {% set trees = report.placements | selectattr("planting_kind", "equalto", "tree") | list %}
-<table>
-<tr><th>id</th><th>Координаты</th><th>Статус</th><th>Вид</th><th>Обоснование</th></tr>
+<table class="placements">
+<colgroup><col class="c-id"><col class="c-xy"><col class="c-status"><col class="c-species"><col></colgroup>
+<thead><tr><th>id</th><th>Координаты</th><th>Статус</th><th>Вид</th><th>Обоснование</th></tr></thead>
+<tbody>
 {% for p in trees[:50] %}
 <tr><td>{{ p.id }}</td><td>{{ "%.1f"|format(p.x) }}, {{ "%.1f"|format(p.y) }}</td><td>{{ "размещено" if p.status == "placed" else "отклонено" }}</td><td>{{ p.species_name_ru or "—" }}</td><td>{{ p.species_citation or "—" }}</td></tr>
 {% endfor %}
+</tbody>
 </table>
 {% if trees|length > 50 %}<p class="note">...ещё {{ trees|length - 50 }} записей — см. полный JSON-отчёт.</p>{% endif %}
 

@@ -9,8 +9,8 @@ const state = {
   proposals: [], // {id, species_name_ru, life_form, x, y}
   lastReview: null, // Map<planting_id, hasIssue>
   selectedSpecies: { tree: new Set(), shrub: new Set() }, // чек-боксы видов на вкладке автогенерации (2026-09-24)
-  // Ручное указание класса напряжения ЛЭП оператором (2026-09-25, прямой
-  // запрос пользователя — «человек имеет дополнительные материалы на руках и
+  // Ручное указание класса напряжения ЛЭП пользователем (2026-09-25, прямой
+  // запрос пользователя — «пользователь имеет дополнительные материалы на руках и
   // может самостоятельно определить класс объекта»). null = не указан,
   // применяется прежнее поведение по умолчанию (макс. консервативный отступ).
   lepVoltageKv: null,
@@ -945,7 +945,9 @@ async function runGenerate() {
     });
     renderGenerateMarkers(report.placements || []);
     renderGenerateSummary(report);
+    renderGenerateDownloads(report);
   } catch (err) {
+    renderGenerateDownloads(null);
     document.getElementById("generate-summary").innerHTML = `<div class="issue bad">Ошибка: ${escapeHtml(err.message)}</div>`;
   } finally {
     buttons.forEach((b) => {
@@ -953,6 +955,24 @@ async function runGenerate() {
       b.textContent = "Сгенерировать план";
     });
   }
+}
+
+// Скачать итоговый DXF и открыть отчёт — файлы остаются на сервере для последних
+// генераций (pipeline/web/results.py); без result_id (ошибка генерации) блок скрыт.
+function renderGenerateDownloads(report) {
+  const box = document.getElementById("generate-downloads");
+  if (!report || !report.result_id) {
+    box.hidden = true;
+    box.innerHTML = "";
+    return;
+  }
+  const id = encodeURIComponent(report.result_id);
+  const links = [`<a class="result-link" href="/api/results/${id}/dxf" download>⬇ Скачать DXF</a>`];
+  if (report.report_available) {
+    links.push(`<a class="result-link" href="/api/results/${id}/report/human_report.html" target="_blank" rel="noopener">📄 Открыть отчёт</a>`);
+  }
+  box.innerHTML = links.join("");
+  box.hidden = false;
 }
 
 function renderGenerateMarkers(placements) {
@@ -1021,7 +1041,9 @@ function renderGenerateSummary(report) {
   if (report.otk_boundary_plausibility && report.otk_boundary_plausibility.verdict === "implausible") {
     warnings.push(report.otk_boundary_plausibility.explanation);
   }
-  if (report.lep_unknown_voltage && report.lep_unknown_voltage.count > 0) {
+  // Предупреждение только если класс напряжения НЕ указан пользователем: иначе отступ
+  // уже посчитан по его выбору, и фраза про 55 м была бы неверной.
+  if (report.lep_unknown_voltage && report.lep_unknown_voltage.count > 0 && report.lep_unknown_voltage.operator_override_kv == null) {
     warnings.push(
       `${report.lep_unknown_voltage.count} объектов ЛЭП с неопределённым классом напряжения — применён отступ ${report.lep_unknown_voltage.fallback_distance_m} м (см. известные упрощения ниже).`
     );
