@@ -177,6 +177,7 @@
 **Заголовок:** Запускается одной командой
 
 **Текст:**
+- Онлайн-версия: `http://najdzelnajspops.fvds.ru` (проверено 2026-10-17, в том числе генерация, скачивание DXF и отчёт).
 - Docker (целевая среда — Linux, MosTex.OS): `docker compose up web`, затем `http://localhost:8000`.
 - Без Docker: `start_web_ui.bat` (Windows) или `sh start_web_ui.sh` (Linux): окружение создаётся само.
 - CLI: `python -m pipeline.run --input … --output-dxf … --output-report …`; готовая команда на демо-объекте в `README.md`.
