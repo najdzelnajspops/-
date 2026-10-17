@@ -1,6 +1,6 @@
 # Отчёт по итогам озеленения{% if object_label %} — {{ object_label }}{% endif %}
 
-Категория территории: **{{ report.territory_category }}** · Схема отчёта: `{{ report.schema_version }}` · Статус границы участка: **{{ report.site_boundary_status }}**
+Категория территории: **{{ territory_label }}** · Граница участка: **{{ boundary_status_ru }}**
 
 Исходные файлы: {% for f in report.source_files %}`{{ f }}`{% if not loop.last %}, {% endif %}{% endfor %}
 
@@ -51,10 +51,21 @@
 ### Деревья
 
 {% set trees = report.placements | selectattr("planting_kind", "equalto", "tree") | list %}
-| id | Координаты | Статус | Вид | Обоснование |
+{% set ns = namespace(refs=[]) %}
+{% for p in trees %}
+{% set key = [p.species_citation or "—", p.grid_spacing_m, p.grid_spacing_citation or "—"] %}
+{% if key not in ns.refs %}{% set ns.refs = ns.refs + [key] %}{% endif %}
+{% endfor %}
+**Основания** (одинаковые для групп деревьев, поэтому приведены один раз; в таблице — номер основания):
+
+{% for r in ns.refs %}
+{{ loop.index }}. {{ r[0] }}{{ "" if r[0][-1:] in [".", "!", "?"] else "." }} Шаг посадки {{ "%.1f"|format(r[1]) if r[1] is not none else "—" }} м — {{ r[2] }}.
+{% endfor %}
+
+| id | Координаты | Статус | Вид | Основание |
 |---|---|---|---|---|
 {% for p in trees[:50] %}
-| {{ p.id }} | {{ "%.1f"|format(p.x) }}, {{ "%.1f"|format(p.y) }} | {{ "размещено" if p.status == "placed" else "отклонено" }} | {{ p.species_name_ru or "—" }} | {{ p.species_citation or "—" }} |
+| {{ p.id }} | {{ "%.1f"|format(p.x) }}, {{ "%.1f"|format(p.y) }} | {{ "размещено" if p.status == "placed" else "отклонено" }} | {{ p.species_name_ru or "—" }} | № {{ ns.refs.index([p.species_citation or "—", p.grid_spacing_m, p.grid_spacing_citation or "—"]) + 1 }} |
 {% endfor %}
 {% if trees|length > 50 %}
 _...ещё {{ trees|length - 50 }} записей — см. полный JSON-отчёт._

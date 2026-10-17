@@ -180,7 +180,7 @@ def _check_species_eligibility(
                 kind="unknown_species",
                 detail=(
                     f"«{proposal.species_name_ru}» ({proposal.life_form}) не найден в каталоге "
-                    "ДПиООС (data/reference/dpioos_species_assortment.json, 329 видов) — либо "
+                    "ДПиООС (329 видов) — либо "
                     "опечатка в названии, либо вид отсутствует в официальном ассортименте mos.ru "
                     "для внутриквартальных территорий Москвы. Проверить написание вручную."
                 ),

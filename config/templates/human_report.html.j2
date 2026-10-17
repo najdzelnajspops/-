@@ -16,6 +16,7 @@
   .warn { background: #fbeaea; border-left: 4px solid #b33f3f; padding: 10px 14px; margin: 16px 0; border-radius: 6px; }
   .note { color: #5b6a58; font-size: 13px; }
   ul { padding-left: 20px; }
+  ol.refs { padding-left: 22px; font-size: 13px; }
   .print-bar { text-align: right; margin-bottom: 8px; }
   .print-bar button { font: inherit; font-size: 14px; padding: 6px 14px; border: 1px solid #2f6b3a; background: #fff; color: #2f6b3a; border-radius: 6px; cursor: pointer; }
   .keep { break-inside: avoid; }
@@ -35,10 +36,10 @@
     tr { break-inside: avoid; }
     img { max-height: 120mm; width: auto; object-fit: contain; }
     .warn { break-inside: avoid; }
-    table.placements col.c-id { width: 9%; }
-    table.placements col.c-xy { width: 13%; }
-    table.placements col.c-status { width: 11%; }
-    table.placements col.c-species { width: 17%; }
+    table.placements col.c-id { width: 12%; }
+    table.placements col.c-xy { width: 17%; }
+    table.placements col.c-status { width: 15%; }
+    table.placements col.c-species { width: 40%; }
   }
 </style>
 </head>
@@ -47,7 +48,7 @@
 <div class="print-bar"><button type="button" onclick="window.print()">Печать / сохранить в PDF</button></div>
 
 <h1>Отчёт по итогам озеленения{% if object_label %} — {{ object_label }}{% endif %}</h1>
-<p class="meta">Категория территории: <strong>{{ report.territory_category }}</strong> · Схема отчёта: <code>{{ report.schema_version }}</code> · Статус границы участка: <strong>{{ report.site_boundary_status }}</strong></p>
+<p class="meta">Категория территории: <strong>{{ territory_label }}</strong> · Граница участка: <strong>{{ boundary_status_ru }}</strong></p>
 <p class="meta">Исходные файлы: {% for f in report.source_files %}<code>{{ f }}</code>{% if not loop.last %}, {% endif %}{% endfor %}</p>
 
 {% if report.site_boundary_status != "found" %}
@@ -99,12 +100,23 @@
 
 <h3>Деревья</h3>
 {% set trees = report.placements | selectattr("planting_kind", "equalto", "tree") | list %}
+{% set ns = namespace(refs=[]) %}
+{% for p in trees %}
+{% set key = [p.species_citation or "—", p.grid_spacing_m, p.grid_spacing_citation or "—"] %}
+{% if key not in ns.refs %}{% set ns.refs = ns.refs + [key] %}{% endif %}
+{% endfor %}
+<p class="note"><strong>Основания</strong> (одинаковые для групп деревьев, поэтому приведены один раз; в таблице — номер основания):</p>
+<ol class="refs">
+{% for r in ns.refs %}
+<li>{{ r[0] }}{{ "" if r[0][-1:] in [".", "!", "?"] else "." }} Шаг посадки {{ "%.1f"|format(r[1]) if r[1] is not none else "—" }} м — {{ r[2] }}.</li>
+{% endfor %}
+</ol>
 <table class="placements">
 <colgroup><col class="c-id"><col class="c-xy"><col class="c-status"><col class="c-species"><col></colgroup>
-<thead><tr><th>id</th><th>Координаты</th><th>Статус</th><th>Вид</th><th>Обоснование</th></tr></thead>
+<thead><tr><th>id</th><th>Координаты</th><th>Статус</th><th>Вид</th><th>Основание</th></tr></thead>
 <tbody>
 {% for p in trees[:50] %}
-<tr><td>{{ p.id }}</td><td>{{ "%.1f"|format(p.x) }}, {{ "%.1f"|format(p.y) }}</td><td>{{ "размещено" if p.status == "placed" else "отклонено" }}</td><td>{{ p.species_name_ru or "—" }}</td><td>{{ p.species_citation or "—" }}</td></tr>
+<tr><td>{{ p.id }}</td><td>{{ "%.1f"|format(p.x) }}, {{ "%.1f"|format(p.y) }}</td><td>{{ "размещено" if p.status == "placed" else "отклонено" }}</td><td>{{ p.species_name_ru or "—" }}</td><td>№ {{ ns.refs.index([p.species_citation or "—", p.grid_spacing_m, p.grid_spacing_citation or "—"]) + 1 }}</td></tr>
 {% endfor %}
 </tbody>
 </table>
