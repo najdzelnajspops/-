@@ -4,7 +4,7 @@
 
 ## Подход к «мозгу» алгоритма
 
-Выбраны **детерминированные правила и геометрические буферы**, не ML/generative AI. Причина — прямое требование ТЗ к результату («корректный, воспроизводимый и объяснимый») и отдельный критерий оценки «трассируемость посадка → норма → пункт»: правило вида «отступ X м, источник — 743-ПП п. Y» проверяемо человеком напрямую, в отличие от вывода обученной модели. ML рассматривался как возможная вторая итерация (`docs/ARCHITECTURE.md`), но не потребовался для прохождения критериев MVP.
+Выбраны **детерминированные правила и геометрические буферы**, не ML/generative AI. Причина — прямое требование ТЗ к результату («корректный, воспроизводимый и объяснимый») и отдельный критерий оценки «трассируемость посадка → норма → пункт»: правило вида «отступ X м, источник — 743-ПП п. Y» проверяемо пользователем напрямую, в отличие от вывода обученной модели. ML рассматривался как возможная вторая итерация (`docs/ARCHITECTURE.md`), но не потребовался для прохождения критериев MVP.
 
 ## Библиотеки (Python), версии зафиксированы точно
 
@@ -16,8 +16,8 @@
 | `openpyxl` | 3.1.5 | Разбор Excel (прайс-листы питомников) | [pypi.org/project/openpyxl](https://pypi.org/project/openpyxl/) |
 | `python-docx` | 1.2.0 | Разбор DOCX (нормативные акты в исходном формате, прайс-листы) | [pypi.org/project/python-docx](https://pypi.org/project/python-docx/) |
 | `pymupdf` | 1.27.2.3 | Разбор PDF (нормативные акты, прайс-листы) | [pypi.org/project/PyMuPDF](https://pypi.org/project/PyMuPDF/) |
-| `jinja2` | 3.1.6 | Шаблонизация человекочитаемого отчёта (Markdown + HTML, `pipeline/report/human_report.py`) | [pypi.org/project/Jinja2](https://pypi.org/project/Jinja2/) |
-| `matplotlib` | 3.10.8 | Рендер схем «до/после» для человекочитаемого отчёта (headless, `matplotlib.use("Agg")`) — только отрисовка уже посчитанных геометрий, не участвует в геометрических расчётах и не влияет на воспроизводимость пайплайна | [pypi.org/project/matplotlib](https://pypi.org/project/matplotlib/) |
+| `jinja2` | 3.1.6 | Шаблонизация отчётё для пользователя (Markdown + HTML, `pipeline/report/human_report.py`) | [pypi.org/project/Jinja2](https://pypi.org/project/Jinja2/) |
+| `matplotlib` | 3.10.8 | Рендер схем «до/после» для отчётё для пользователя (headless, `matplotlib.use("Agg")`) — только отрисовка уже посчитанных геометрий, не участвует в геометрических расчётах и не влияет на воспроизводимость пайплайна | [pypi.org/project/matplotlib](https://pypi.org/project/matplotlib/) |
 | `pytest` | 9.0.2 | Тесты | [pypi.org/project/pytest](https://pypi.org/project/pytest/) |
 | `fastapi` | 0.135.1 | Веб-UI backend, Swagger/OpenAPI «из коробки» на `/docs` | [pypi.org/project/fastapi](https://pypi.org/project/fastapi/) |
 | `uvicorn` | 0.41.0 | ASGI-сервер для FastAPI | [pypi.org/project/uvicorn](https://pypi.org/project/uvicorn/) |

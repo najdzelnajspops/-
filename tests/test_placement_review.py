@@ -1,5 +1,5 @@
 """Тесты Placement Review Agent (pipeline/review/placement_review.py) —
-второй режим работы (2026-09-18, прямой запрос пользователя): человек сам
+второй режим работы (2026-09-18, прямой запрос пользователя): пользователь сам
 решает, что и куда сажать, сервис только честно проверяет и объясняет.
 
 Реальные каталоги (не моки) — тест находит подходящие реальные записи вместо
@@ -114,7 +114,7 @@ def test_species_not_recommended_for_category_is_flagged():
 
 def test_phytosanitary_conflict_between_any_pair_is_flagged():
     """Не только дерево/кустарник (как в автогенераторе) — любая пара разных
-    видов из предложенного человеком списка."""
+    видов из предложенного пользователем списка."""
     juniper, fruit = _find_conflicting_pair()
     site_boundary = box(0, 0, 100, 100)
     proposals = [
@@ -129,7 +129,7 @@ def test_phytosanitary_conflict_between_any_pair_is_flagged():
 
 def test_insufficient_offset_from_communication_is_flagged():
     """Переиспользует ту же независимую проверку отступов, что и 6.1 — не
-    доверяет решению человека так же, как не доверяла решению автогенератора."""
+    доверяет решению пользователя так же, как не доверяла решению автогенератора."""
     tree_name = _find_recommended_species("tree")
     site_boundary = box(0, 0, 100, 100)
     gas_line = LineString([(20, 0), (20, 100)])  # требуется 1.5 м (743-ПП)

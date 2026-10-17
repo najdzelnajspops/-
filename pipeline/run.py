@@ -101,7 +101,7 @@ def run_service_a(
     формы, отсутствующей в словаре (или сам словарь None), сохраняет прежнее
     однвидовое поведение для этой формы (pick_species), см. generate_placement.
 
-    lep_voltage_kv_override (2026-09-25, прямой запрос пользователя — «человек
+    lep_voltage_kv_override (2026-09-25, прямой запрос пользователя — «пользователь
     имеет дополнительные материалы на руках и может самостоятельно определить
     класс объекта»): если задан, ВСЕ ЛЭП с неопределённым по чертежу классом
     напряжения на этом участке пересчитываются по указанному классу (ПП РФ
@@ -321,7 +321,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         "--output-human-report-dir",
         default=None,
         help=(
-            "Необязательно: каталог для человекочитаемого отчёта (Markdown + HTML + схемы "
+            "Необязательно: каталог для отчётё для пользователя (Markdown + HTML + схемы "
             "«до/после»), см. pipeline/report/human_report.py и docs/REPORT_DESIGN.md. Без "
             "этого флага строится только машиночитаемый JSON (--output-report)."
         ),
@@ -332,8 +332,8 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Необязательно (2026-09-25, прямой запрос пользователя): реальный класс напряжения "
-            "(кВ) для ВСЕХ ЛЭП с неопределённым по чертежу классом на этом участке — если он "
-            "известен оператору из дополнительных материалов, не отражённых в чертеже. Без флага "
+            "(кВ) для всех ЛЭП с неопределённым по чертежу классом на этом участке — если он "
+            "известен пользователю из дополнительных материалов, не отражённых в чертеже. Без флага "
             "применяется максимально консервативный отступ 55 м (тариф 1150 кВ, ПП РФ №160). "
             "Типовые значения по ПП РФ №160: 1, 20, 35, 110, 220, 500, 750, 1150 (кВ)."
         ),
@@ -358,21 +358,21 @@ def main(argv: list[str] | None = None) -> None:
     print(f"Граница участка: {result.ingest_result.site_boundary_status}")
     if result.ingest_result.site_boundary_status != "found":
         print(
-            "  ВНИМАНИЕ: граница участка определена ненадёжно (см. docs/DATA_STRUCTURE.md §11) — "
+            "  Внимание: граница участка определена ненадёжно (см. docs/DATA_STRUCTURE.md §11) — "
             "малое/нулевое число посадок ниже может быть следствием этого, а не реальной "
             "занятости участка. Проверьте площадь допустимой зоны вручную."
         )
     if result.boundary_plausibility is not None:
         print(f"  [Агент ОТК, 6.1a] правдоподобие границы: {result.boundary_plausibility.verdict}")
         if result.boundary_plausibility.verdict != "ok":
-            print(f"    ВНИМАНИЕ: {result.boundary_plausibility.explanation}")
+            print(f"    Внимание: {result.boundary_plausibility.explanation}")
     lep_count = len(result.ingest_result.lep_features_needing_voltage)
     if lep_count > 0 and result.lep_voltage_override_kv is None:
         print(
-            f"  ВНИМАНИЕ: на участке {lep_count} объектов ЛЭП, чей класс напряжения не удалось "
+            f"  Внимание: на участке {lep_count} объектов ЛЭП, чей класс напряжения не удалось "
             f"определить по чертежу — применён максимально консервативный отступ "
             f"{result.lep_unknown_voltage_fallback_m:.0f} м (тариф для линий 1150 кВ, Постановление "
-            "№160) для КАЖДОГО из них. Реальный класс напряжения этой ЛЭП, скорее всего, ниже — но "
+            "№160) для каждого из них. Реальный класс напряжения этой ЛЭП, скорее всего, ниже — но "
             "чертёж не даёт способа его определить. Это может критически уменьшить итоговую "
             "допустимую зону для посадки (см. известный случай на «Камчатской улице» — "
             "docs/SESSION_LOG.md, 2026-09-17: 55 м от одной ЛЭП дали зону, кратно превышающую сам "
@@ -403,7 +403,7 @@ def main(argv: list[str] | None = None) -> None:
         if offset_check is not None:
             print(f"    [Агент ОТК, 6.1] отступы от коммуникаций: {offset_check.verdict}")
             if offset_check.verdict != "ok":
-                print(f"      ВНИМАНИЕ: {offset_check.explanation}")
+                print(f"      Внимание: {offset_check.explanation}")
                 for violation in offset_check.violations:
                     print(f"        ({violation.kind}): {violation.detail}")
     total_cost_rub = sum(p.estimated_cost_rub or 0 for p in result.placement_results.values())
@@ -414,7 +414,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     if not (result.target_budget_min_rub <= total_cost_rub <= result.target_budget_max_rub):
         print(
-            "  ПРИМЕЧАНИЕ: оценочная стоимость вне целевого диапазона — это ожидаемо и НЕ ошибка: "
+            "  ПРИМЕЧАНИЕ: оценочная стоимость вне целевого диапазона — это ожидаемо и не ошибка: "
             "густота посадки определяется нормой плотности (623-ПП), а не бюджетом, см. docs/OPEN_QUESTIONS.md."
         )
     print(f"DXF-результат: {result.export_summary.output_path}")
@@ -422,13 +422,13 @@ def main(argv: list[str] | None = None) -> None:
         print(f"  [Агент ОТК, 6.2] целостность слоёв: {result.layer_integrity.verdict}")
         if result.layer_integrity.verdict != "ok":
             for issue in result.layer_integrity.issues:
-                print(f"    ВНИМАНИЕ ({issue.kind}, слой {issue.layer}): {issue.detail}")
+                print(f"    Внимание ({issue.kind}, слой {issue.layer}): {issue.detail}")
     citation_integrity = (result.report or {}).get("otk_citation_integrity")
     if citation_integrity is not None:
         print(f"  [Агент ОТК, 6.3] целостность цитат: {citation_integrity['verdict']}")
         if citation_integrity["verdict"] != "ok":
             for violation in citation_integrity["violations"]:
-                print(f"    ВНИМАНИЕ ({violation['kind']}, {violation['location']}): {violation['detail']}")
+                print(f"    Внимание ({violation['kind']}, {violation['location']}): {violation['detail']}")
     print(f"Отчёт (JSON): {args.output_report}")
 
     if args.output_human_report_dir:
@@ -440,8 +440,8 @@ def main(argv: list[str] | None = None) -> None:
             placement_results=result.placement_results,
             output_dir=args.output_human_report_dir,
         )
-        print(f"Человекочитаемый отчёт (Markdown): {human_paths.markdown_path}")
-        print(f"Человекочитаемый отчёт (HTML): {human_paths.html_path}")
+        print(f"Отчётё для пользователя (Markdown): {human_paths.markdown_path}")
+        print(f"Отчётё для пользователя (HTML): {human_paths.html_path}")
 
 
 if __name__ == "__main__":

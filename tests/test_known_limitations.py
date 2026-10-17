@@ -24,7 +24,7 @@ from pipeline.constraints.offset_registry import OffsetRegistry
 
 def test_offset_is_identical_regardless_of_species_label():
     """ТЕКУЩЕЕ (осознанное) поведение: ConstraintFeature.label — произвольная
-    подпись для человека, она НИКАК не влияет на расчёт отступа. Отступ зависит
+    подпись для пользователя, она НИКАК не влияет на расчёт отступа. Отступ зависит
     только от boundary_type (тип сети) и planting_kind (tree/shrub) — не от
     того, какой конкретно вид растения имеется в виду."""
     site = Polygon([(0, 0), (20, 0), (20, 20), (0, 20)])
