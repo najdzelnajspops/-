@@ -190,6 +190,14 @@ def build_report(
     if citation_integrity.verdict == "violation":
         known_simplifications.insert(0, f"[Агент ОТК, 6.3] {citation_integrity.explanation}")
 
+    if not any(applied_norms_by_kind.values()):
+        known_simplifications.insert(
+            0,
+            "Внимание: в чертеже не найдено ни одного объекта-ограничения (коммуникаций, построек, красных "
+            "линий): допустимая зона — весь участок, расстановка не учитывает сети и здания. Загрузите "
+            "чертёж с коммуникациями из того же комплекта (геодезия: слои коммуникаций и зданий).",
+        )
+
     return {
         "schema_version": "1.1-mvp",
         "territory_category": territory_category,

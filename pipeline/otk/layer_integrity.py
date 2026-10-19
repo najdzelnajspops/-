@@ -41,7 +41,15 @@ _IGNORED_ATTRIBS = {"handle", "owner"}
 #   - ELLIPSE.extrusion=(0.0, 0.0, 1.0) (стандартный вектор экструзии DXF —
 #     «без поворота плоскости», найдено на 2525 сущностях «Олимпийской деревни»);
 #   - MTEXT.flow_direction=1 (направление текста «слева направо» — умолчание
-#     по спецификации DXF group code 76).
+#     по спецификации DXF group code 76);
+#   - MTEXT.line_spacing_factor=1.0 и MTEXT.line_spacing_style=1 (межстрочный интервал по
+#     умолчанию, group codes 44 и 73; найдено 2026-10-19 на проектном чертеже «Харьковская
+#     улица»: 647 сущностей слоя «PDF _Текст» с явно заданными умолчаниями в файле от ODA);
+#   - DIMENSION.angle=0.0 (у размера без угла ezdxf при записи добавляет умолчание 0.0 — то же
+#     значение, отсутствие угла и есть ноль; 408 размеров на той же «Харьковской улице»);
+#   - SPLINE.control_point_tolerance=1e-10 (умолчание допуска; явно заданное в файле от ODA
+#     ezdxf опускает; 7 сплайнов на той же «Харьковской улице»; в сравнении значение уже округлено
+#     до 6 знаков, то есть равно 0.0).
 _KNOWN_BENIGN_ROUNDTRIP_DEFAULTS = {
     "const_width": 0.0,
     "xscale": 1.0,
@@ -49,6 +57,10 @@ _KNOWN_BENIGN_ROUNDTRIP_DEFAULTS = {
     "zscale": 1.0,
     "extrusion": (0.0, 0.0, 1.0),
     "flow_direction": 1,
+    "line_spacing_factor": 1.0,
+    "line_spacing_style": 1,
+    "angle": 0.0,
+    "control_point_tolerance": 0.0,  # 1e-10 после округления значений до 6 знаков в _normalize_value
 }
 
 

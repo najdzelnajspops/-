@@ -98,6 +98,38 @@ def test_low_confidence_boundary_status_adds_explicit_warning():
     assert any("found_low_confidence" in note for note in report["known_simplifications"])
 
 
+def test_no_constraints_at_all_adds_prominent_warning():
+    """Если в чертеже не распознано ни одного объекта-ограничения (коммуникаций, построек), допустимая зона —
+    весь участок, и результат не учитывает сети. Это не должно быть незаметно (найдено 2026-10-19:
+    «Измайловская площадь» и «Харьковская улица» по одному проектному чертежу — тысячи посадок «без замечаний»)."""
+    empty = ConstraintMapResult(
+        planting_kind="tree",
+        site_boundary=box(0, 0, 10, 10),
+        allowed_zone=box(0, 0, 10, 10),
+        forbidden_zone=GeometryCollection(),
+        zone_sources=[],
+    )
+    report = build_report(
+        territory_category="dvorovye",
+        constraint_results=[empty],
+        placement_results=[_sample_placement_result()],
+        source_files=["design.dxf"],
+        site_boundary_status="found",
+    )
+    assert report["known_simplifications"][0].startswith("Внимание: в чертеже не найдено ни одного объекта-ограничения")
+
+
+def test_constraints_present_gives_no_empty_constraints_warning():
+    report = build_report(
+        territory_category="dvorovye",
+        constraint_results=[_sample_constraint_result()],
+        placement_results=[_sample_placement_result()],
+        source_files=["up.dxf"],
+        site_boundary_status="found",
+    )
+    assert not any("не найдено ни одного объекта-ограничения" in n for n in report["known_simplifications"])
+
+
 def test_placement_rows_carry_citation_norms_stored_once_at_top_level():
     """Регрессионный тест на баг 2026-09-16 (168 ГБ JSON на реальном объекте,
     140447 объектов-ограничений): применённые нормы обязаны храниться ОДИН РАЗ

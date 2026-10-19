@@ -30,6 +30,7 @@ import ezdxf
 from shapely.geometry import LineString, Point, Polygon
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import polygonize
+from shapely.strtree import STRtree
 
 from pipeline.constraints.buffer_engine import ConstraintFeature
 from pipeline.constraints.lep_zones import LepZoneRegistry
@@ -213,6 +214,10 @@ def _close_if_nearly_closed(geom: BaseGeometry) -> Polygon | None:
 # 588 отрезков, чей общий охват (bounding box) — сотни метров, т.е. purely
 # локальное случайное замыкание нескольких отрезков, не периметр участка.
 _BOUNDARY_COVERAGE_CONFIDENCE_THRESHOLD = 0.5
+# Граница из другого файла комплекта (проектный чертёж, «Границы работ») может лежать в иной системе
+# координат, чем геодезия. Кандидат, рядом с которым (в этой полосе) есть хотя бы один объект-ограничение,
+# считается совмещённым с участком и предпочитается несовмещённому.
+_ALIGNMENT_MARGIN_M = 50.0
 
 
 def _bbox_diagonal(bounds: tuple[float, float, float, float]) -> float:
@@ -537,8 +542,21 @@ def _ingest_dxf_files_uncached(paths: list[str | Path], classifier: LayerClassif
         # лишь тай-брейком между одинаково надёжными кандидатами. Только если
         # НИ ОДИН кандидат не надёжен — используется прежнее поведение (лучший
         # ранг среди ненадёжных, статус честно `found_low_confidence`).
-        reliable = [c for c in all_boundary_candidates if c[3] >= _BOUNDARY_COVERAGE_CONFIDENCE_THRESHOLD]
-        pool = reliable if reliable else all_boundary_candidates
+        candidates = all_boundary_candidates
+        if all_features:
+            # Совмещение с ограничениями важнее приоритета слоя и надёжности контура: граница, не
+            # пересекающая ни одного объекта комплекта, — это, как правило, другой чертёж в другой
+            # системе координат. Если совмещённых кандидатов нет вообще — выбор прежний, а несовмещение
+            # ловит независимая проверка ОТК 6.1a (pipeline/otk/boundary_plausibility.py).
+            tree = STRtree([f.geometry for f in all_features])
+            aligned = [
+                c for c in candidates
+                if len(tree.query(c[2].buffer(_ALIGNMENT_MARGIN_M), predicate="intersects")) > 0
+            ]
+            if aligned:
+                candidates = aligned
+        reliable = [c for c in candidates if c[3] >= _BOUNDARY_COVERAGE_CONFIDENCE_THRESHOLD]
+        pool = reliable if reliable else candidates
 
         best_rank = min(rank for rank, _, _, _ in pool)
         at_best_rank = [c for c in pool if c[0] == best_rank]
