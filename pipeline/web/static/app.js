@@ -1043,6 +1043,11 @@ function renderGenerateSummary(report) {
   }
   // Предупреждение только если класс напряжения НЕ указан пользователем: иначе отступ
   // уже посчитан по его выбору, и фраза про 55 м была бы неверной.
+  // Ни одного объекта-ограничения в чертеже: допустимая зона — весь участок, сети не учтены.
+  const norms = report.applied_constraint_norms_by_kind || {};
+  if (Object.keys(norms).length > 0 && Object.values(norms).every((rows) => !rows || rows.length === 0)) {
+    warnings.push("В чертеже не найдено ни одного объекта-ограничения (коммуникаций, построек): посадка не учитывает сети. Загрузите чертёж с коммуникациями из того же комплекта.");
+  }
   if (report.lep_unknown_voltage && report.lep_unknown_voltage.count > 0 && report.lep_unknown_voltage.operator_override_kv == null) {
     warnings.push(
       `${report.lep_unknown_voltage.count} объектов ЛЭП с неопределённым классом напряжения — применён отступ ${report.lep_unknown_voltage.fallback_distance_m} м (см. известные упрощения ниже).`

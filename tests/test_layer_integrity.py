@@ -245,6 +245,51 @@ def test_ignores_benign_mtext_flow_direction_default_drop(tmp_path):
     assert result.issues == []
 
 
+def test_ignores_benign_mtext_line_spacing_default_drop():
+    """Регрессионный тест на реальную находку 2026-10-19 («Харьковская улица», проектный чертёж, 647
+    сущностей MTEXT на слое «PDF _Текст»): в файле от ODA line_spacing_factor=1.0 и line_spacing_style=1
+    (умолчания DXF, group codes 44 и 73) заданы явно, а ezdxf при readfile+saveas их опускает —
+    нормализация формата, не смысловое изменение. Проверяется сама функция сравнения: синтетический
+    файл ezdxf сам умолчания не пишет, поэтому на нём случай не воспроизвести."""
+    from pipeline.otk.layer_integrity import _MISSING, _values_equal_allowing_benign_default as same
+
+    assert same("line_spacing_factor", 1.0, _MISSING)
+    assert same("line_spacing_factor", _MISSING, 1.0)
+    assert same("line_spacing_style", 1, _MISSING)
+    assert same("line_spacing_style", _MISSING, 1)
+    # не умолчание — по-прежнему различие
+    assert not same("line_spacing_factor", 1.5, _MISSING)
+    assert not same("line_spacing_style", 2, _MISSING)
+    assert not same("line_spacing_factor", 1.0, 2.0)
+    # DIMENSION.angle и SPLINE.control_point_tolerance (найдено там же, 2026-10-19)
+    assert same("angle", _MISSING, 0.0)
+    assert same("angle", 0.0, _MISSING)
+    assert same("control_point_tolerance", 0.0, _MISSING)  # 1e-10 после округления до 6 знаков
+    assert not same("angle", _MISSING, 15.0)
+    assert not same("control_point_tolerance", 1e-6, _MISSING)
+
+
+def test_detects_changed_mtext_line_spacing_that_is_not_the_default(tmp_path):
+    """Разрешено только умолчание: если интервал в результате отличается от исходного НЕ умолчанием — это нарушение."""
+    base_path = tmp_path / "base.dxf"
+    output_path = tmp_path / "output.dxf"
+
+    doc = ezdxf.new(setup=False)
+    doc.layers.add(name="EXISTING_COMMUNICATIONS")
+    mtext = doc.modelspace().add_mtext("Тестовая подпись", dxfattribs={"layer": "EXISTING_COMMUNICATIONS"})
+    mtext.dxf.insert = (4, 4, 0)
+    mtext.dxf.line_spacing_factor = 1.5
+    doc.saveas(str(base_path))
+
+    export_placement_to_dxf(base_path, output_path, [_placement([(1, 1)])])
+    out = ezdxf.readfile(str(output_path))
+    changed = next(e for e in out.modelspace() if e.dxftype() == "MTEXT")
+    changed.dxf.line_spacing_factor = 2.0
+    out.saveas(str(output_path))
+
+    assert check_layer_integrity(base_path, output_path).verdict == "violation"
+
+
 def test_detects_new_entity_in_non_green_ai_layer(tmp_path):
     base_path = tmp_path / "base.dxf"
     output_path = tmp_path / "output.dxf"

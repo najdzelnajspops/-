@@ -26,6 +26,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from shapely.geometry.base import BaseGeometry
+from shapely.strtree import STRtree
 
 from pipeline.constraints.buffer_engine import ConstraintFeature
 
@@ -36,6 +37,12 @@ from pipeline.constraints.buffer_engine import ConstraintFeature
 # дефектная — 46,9 м² (в ~10000 раз меньше охвата коммуникаций) — разница на
 # порядки, порог 1% даёт большой запас, не подгонка под конкретное число.
 _MIN_BOUNDARY_TO_FEATURES_BBOX_RATIO = 0.01
+
+# Запас вокруг границы при проверке «объекты лежат на участке»: коммуникации могут идти вдоль самой
+# границы и чуть за ней. Ноль объектов в этой полосе — граница и коммуникации в разных системах
+# координат либо граница не от этого участка (найдено 2026-10-19: «Харьковская улица», граница из
+# проектного чертежа не пересекалась с геодезией, а проверка площади отвечала «ok»).
+_ALIGNMENT_MARGIN_M = 50.0
 
 Verdict = Literal["ok", "implausible", "not_checked"]
 
@@ -107,6 +114,29 @@ def check_boundary_plausibility(
                 "причина — сбой автосборки границы из разрозненных отрезков, а не то, что "
                 "участок действительно настолько мал. Статус «граница найдена» не стоит принимать "
                 "на веру — проверьте границу участка."
+            ),
+        )
+
+    # Совмещение: хотя бы один объект должен лежать на участке (с запасом). Сначала дешёвая проверка
+    # по рамкам, затем точная по индексу — на объекте в 140 тысяч объектов это порядка секунды.
+    zone = site_boundary.buffer(_ALIGNMENT_MARGIN_M)
+    zx0, zy0, zx1, zy1 = zone.bounds
+    bbox_overlaps = not (zx1 < minx or zx0 > maxx or zy1 < miny or zy0 > maxy)
+    if bbox_overlaps:
+        nearby = len(STRtree([f.geometry for f in features]).query(zone, predicate="intersects"))
+    else:
+        nearby = 0
+    if nearby == 0:
+        return BoundaryPlausibilityCheck(
+            verdict="implausible",
+            boundary_area_m2=boundary_area,
+            features_bbox_area_m2=features_bbox_area,
+            ratio=ratio,
+            explanation=(
+                f"Граница участка ({boundary_area:.1f} кв. м) не пересекается ни с одним из {len(features)} "
+                "объектов-коммуникаций (даже с запасом 50 м): граница и коммуникации, вероятно, в разных "
+                "системах координат либо граница взята из другого чертежа. Посадки при такой границе "
+                "ненадёжны — загрузите границу из того же комплекта, что и коммуникации."
             ),
         )
 

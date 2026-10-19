@@ -45,6 +45,22 @@ def test_implausibly_tiny_boundary_relative_to_features_is_flagged():
     assert "подозрительно мала" in result.explanation
 
 
+def test_boundary_not_overlapping_features_is_flagged_as_misaligned():
+    """Граница и коммуникации в разных системах координат: площадь правдоподобна, но участок не
+    пересекается ни с одним объектом — раньше проверка отвечала «ok» (найдено 2026-10-19, «Харьковская улица»)."""
+    features = _make_features(60, 100.0)  # объекты в x=0..100, y=0..59
+    far_boundary = box(1000, 1000, 1100, 1100)
+    check = check_boundary_plausibility(far_boundary, features)
+    assert check.verdict == "implausible"
+    assert "не пересека" in check.explanation
+
+
+def test_boundary_overlapping_features_still_ok():
+    features = _make_features(60, 100.0)
+    near_boundary = box(-10, -10, 120, 80)
+    assert check_boundary_plausibility(near_boundary, features).verdict == "ok"
+
+
 def test_no_features_is_not_checked_not_silently_ok():
     boundary = box(0, 0, 100, 100)
     result = check_boundary_plausibility(boundary, [])

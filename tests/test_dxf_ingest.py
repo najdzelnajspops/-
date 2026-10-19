@@ -333,6 +333,53 @@ def test_site_boundary_ignores_degenerate_nearly_closed_polyline():
         assert result.site_boundary is None or result.site_boundary.area >= 1
 
 
+def _file_with_boundary_and_pipes(path: Path, boundary_layer: str, boundary_box: tuple, pipes_at: tuple | None) -> None:
+    doc = ezdxf.new("R2018")
+    msp = doc.modelspace()
+    doc.layers.new(name=boundary_layer)
+    x0, y0, x1, y1 = boundary_box
+    msp.add_lwpolyline([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], close=True, dxfattribs={"layer": boundary_layer})
+    if pipes_at is not None:
+        if "obj|Газопровод" not in doc.layers:
+            doc.layers.new(name="obj|Газопровод")
+        px, py = pipes_at
+        for i in range(30):
+            msp.add_lwpolyline([(px, py + i), (px + 80, py + i)], dxfattribs={"layer": "obj|Газопровод"})
+    doc.saveas(str(path))
+
+
+def test_site_boundary_prefers_candidate_aligned_with_constraints():
+    """Граница из другого файла (например, проектный чертёж в иной системе координат) не должна
+    вытеснять границу, которая реально лежит на коммуникациях, даже если слой первой выше по приоритету
+    (найдено 2026-10-19 на «Харьковская улица»: граница из «ГП» не пересекалась с геодезией)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        geodesy = Path(tmp) / "geodesy.dxf"
+        design = Path(tmp) / "design.dxf"
+        # геодезия: коммуникации в 0..100 и граница заказа (приоритет ниже) вокруг них
+        _file_with_boundary_and_pipes(geodesy, "obj|Граница заказа", (-10, -10, 120, 50), (0, 0))
+        # проектный чертёж: «Граница площадки» (приоритет выше), но в другой системе координат
+        _file_with_boundary_and_pipes(design, "obj|Граница площадки", (5000, 5000, 5100, 5100), None)
+
+        result = ingest_dxf_files([geodesy, design])
+
+        assert result.site_boundary is not None
+        assert result.site_boundary.bounds[0] < 100  # выбрана граница рядом с коммуникациями, не из 5000..5100
+
+
+def test_site_boundary_without_any_aligned_candidate_keeps_previous_choice():
+    """Если совмещённой с ограничениями границы нет вообще, выбор прежний (его проверяет ОТК 6.1a)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        geodesy = Path(tmp) / "geodesy.dxf"
+        design = Path(tmp) / "design.dxf"
+        _file_with_boundary_and_pipes(geodesy, "obj|Газопровод", (0, 0, 1, 1), (0, 0))  # на слое коммуникаций, не границы
+        _file_with_boundary_and_pipes(design, "obj|Граница площадки", (5000, 5000, 5100, 5100), None)
+
+        result = ingest_dxf_files([geodesy, design])
+
+        assert result.site_boundary is not None
+        assert result.site_boundary.bounds[0] >= 5000
+
+
 if __name__ == "__main__":
     test_dxf_ingest_classifies_real_layer_naming_convention()
     test_dxf_ingest_is_deterministic_across_independent_calls()
