@@ -25,6 +25,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+import numpy as np
 from shapely.geometry.base import BaseGeometry
 from shapely.strtree import STRtree
 
@@ -43,6 +44,14 @@ _MIN_BOUNDARY_TO_FEATURES_BBOX_RATIO = 0.01
 # координат либо граница не от этого участка (найдено 2026-10-19: «Харьковская улица», граница из
 # проектного чертежа не пересекалась с геодезией, а проверка площади отвечала «ok»).
 _ALIGNMENT_MARGIN_M = 50.0
+
+# Охват объектов считается без самых далёких: несколько заблудившихся объектов (например, в нулевой точке
+# чертежа) раздували охват в сотни раз и давали ложное «implausible» на верной границе (найдено 2026-10-19:
+# «Кустанайская улица» 0,0047, «Грузинская М ул» 0,0006; без 0,5 % с каждой стороны 0,39 и 0,031 при пороге
+# 0,01). Настоящая ошибка (граница в сотни раз меньше охвата) остаётся далеко ниже порога. При малом числе
+# объектов усечения нет: там выбросы нельзя отличить от настоящего охвата.
+_OUTLIER_TRIM_FRACTION = 0.005
+_MIN_FEATURES_FOR_TRIMMING = 200
 
 Verdict = Literal["ok", "implausible", "not_checked"]
 
@@ -88,11 +97,14 @@ def check_boundary_plausibility(
     # bbox объединения МАТЕМАТИЧЕСКИ идентичен bbox, собранному из min/max
     # отдельных bounds (объединение не меняет общий охват) — не приближение,
     # тот же результат в 1000+ раз быстрее (проверено: 1.3 сек на том же объекте).
-    feature_bounds = [f.geometry.bounds for f in features]
-    minx = min(b[0] for b in feature_bounds)
-    miny = min(b[1] for b in feature_bounds)
-    maxx = max(b[2] for b in feature_bounds)
-    maxy = max(b[3] for b in feature_bounds)
+    feature_bounds = np.array([f.geometry.bounds for f in features])
+    if len(features) >= _MIN_FEATURES_FOR_TRIMMING:
+        minx, miny = np.quantile(feature_bounds[:, 0], _OUTLIER_TRIM_FRACTION), np.quantile(feature_bounds[:, 1], _OUTLIER_TRIM_FRACTION)
+        maxx, maxy = np.quantile(feature_bounds[:, 2], 1 - _OUTLIER_TRIM_FRACTION), np.quantile(feature_bounds[:, 3], 1 - _OUTLIER_TRIM_FRACTION)
+    else:
+        minx, miny = feature_bounds[:, 0].min(), feature_bounds[:, 1].min()
+        maxx, maxy = feature_bounds[:, 2].max(), feature_bounds[:, 3].max()
+    minx, miny, maxx, maxy = float(minx), float(miny), float(maxx), float(maxy)
     features_bbox_area = (maxx - minx) * (maxy - miny)
     boundary_area = site_boundary.area
     ratio = boundary_area / features_bbox_area if features_bbox_area > 0 else None
@@ -121,7 +133,10 @@ def check_boundary_plausibility(
     # по рамкам, затем точная по индексу — на объекте в 140 тысяч объектов это порядка секунды.
     zone = site_boundary.buffer(_ALIGNMENT_MARGIN_M)
     zx0, zy0, zx1, zy1 = zone.bounds
-    bbox_overlaps = not (zx1 < minx or zx0 > maxx or zy1 < miny or zy0 > maxy)
+    # для быстрой проверки по рамке нужен ПОЛНЫЙ охват (усечённый мог бы отсечь границу у самого края)
+    fminx, fminy = float(feature_bounds[:, 0].min()), float(feature_bounds[:, 1].min())
+    fmaxx, fmaxy = float(feature_bounds[:, 2].max()), float(feature_bounds[:, 3].max())
+    bbox_overlaps = not (zx1 < fminx or zx0 > fmaxx or zy1 < fminy or zy0 > fmaxy)
     if bbox_overlaps:
         nearby = len(STRtree([f.geometry for f in features]).query(zone, predicate="intersects"))
     else:
