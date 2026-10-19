@@ -55,6 +55,39 @@ def test_boundary_not_overlapping_features_is_flagged_as_misaligned():
     assert "не пересека" in check.explanation
 
 
+def _make_spread_features(n: int, size: float) -> list[ConstraintFeature]:
+    """n коротких объектов, равномерно по квадрату size x size."""
+    step = size / max(int(n ** 0.5), 1)
+    cols = max(int(n ** 0.5), 1)
+    return [
+        ConstraintFeature(
+            id=f"s{i}",
+            boundary_type="gas_pipeline",
+            geometry=LineString([((i % cols) * step, (i // cols) * step), ((i % cols) * step + 1, (i // cols) * step)]),
+        )
+        for i in range(n)
+    ]
+
+
+def test_few_far_outliers_do_not_make_a_correct_boundary_implausible():
+    """Несколько далёких выбросов (например, заблудившиеся объекты в нулевой точке чертежа) раздували охват
+    всех объектов и давали ложное «implausible» на корректной границе (найдено 2026-10-19: «Кустанайская улица»,
+    «Грузинская М ул»). Охват считается без 0,5 % самых далёких объектов с каждой стороны."""
+    features = _make_spread_features(2000, 400.0)
+    for i in range(8):  # 8 из 2008 — меньше 0,5 % с каждой стороны
+        features.append(ConstraintFeature(id=f"out{i}", boundary_type="gas_pipeline", geometry=LineString([(-30000, -30000 + i), (-29999, -30000 + i)])))
+    boundary = box(0, 0, 400, 400)  # граница лежит на объектах, площадь 160000
+    check = check_boundary_plausibility(boundary, features)
+    assert check.verdict == "ok"
+
+
+def test_tiny_boundary_among_many_features_is_still_flagged():
+    """Усечение выбросов не должно скрывать настоящую ошибку: крошечная граница среди тысяч объектов."""
+    features = _make_spread_features(2000, 1000.0)
+    tiny = box(10, 10, 15, 15)  # 25 кв. м против ~1 000 000 охвата
+    assert check_boundary_plausibility(tiny, features).verdict == "implausible"
+
+
 def test_boundary_overlapping_features_still_ok():
     features = _make_features(60, 100.0)
     near_boundary = box(-10, -10, 120, 80)
