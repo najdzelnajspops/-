@@ -195,7 +195,7 @@ def check_layer_integrity(base_dxf_path: str | Path, output_dxf_path: str | Path
         "Исходные слои и сущности не изменены; весь новый контент — только в слоях "
         f"«{RESULT_LAYER_PREFIX}*»."
         if verdict == "ok"
-        else f"Найдено нарушений целостности: {len(issues)} — см. issues."
+        else f"Найдено нарушений целостности: {len(issues)} — подробности в списке."
     )
 
     return LayerIntegrityCheck(

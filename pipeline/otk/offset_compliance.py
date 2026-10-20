@@ -162,7 +162,7 @@ def check_offset_compliance(
         f"Независимая проверка {len(relevant_points)} точек посадки вида «{planting_kind}»: "
         "фактическое расстояние до каждого объекта-ограничения соответствует требуемому отступу."
         if verdict == "ok"
-        else f"Найдено нарушений отступа: {len(violations)} — см. violations."
+        else f"Найдено нарушений отступа: {len(violations)} — подробности в списке."
     )
     return OffsetComplianceCheck(
         verdict=verdict,

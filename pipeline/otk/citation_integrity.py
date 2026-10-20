@@ -212,7 +212,7 @@ def check_citation_integrity(report: dict) -> CitationIntegrityCheck:
         f"Независимая проверка {checked} ссылок на нормы: каждая цитата в отчёте пересчитана заново "
         "из верифицированного реестра-источника и совпадает буквально."
         if verdict == "ok"
-        else f"Найдено нарушений целостности цитат: {len(violations)} — см. violations."
+        else f"Найдено нарушений целостности цитат: {len(violations)} — подробности в списке."
     )
     return CitationIntegrityCheck(
         verdict=verdict, violations=violations, citations_checked=checked, explanation=explanation
