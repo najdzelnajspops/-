@@ -201,6 +201,28 @@ def test_layer_classifier_matches_real_convention_examples():
     assert c4.status == "unclassified"
 
 
+def test_layer_classifier_understands_xref_dollar_separator():
+    """Внешняя ссылка, привязанная к чертежу командой AutoCAD, даёт имя «ссылка$0$слой»
+    (реальные слои присланного 20.10.2026 чертежа ПОДД и «Олимпийской деревни»)."""
+    classifier = LayerClassifier()
+
+    c1 = classifier.classify("output[1-5]_3_3754-22tp$0$Здания")
+    assert c1.status == "mapped"
+    assert c1.boundary_type == "building_wall"
+    assert c1.category == "Здания"
+
+    c2 = classifier.classify("output[1-5]_3_3754-22tp$0$Отдельно стоящее дерево")
+    assert c2.status == "mapped"
+    assert c2.boundary_type == "existing_tree_preserve"
+
+    assert classifier.is_site_boundary_category("output[1-5]_3_3754-22tp$0$Граница площадки")
+    assert classifier.is_site_boundary_category("$2$ДВ_ГП_П_Граница работ")
+    # вложенные разделители: берётся часть после ПОСЛЕДНЕГО
+    assert classifier.classify("a|b$1$Здания").status == "mapped"
+    # знак доллара без цифр — часть имени, а не разделитель
+    assert classifier.classify("цена$Здания").status == "unclassified"
+
+
 def test_ingest_dxf_files_cache_hit_returns_equal_but_independent_result():
     """Регрессионный тест на кеш 2026-09-28 (прямой запрос пользователя —
     веб-сервис на VPS «оч долго грузится» один и тот же демо-объект при каждом

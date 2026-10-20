@@ -11,6 +11,7 @@ docs/DATA_STRUCTURE.md §9): "<источник>|<категория>". Матч
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -22,6 +23,8 @@ from pipeline.common.schema_validation import require_keys, source_updated_at
 DEFAULT_ALIASES_PATH = (
     Path(__file__).resolve().parents[2] / "data" / "reference" / "layer_name_aliases.yaml"
 )
+
+_XREF_SEPARATOR = re.compile(r"\||\$\d+\$")
 
 ClassificationStatus = Literal[
     "mapped", "lep_unknown_voltage", "ignored", "site_boundary_candidate", "unclassified"
@@ -60,8 +63,12 @@ class LayerClassifier:
 
     @staticmethod
     def _extract_category(raw_layer_name: str) -> str:
-        # Часть после ПОСЛЕДНЕГО "|" — источники сами могут содержать "|" в имени.
-        category = raw_layer_name.rsplit("|", 1)[-1]
+        # Часть после ПОСЛЕДНЕГО разделителя — источники сами могут содержать "|" в имени.
+        # Разделитель — "|" (внешняя ссылка, как её читает ODA) или "$0$", "$1$" и т.д.
+        # (внешняя ссылка, "вшитая" в чертёж командой «Вставить/Привязать» в AutoCAD:
+        # «имя_ссылки$0$слой»). Найдено 2026-10-20 на присланном проектном чертеже ПОДД
+        # («…tp$0$Здания», «…tp$0$Граница площадки»).
+        category = _XREF_SEPARATOR.split(raw_layer_name)[-1]
         return category.strip()
 
     def classify(self, raw_layer_name: str) -> LayerClassification:

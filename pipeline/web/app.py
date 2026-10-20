@@ -176,6 +176,24 @@ def _prepared_site(object_id: str, lep_voltage_kv: float | None = None):
     return resolved, ingest_result, features
 
 
+def _unrecognized_layers_hint(input_paths) -> str:
+    """Короткая подсказка к ошибке «граница не найдена»: какие слои файла сервис не распознал.
+    Разбор уже сделан и лежит в кэше, поэтому повторный вызов быстрый; любой сбой не мешает ответу."""
+    try:
+        result = ingest_dxf_files(input_paths)
+        hits = sorted(result.unclassified_layers.values(), key=lambda h: -h.entity_count)[:6]
+    except Exception:
+        return ""
+    if not hits:
+        return ""
+    names = ", ".join(f"«{h.category}»" for h in hits)
+    return (
+        f" Сервис читает слои геодезической подосновы («Граница площадки», «Здания», «Водопровод» и т. п.); "
+        f"в вашем файле крупнейшие нераспознанные слои: {names}. Если это проектный чертёж, а не подоснова, "
+        "подайте вместе с ним файл подосновы с границей участка."
+    )
+
+
 @app.get("/api/demo-objects")
 def api_list_demo_objects():
     demo_entries = [
@@ -234,6 +252,7 @@ def api_upload(files: list[UploadFile] = File(...), label_ru: str | None = Form(
         detail = (
             "Граница участка в загруженных файлах не найдена — нужен слой границы участка "
             "(например «Граница заказа» или «Граница работ»). Проверьте состав файлов."
+            + _unrecognized_layers_hint(obj.input_paths)
         )
         log_event("upload", obj.id, "-", {"filenames": [f.filename for f in files]}, {"error": exc.detail})
         raise HTTPException(status_code=422, detail=detail) from exc

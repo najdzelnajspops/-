@@ -101,3 +101,24 @@ def test_upload_dxf_without_site_boundary_gives_4xx_and_is_not_registered(tmp_pa
     assert resp.status_code == 422
     assert "границ" in resp.json()["detail"].lower()
     assert _uploaded_ids() == before
+
+
+def test_upload_without_boundary_names_unrecognized_layers(tmp_path):
+    """Проектный чертёж с чужими именами слоёв: в ответе перечислены слои, которые сервис не узнал
+    (20.10.2026, присланные проектные чертежи со слоями BOUND, DOM, TREE)."""
+    import ezdxf
+
+    path = tmp_path / "design_only.dxf"
+    doc = ezdxf.new("R2018")
+    for name in ("TREE", "DOM"):
+        doc.layers.add(name)
+    msp = doc.modelspace()
+    msp.add_lwpolyline([(0, 0), (10, 0), (10, 10), (0, 10)], close=True, dxfattribs={"layer": "DOM"})
+    msp.add_circle((5, 5), 1, dxfattribs={"layer": "TREE"})
+    doc.saveas(str(path))
+    with open(path, "rb") as f:
+        resp = client.post("/api/uploads", files=[("files", ("design_only.dxf", f, "application/dxf"))])
+    assert resp.status_code == 422
+    detail = resp.json()["detail"]
+    assert "«DOM»" in detail and "«TREE»" in detail
+    assert "подоснов" in detail
