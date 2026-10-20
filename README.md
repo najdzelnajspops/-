@@ -38,7 +38,7 @@ python -m pipeline.run --input data/demo_objects/peschany_pereulok/output_1-5__3
 
 ## Презентация
 
-`docs/presentation.pdf` — презентация проекта для сдачи кейса.
+`docs/presentation.pdf` (и та же презентация в формате `docs/presentation.pptx`) — презентация проекта для сдачи кейса.
 
 ## Навигация по документации
 
