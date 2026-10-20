@@ -102,3 +102,14 @@ def test_report_with_user_voltage_has_no_conflicting_warning(tmp_path):
     assert "указан пользователем: 10 кВ" in page
     assert "Применён максимально консервативный отступ" not in page
     assert 'class="warn"' not in page
+
+
+def test_result_blocks_survive_hide_recommendations_toggle():
+    """«Скрыть рекомендации сервиса» прячет только рекомендации (предупреждения), а не итоги:
+    блоки «Результат» и «Выбранные виды» без класса service-recommendation (20.10.2026:
+    при печати с галочкой «Результат» оставался пустым)."""
+    html = client.get("/").text
+    assert 'id="generate-warnings" class="service-recommendation"' in html
+    for block_id in ("generate-summary", "generate-species"):
+        tag = html.split(f'id="{block_id}"', 1)[1].split(">", 1)[0]
+        assert "service-recommendation" not in tag, block_id
