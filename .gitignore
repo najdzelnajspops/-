@@ -34,3 +34,9 @@ diff_prep.txt
 brag-output/
 .agents/
 skills-lock.json
+
+# Private presentation files and local history snapshots
+/docs/presentation.pdf
+/docs/presentation.pptx
+/backups/
+
